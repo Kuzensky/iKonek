@@ -1,0 +1,56 @@
+/* Typography */
+
+.section-title {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    line-height: var(--line-height-tight);
+    font-family: var(--font-heading);
+    letter-spacing: -0.5px;
+}
+
+.section-description {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-light);
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.section-header {
+    margin-bottom: var(--spacing-4xl);
+}
+
+.section-footer {
+    margin-top: var(--spacing-3xl);
+    text-align: center;
+}
+
+.text-link {
+    color: var(--color-primary);
+    transition: color var(--transition-fast);
+}
+
+.text-link:hover {
+    color: var(--color-primary-dark);
+}
+
+.red {
+    color: var(--color-primary);
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}

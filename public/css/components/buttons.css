@@ -1,0 +1,113 @@
+/* Buttons */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Button Sizes */
+.btn-sm {
+    padding: var(--spacing-sm) 17px;
+    height: 36px;
+    font-size: var(--font-size-sm);
+}
+
+.btn-lg {
+    padding: var(--spacing-md) var(--spacing-xl);
+    height: 59px;
+    font-size: var(--font-size-3xl);
+}
+
+/* Button Variants */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-text {
+    background-color: transparent;
+    color: var(--color-secondary);
+    text-decoration: none;
+}
+
+.btn-text:hover:not(:disabled) {
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+}
+
+.btn-outline {
+    background-color: var(--color-white);
+    color: var(--color-secondary);
+    border: 1.6px solid var(--color-secondary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+}
+
+.btn-outline-primary {
+    background-color: var(--color-white);
+    color: var(--color-secondary);
+    border: 0.8px solid var(--color-secondary);
+}
+
+.btn-outline-primary:hover:not(:disabled) {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+}
+
+.btn-outline-secondary {
+    background-color: var(--color-white);
+    color: var(--color-secondary);
+    border: 1.6px solid var(--color-secondary);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-sm);
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .btn-lg {
+        width: 100%;
+        height: 48px;
+        font-size: var(--font-size-lg);
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+    
+    .btn-lg svg {
+        width: 24px;
+        height: auto;
+    }
+}

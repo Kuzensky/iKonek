@@ -1,0 +1,88 @@
+:root {
+    /* Colors */
+    --color-primary: #E63946;
+    --color-primary-light: rgba(230, 57, 70, 0.1);
+    --color-primary-dark: #d12835;
+    
+    --color-secondary: #1D3557;
+    --color-secondary-light: rgba(29, 53, 87, 0.1);
+    --color-secondary-dark: #152841;
+    
+    --color-white: #FFFFFF;
+    --color-background: #F8F9FA;
+    --color-text: #1D3557;
+    --color-text-light: rgba(29, 53, 87, 0.7);
+    --color-text-lighter: rgba(29, 53, 87, 0.6);
+    --color-text-lightest: rgba(29, 53, 87, 0.4);
+    
+    --color-border: rgba(29, 53, 87, 0.1);
+    --color-border-light: rgba(29, 53, 87, 0.05);
+    
+    --color-success: #28A745;
+    --color-warning: #FFC107;
+    --color-error: #DC3545;
+    
+    /* Typography */
+    --font-primary: 'Arial', sans-serif;
+    --font-heading: 'Bakbak One', cursive;
+    
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-base: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 20px;
+    --font-size-2xl: 22px;
+    --font-size-3xl: 24px;
+    --font-size-4xl: 30px;
+    --font-size-5xl: 48px;
+    --font-size-6xl: 64px;
+    
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+    --spacing-4xl: 80px;
+    
+    /* Layout */
+    --container-max-width: 1200px;
+    --container-padding: 24px;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-sm: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1);
+    
+    /* Transitions */
+    --transition-fast: 150ms ease-in-out;
+    --transition-base: 300ms ease-in-out;
+    --transition-slow: 500ms ease-in-out;
+    
+    /* Z-index */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+}

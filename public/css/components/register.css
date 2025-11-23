@@ -1,0 +1,531 @@
+/* ============================================
+   Register Page Component Styles
+   ============================================ */
+
+/* Register Page Container */
+.register-page {
+    min-height: 100vh;
+    background-color: var(--color-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: var(--spacing-lg);
+}
+
+/* Background Decorative Shapes */
+.register-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.register-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.08;
+}
+
+.register-shape-1 {
+    width: 420.839px;
+    height: 420.839px;
+    background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
+    left: -170.42px;
+    top: 60.37px;
+}
+
+.register-shape-2 {
+    width: 369.916px;
+    height: 369.916px;
+    background: radial-gradient(circle, var(--color-secondary) 0%, transparent 70%);
+    right: -100px;
+    bottom: 50px;
+    opacity: 0.06;
+}
+
+/* Register Container */
+.register-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 672px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* Back to Home Link */
+.back-to-home {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--color-secondary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    width: fit-content;
+}
+
+.back-to-home:hover {
+    color: var(--color-primary);
+    gap: 12px;
+}
+
+.back-to-home svg {
+    transition: transform var(--transition-fast);
+}
+
+.back-to-home:hover svg {
+    transform: translateX(-4px);
+}
+
+/* Register Card */
+.register-card {
+    background: var(--color-white);
+    border: 0.8px solid rgba(29, 53, 87, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+}
+
+/* Register Header */
+.register-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.register-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: var(--spacing-md);
+}
+
+.register-logo .logo-image {
+    width: 54px;
+    height: 66px;
+    object-fit: cover;
+}
+
+.register-logo .logo-text {
+    font-family: var(--font-heading);
+    font-size: 48px;
+    color: var(--color-secondary);
+    line-height: 32px;
+    letter-spacing: -0.6px;
+}
+
+.register-logo .logo-i {
+    color: var(--color-primary);
+}
+
+.register-title {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1;
+}
+
+.register-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-lighter);
+    line-height: 1.4;
+}
+
+/* Register Form */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* Form Row for Side-by-Side Fields */
+.form-row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+/* Form Group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.form-group-half {
+    flex: 1;
+}
+
+.form-group-third {
+    flex: 1;
+}
+
+.form-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-secondary);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.required {
+    color: var(--color-primary);
+    font-size: var(--font-size-sm);
+}
+
+.optional {
+    color: rgba(29, 53, 87, 0.5);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+}
+
+/* Form Input */
+.form-input {
+    width: 100%;
+    height: 44px;
+    padding: 12px;
+    font-size: var(--font-size-sm);
+    font-family: var(--font-primary);
+    color: var(--color-secondary);
+    background-color: #F3F3F5;
+    border: 0.8px solid rgba(29, 53, 87, 0.2);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: #717182;
+}
+
+.form-input:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-white);
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+}
+
+.form-input.error {
+    border-color: var(--color-error);
+}
+
+.form-input.error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* Date Input Styling */
+.form-input[type="date"] {
+    color: #717182;
+}
+
+.form-input[type="date"]:focus,
+.form-input[type="date"]:valid {
+    color: var(--color-secondary);
+}
+
+/* Select Dropdown */
+.select-wrapper {
+    position: relative;
+}
+
+.form-select {
+    width: 100%;
+    height: 44px;
+    padding: 0 36px 0 12px;
+    font-size: var(--font-size-sm);
+    font-family: var(--font-primary);
+    color: #717182;
+    background-color: #F3F3F5;
+    border: 0.8px solid rgba(29, 53, 87, 0.2);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23717182' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+.form-select:hover {
+    border-color: rgba(29, 53, 87, 0.3);
+    background-color: #FAFAFA;
+}
+
+.form-select:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-white);
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23E63946' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.form-select:disabled {
+    background-color: rgba(243, 243, 245, 0.5);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.form-select option {
+    color: var(--color-secondary);
+    background-color: var(--color-white);
+    padding: 10px 12px;
+    font-size: var(--font-size-sm);
+}
+
+.form-select option:first-child {
+    color: #717182;
+    font-style: normal;
+}
+
+.form-select option:disabled {
+    color: #999;
+    background-color: #F5F5F5;
+}
+
+.form-select option:hover {
+    background-color: rgba(230, 57, 70, 0.08);
+}
+
+.form-select option:checked {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.form-select:valid:not(:focus) {
+    color: var(--color-secondary);
+    background-color: #F3F3F5;
+}
+
+.form-select.error {
+    border-color: var(--color-error);
+    background-color: #FFF5F5;
+}
+
+.form-select.error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* Hide the separate select icon since we're using background-image */
+.select-icon {
+    display: none;
+}
+
+/* Password Input Wrapper */
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input {
+    padding-right: 48px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: rgba(29, 53, 87, 0.4);
+    transition: color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    color: var(--color-secondary);
+}
+
+.password-toggle:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Password Hint */
+.password-hint {
+    font-size: var(--font-size-xs);
+    color: rgba(29, 53, 87, 0.5);
+    line-height: 1.33;
+}
+
+/* Required Note */
+.required-note {
+    font-size: var(--font-size-xs);
+    color: rgba(29, 53, 87, 0.5);
+    line-height: 1.33;
+    margin-top: -8px;
+}
+
+/* Form Error */
+.form-error {
+    font-size: var(--font-size-xs);
+    color: var(--color-error);
+    display: none;
+    min-height: 16px;
+}
+
+.form-error.active {
+    display: block;
+}
+
+/* Register Button */
+.btn-register {
+    width: 100%;
+    height: 48px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    margin-top: var(--spacing-xs);
+}
+
+.btn-register:disabled {
+    background-color: rgba(230, 57, 70, 0.5);
+    cursor: not-allowed;
+}
+
+.btn-register.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-register.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid var(--color-white);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Login Prompt */
+.login-prompt {
+    text-align: center;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-lighter);
+    margin-top: var(--spacing-xs);
+}
+
+.login-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    transition: color var(--transition-fast);
+}
+
+.login-link:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+/* Security Badge */
+.security-badge {
+    text-align: center;
+    font-size: var(--font-size-xs);
+    color: rgba(29, 53, 87, 0.5);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+    .register-page {
+        padding: var(--spacing-md);
+    }
+
+    .register-container {
+        max-width: 100%;
+    }
+
+    .register-card {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .register-logo .logo-text {
+        font-size: 36px;
+    }
+
+    .register-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .back-to-home {
+        font-size: var(--font-size-sm);
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+
+    .form-group-half,
+    .form-group-third {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-shape-1,
+    .register-shape-2 {
+        display: none;
+    }
+
+    .register-logo .logo-image {
+        width: 44px;
+        height: 55px;
+    }
+
+    .register-logo .logo-text {
+        font-size: 32px;
+    }
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+.register-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus visible for accessibility */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.password-toggle:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}

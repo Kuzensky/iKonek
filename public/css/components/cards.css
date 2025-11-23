@@ -1,0 +1,441 @@
+/* Cards */
+
+.card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 249, 250, 1) 100%);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--color-border);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+/* Campaign Card */
+.campaign-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    height: 100%;
+    min-height: 420px;
+}
+
+.campaign-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    flex: 1;
+}
+
+.campaign-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.campaign-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.12) 0%, rgba(230, 57, 70, 0.08) 100%);
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    line-height: 16px;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    width: fit-content;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.1);
+}
+
+.campaign-title {
+    font-size: var(--font-size-xl);
+    color: var(--color-secondary);
+    line-height: 28px;
+    font-weight: var(--font-weight-bold);
+    margin-top: 4px;
+    transition: color var(--transition-fast);
+}
+
+.campaign-card:hover .campaign-title {
+    color: var(--color-primary);
+}
+
+.campaign-organizer {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-lighter);
+    line-height: 20px;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.campaign-organizer::before {
+    content: '👥';
+    font-size: 14px;
+}
+
+.campaign-progress {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+}
+
+.campaign-amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+}
+
+.campaign-raised-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.campaign-raised {
+    font-size: 32px;
+    color: var(--color-secondary);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.campaign-goal {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-lighter);
+    line-height: 18px;
+    margin-top: 2px;
+}
+
+.campaign-percentage {
+    font-size: var(--font-size-lg);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    text-align: right;
+    padding: 8px 12px;
+    background: rgba(230, 57, 70, 0.08);
+    border-radius: var(--radius-sm);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(29, 53, 87, 0.1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+    border-radius: var(--radius-full);
+    transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.campaign-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding-top: var(--spacing-xs);
+    border-top: 1px solid var(--color-border-light);
+}
+
+.campaign-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    line-height: 20px;
+    font-weight: var(--font-weight-medium);
+}
+
+.campaign-meta-item img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+}
+
+.campaign-button {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #d12835 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px 24px;
+    font-size: var(--font-size-base);
+    line-height: 20px;
+    font-weight: var(--font-weight-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.campaign-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.campaign-button:hover::before {
+    left: 100%;
+}
+
+.campaign-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35);
+}
+
+.campaign-button:active {
+    transform: translateY(0);
+}
+
+.campaign-button img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+}
+
+/* Hospital Card */
+.hospital-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.hospital-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.hospital-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.12) 0%, rgba(230, 57, 70, 0.08) 100%);
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    line-height: 16px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    width: fit-content;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.1);
+}
+
+.hospital-name {
+    font-size: var(--font-size-xl);
+    color: var(--color-secondary);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-bold);
+    margin-top: 4px;
+    transition: color var(--transition-fast);
+}
+
+.hospital-card:hover .hospital-name {
+    color: var(--color-primary);
+}
+
+.hospital-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+}
+
+.hospital-detail {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--color-text-light);
+    line-height: var(--line-height-normal);
+    transition: color var(--transition-fast);
+}
+
+.hospital-card:hover .hospital-detail {
+    color: var(--color-text);
+}
+
+.hospital-detail img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: block;
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+}
+
+.hospital-card:hover .hospital-detail img {
+    opacity: 1;
+}
+
+.hospital-detail strong {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-secondary);
+}
+
+.hospital-action {
+    margin-top: auto;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border-light);
+}
+
+.hospital-button {
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    font-size: var(--font-size-sm);
+    line-height: 20px;
+    font-weight: var(--font-weight-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(29, 53, 87, 0.2);
+}
+
+.hospital-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(29, 53, 87, 0.3);
+}
+
+.hospital-button:active {
+    transform: translateY(0);
+}
+
+.hospital-button img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card {
+        padding: var(--spacing-lg);
+    }
+    
+    .campaign-card {
+        min-height: 380px;
+    }
+    
+    .campaign-title {
+        font-size: var(--font-size-lg);
+        line-height: 26px;
+    }
+    
+    .campaign-raised {
+        font-size: 28px;
+    }
+    
+    .campaign-percentage {
+        font-size: var(--font-size-base);
+        padding: 6px 10px;
+    }
+    
+    .campaign-button {
+        padding: 12px 20px;
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: var(--spacing-md);
+    }
+    
+    .campaign-card {
+        min-height: 360px;
+        gap: var(--spacing-md);
+    }
+    
+    .campaign-header {
+        gap: var(--spacing-md);
+    }
+    
+    .campaign-title {
+        font-size: var(--font-size-base);
+        line-height: 24px;
+    }
+    
+    .campaign-raised {
+        font-size: 24px;
+    }
+    
+    .campaign-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+}

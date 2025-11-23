@@ -1,0 +1,51 @@
+/* Stats Component */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl) 0;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background-color: var(--color-primary-light);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-number {
+    font-size: var(--font-size-3xl);
+    color: var(--color-secondary);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+}
+
+.stat-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
