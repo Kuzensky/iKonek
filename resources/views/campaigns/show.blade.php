@@ -42,7 +42,7 @@
                 <img src="{{ asset('assets/icons/history-blue.svg') }}" alt="" class="nav-icon" width="20" height="20">
                 <span class="nav-text">My History</span>
             </a>
-            <a href="{{ route('fundraisers') }}" class="nav-item active">
+            <a href="{{ route('fundraisers.index') }}" class="nav-item active">
                 <img src="{{ asset('assets/icons/fundraisers.svg') }}" alt="" class="nav-icon" width="20" height="20">
                 <span class="nav-text">Fundraisers</span>
             </a>
@@ -68,7 +68,7 @@
     <main class="dashboard-main campaign-view-main">
         <!-- Back Button -->
         <div class="campaign-back">
-            <a href="{{ route('fundraisers') }}" class="back-link">
+            <a href="{{ route('fundraisers.index') }}" class="back-link">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>

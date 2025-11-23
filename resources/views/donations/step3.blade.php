@@ -40,7 +40,7 @@
                 <img src="{{ asset('assets/icons/history-blue.svg') }}" alt="" class="nav-icon" width="20" height="20">
                 <span class="nav-text">My History</span>
             </a>
-            <a href="{{ route('fundraisers') }}" class="nav-item">
+            <a href="{{ route('fundraisers.index') }}" class="nav-item">
                 <img src="{{ asset('assets/icons/fundraisers-blue.svg') }}" alt="" class="nav-icon" width="20" height="20">
                 <span class="nav-text">Fundraisers</span>
             </a>
