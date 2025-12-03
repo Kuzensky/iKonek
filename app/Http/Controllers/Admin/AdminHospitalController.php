@@ -15,38 +15,30 @@ class AdminHospitalController extends Controller
     {
         $search = $request->get('search');
         $status = $request->get('status');
-        $province = $request->get('province');
+        $region = $request->get('region');
 
         $hospitals = Hospital::query()
             ->search($search)
             ->byStatus($status)
-            ->byProvince($province)
+            ->byRegion($region)
             ->orderBy('created_at', 'desc')
             ->paginate(12);
 
         $stats = [
             'total' => Hospital::count(),
             'blood_banks' => Hospital::whereNotNull('blood_types_available')
-                ->where('blood_types_available', '!=', '[]')
+                ->whereRaw("blood_types_available::text != '[]'")
                 ->count(),
             'pending' => Hospital::pending()->count(),
             'total_capacity' => Hospital::sum('bed_capacity'),
         ];
 
-        $provinces = Hospital::select('province')
+        $regions = Hospital::select('region')
             ->distinct()
-            ->orderBy('province')
-            ->pluck('province');
+            ->orderBy('region')
+            ->pluck('region');
 
-        return view('admin.hospitals.index', compact('hospitals', 'stats', 'provinces'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('admin.hospitals.create');
+        return view('admin.hospitals.index', compact('hospitals', 'stats', 'regions'));
     }
 
     /**
@@ -58,18 +50,17 @@ class AdminHospitalController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'city' => 'required|string|max:100',
-            'province' => 'required|string|max:100',
+            'region' => 'required|string|max:100',
             'contact_number' => 'nullable|string|max:20',
             'email' => 'nullable|email',
             'website' => 'nullable|url',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
-            'is_24_7' => 'boolean',
+            'operating_hours' => 'nullable|string|max:255',
             'blood_types_available' => 'nullable|array',
             'blood_types_available.*' => 'in:O+,O-,A+,A-,B+,B-,AB+,AB-',
             'bed_capacity' => 'nullable|integer|min:0',
-            'available_beds_this_week' => 'nullable|integer|min:0',
-            'available_beds_this_month' => 'nullable|integer|min:0',
+            'monthly_capacity' => 'nullable|integer|min:0',
             'status' => 'required|in:active,pending,inactive',
         ]);
 
@@ -84,14 +75,6 @@ class AdminHospitalController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Hospital $hospital)
-    {
-        return view('admin.hospitals.edit', compact('hospital'));
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Hospital $hospital)
@@ -100,18 +83,17 @@ class AdminHospitalController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'city' => 'required|string|max:100',
-            'province' => 'required|string|max:100',
+            'region' => 'required|string|max:100',
             'contact_number' => 'nullable|string|max:20',
             'email' => 'nullable|email',
             'website' => 'nullable|url',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
-            'is_24_7' => 'boolean',
+            'operating_hours' => 'nullable|string|max:255',
             'blood_types_available' => 'nullable|array',
             'blood_types_available.*' => 'in:O+,O-,A+,A-,B+,B-,AB+,AB-',
             'bed_capacity' => 'nullable|integer|min:0',
-            'available_beds_this_week' => 'nullable|integer|min:0',
-            'available_beds_this_month' => 'nullable|integer|min:0',
+            'monthly_capacity' => 'nullable|integer|min:0',
             'status' => 'required|in:active,pending,inactive',
         ]);
 

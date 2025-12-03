@@ -139,7 +139,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Admin Protected Routes
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
-        Route::resource('hospitals', AdminHospitalController::class)->except(['show']);
+        Route::resource('hospitals', AdminHospitalController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::post('/logout', [App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('logout');
     });
 });

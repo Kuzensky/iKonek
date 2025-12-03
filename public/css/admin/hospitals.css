@@ -704,3 +704,162 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Modal Form Styles */
+.modal-header {
+    padding: 32px 24px 24px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--text-primary);
+}
+
+.modal-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.modal-body {
+    padding: 24px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 20px 24px;
+    background: var(--background);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* Form Groups in Modal */
+.modal-body .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-body .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.modal-body .form-input,
+.modal-body .form-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.modal-body .form-input:focus,
+.modal-body .form-select:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 3px var(--primary-red-light);
+}
+
+.modal-body .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.modal-body .form-row .form-group {
+    margin-bottom: 0;
+}
+
+.form-error {
+    display: block;
+    color: var(--danger-red);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Blood Types Grid */
+.blood-types-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.checkbox-inline {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+}
+
+.checkbox-inline:hover {
+    background: var(--background);
+    border-color: var(--text-secondary);
+}
+
+.checkbox-inline input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+    accent-color: var(--primary-red);
+}
+
+.checkbox-inline:has(input:checked) {
+    background: var(--primary-red-light);
+    border-color: var(--primary-red);
+}
+
+.checkbox-inline span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.required {
+    color: var(--danger-red);
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+    .modal-body .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .blood-types-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .modal-header {
+        padding: 24px 20px 20px 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 18px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        padding: 16px 20px;
+        flex-direction: column-reverse;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

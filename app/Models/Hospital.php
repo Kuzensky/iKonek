@@ -10,18 +10,17 @@ class Hospital extends Model
         'name',
         'address',
         'city',
-        'province',
+        'region',
         'contact_number',
         'email',
         'latitude',
         'longitude',
         'is_active',
         'website',
-        'is_24_7',
+        'operating_hours',
         'blood_types_available',
         'bed_capacity',
-        'available_beds_this_week',
-        'available_beds_this_month',
+        'monthly_capacity',
         'status',
     ];
 
@@ -29,11 +28,9 @@ class Hospital extends Model
         'is_active' => 'boolean',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
-        'is_24_7' => 'boolean',
         'blood_types_available' => 'array',
         'bed_capacity' => 'integer',
-        'available_beds_this_week' => 'integer',
-        'available_beds_this_month' => 'integer',
+        'monthly_capacity' => 'integer',
     ];
 
     // Relationships
@@ -71,10 +68,10 @@ class Hospital extends Model
         return $query;
     }
 
-    public function scopeByProvince($query, $province)
+    public function scopeByRegion($query, $region)
     {
-        if ($province && $province !== 'all') {
-            return $query->where('province', $province);
+        if ($region && $region !== 'all') {
+            return $query->where('region', $region);
         }
         return $query;
     }

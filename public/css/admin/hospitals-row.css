@@ -1,0 +1,286 @@
+/* Hospital Row List Layout */
+.hospitals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.hospital-row {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    transition: all 0.2s;
+}
+
+.hospital-row:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.hospital-row-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+}
+
+.hospital-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+}
+
+.hospital-main-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.hospital-name-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.hospital-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.hospital-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hospital-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.hospital-detail-item svg {
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+
+.hospital-detail-item span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hospital-row-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.hospital-contact-item,
+.hospital-hours-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.hospital-contact-item svg,
+.hospital-hours-item svg {
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+
+.hospital-blood-types {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.hospital-blood-types .label {
+    color: #64748b;
+    font-weight: 500;
+    white-space: nowrap;
+    padding-top: 2px;
+}
+
+.blood-types-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.blood-type-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    background: #fee2e2;
+    color: #ef4444;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.hospital-capacity-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    flex-wrap: wrap;
+}
+
+.hospital-capacity-item .label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.hospital-capacity-item .value {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.hospital-capacity-item .bullet {
+    color: #cbd5e1;
+}
+
+.hospital-capacity-item .additional {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.hospital-row-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #1e293b;
+}
+
+.edit-btn:hover {
+    background: #f0f9ff;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.delete-btn {
+    color: #ef4444;
+}
+
+.delete-btn:hover {
+    background: #fef2f2;
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-badge-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge-active svg {
+    flex-shrink: 0;
+}
+
+.badge-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .hospital-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hospital-row-left,
+    .hospital-row-middle {
+        width: 100%;
+    }
+
+    .hospital-row-right {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .hospital-row {
+        padding: 16px;
+    }
+
+    .hospital-icon-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
+    .hospital-name {
+        font-size: 14px;
+    }
+
+    .hospital-detail-item,
+    .hospital-contact-item,
+    .hospital-hours-item {
+        font-size: 12px;
+    }
+}
