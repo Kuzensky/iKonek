@@ -345,27 +345,27 @@
                 
                 if (viewFundraisersBtn) {
                     viewFundraisersBtn.addEventListener('click', () => {
-                        window.location.href = 'fundraisers.html';
+                        window.location.href = '{{ route('fundraisers.index') }}';
                     });
                 }
             }
             
             shareOnFacebook() {
                 const campaignData = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                const url = encodeURIComponent(window.location.origin + '/fundraisers.html');
+                const url = encodeURIComponent(window.location.origin + '/fundraisers');
                 const text = encodeURIComponent(`Please support my fundraiser: ${campaignData.title || 'My Campaign'}`);
                 window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
             }
             
             shareOnTwitter() {
                 const campaignData = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                const url = encodeURIComponent(window.location.origin + '/fundraisers.html');
+                const url = encodeURIComponent(window.location.origin + '/fundraisers');
                 const text = encodeURIComponent(`Please support my fundraiser: ${campaignData.title || 'My Campaign'} #iKonek #Fundraising`);
                 window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
             }
             
             copyLink() {
-                const url = window.location.origin + '/fundraisers.html';
+                const url = window.location.origin + '/fundraisers';
                 navigator.clipboard.writeText(url).then(() => {
                     const copyBtn = document.querySelector('.share-btn-copy');
                     const originalHTML = copyBtn.innerHTML;
@@ -545,27 +545,27 @@
                 
                 if (viewFundraisersBtn) {
                     viewFundraisersBtn.addEventListener('click', () => {
-                        window.location.href = 'fundraisers.html';
+                        window.location.href = '{{ route('fundraisers.index') }}';
                     });
                 }
             }
             
             shareOnFacebook() {
                 const campaignData = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                const url = encodeURIComponent(window.location.origin + '/fundraisers.html');
+                const url = encodeURIComponent(window.location.origin + '/fundraisers');
                 const text = encodeURIComponent(`Please support my fundraiser: ${campaignData.title || 'My Campaign'}`);
                 window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
             }
             
             shareOnTwitter() {
                 const campaignData = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                const url = encodeURIComponent(window.location.origin + '/fundraisers.html');
+                const url = encodeURIComponent(window.location.origin + '/fundraisers');
                 const text = encodeURIComponent(`Please support my fundraiser: ${campaignData.title || 'My Campaign'} #iKonek #Fundraising`);
                 window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
             }
             
             copyLink() {
-                const url = window.location.origin + '/fundraisers.html';
+                const url = window.location.origin + '/fundraisers';
                 navigator.clipboard.writeText(url).then(() => {
                     const copyBtn = document.querySelector('.share-btn-copy');
                     const originalHTML = copyBtn.innerHTML;

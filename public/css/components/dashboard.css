@@ -94,9 +94,10 @@
 }
 
 .nav-item:hover {
-    background-color: rgba(230, 57, 70, 0.06);
-    color: #E63946;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.9) 0%, rgba(209, 40, 53, 0.9) 100%);
+    color: #FFFFFF;
     transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.2);
 }
 
 .nav-item.active {
@@ -118,11 +119,12 @@
     width: 22px;
     height: 22px;
     flex-shrink: 0;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .nav-item:hover .nav-icon {
     transform: scale(1.1);
+    filter: brightness(0) invert(1);
 }
 
 .nav-text {
@@ -712,31 +714,140 @@
 
 /* Appointment Card */
 .appointment-card {
-    background: linear-gradient(135deg, rgba(230, 57, 70, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
-    border: 1.5px solid rgba(230, 57, 70, 0.2);
-    border-radius: 20px;
-    padding: 32px;
+    background: linear-gradient(to bottom, #FFFFFF 0%, #FFE8ED 100%);
+    border: 1px solid rgba(230, 57, 70, 0.15);
+    border-radius: 16px;
+    padding: 24px;
     margin-bottom: 40px;
-    box-shadow: 0 8px 24px rgba(230, 57, 70, 0.12), 0 2px 8px rgba(230, 57, 70, 0.06);
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.08);
     position: relative;
-    overflow: hidden;
     transition: all 0.3s ease;
 }
 
-.appointment-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(230, 57, 70, 0.08) 0%, transparent 70%);
-    pointer-events: none;
+.appointment-card:hover {
+    box-shadow: 0 4px 16px rgba(230, 57, 70, 0.12);
+    transform: translateY(-1px);
 }
 
-.appointment-card:hover {
-    box-shadow: 0 12px 32px rgba(230, 57, 70, 0.18), 0 4px 12px rgba(230, 57, 70, 0.08);
-    transform: translateY(-2px);
+/* Appointment Card Header */
+.appointment-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.appointment-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.appointment-header-left svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.appointment-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.appointment-card-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(29, 53, 87, 0.6);
+    margin: 2px 0 0 0;
+    line-height: 1.4;
+}
+
+/* Appointment Columns */
+.appointment-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.appointment-column {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.appointment-column-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.appointment-column-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.appointment-column-content {
+    flex: 1;
+}
+
+.appointment-column-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(29, 53, 87, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px 0;
+}
+
+.appointment-column-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+}
+
+.appointment-column-time,
+.appointment-column-sublabel {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(29, 53, 87, 0.65);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.appointment-column-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #E63946;
+    text-decoration: none;
+    margin-top: 6px;
+    transition: all 0.2s;
+}
+
+.appointment-column-link:hover {
+    color: #d12835;
+    gap: 6px;
+}
+
+.appointment-column-link svg {
+    width: 12px;
+    height: 12px;
 }
 
 .card-header-row {
@@ -838,41 +949,34 @@
 .badge {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 6px;
-    padding: 8px 14px;
-    border-radius: 10px;
+    padding: 6px 12px;
+    border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-size: 12px;
-    line-height: 16px;
     font-weight: 600;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-}
-
-.badge-confirmed {
-    background: linear-gradient(135deg, #E63946 0%, #D12835 100%);
-    color: #FFFFFF;
-    border: none;
-    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.25);
-}
-
-.badge-verified {
-    background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
-    color: #15803D;
-    border: 1px solid rgba(21, 128, 61, 0.2);
-}
-
-.badge-pending {
-    background: linear-gradient(135deg, #FEF9C2 0%, #FEF08A 100%);
-    color: #A16207;
-    border: 1px solid rgba(161, 98, 7, 0.2);
+    line-height: 1;
 }
 
 .badge svg {
     width: 14px;
     height: 14px;
-    display: block;
+}
+
+.badge-confirmed {
+    background: #E63946;
+    color: white;
+}
+
+.badge-pending {
+    background: #FEF9C2;
+    color: #854D0E;
+    border: 1px solid #FDE047;
+}
+
+.badge-verified {
+    background: #22C55E;
+    color: white;
 }
 
 /* Appointment Details */
@@ -1049,39 +1153,63 @@
 
 .appointment-reminder {
     display: flex;
-    gap: 16px;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(69, 123, 157, 0.05) 0%, rgba(69, 123, 157, 0.02) 100%);
-    border-radius: 12px;
-    border: 1px solid rgba(69, 123, 157, 0.15);
     align-items: flex-start;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(230, 57, 70, 0.1);
 }
 
 .appointment-reminder svg {
+    width: 18px;
+    height: 18px;
+    color: #457B9D;
     flex-shrink: 0;
     margin-top: 2px;
 }
 
-.reminder-content {
-    flex: 1;
-}
-
-.reminder-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-    color: #1D3557;
-    margin: 0 0 6px 0;
-    font-weight: 600;
-}
-
-.reminder-text {
+.appointment-reminder-text {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
-    line-height: 20px;
-    color: rgba(29, 53, 87, 0.7);
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0 0 4px 0;
+}
+
+.appointment-reminder-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(29, 53, 87, 0.65);
     margin: 0;
-    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Appointment Card Responsive */
+@media (max-width: 1024px) {
+    .appointment-columns {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .appointment-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .appointment-card {
+        padding: 16px;
+    }
+
+    .appointment-card-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .appointment-columns {
+        gap: 16px;
+    }
 }
 
 /* Stats Section */
@@ -1823,5 +1951,104 @@
     
     .activity-card {
         padding: 20px 16px;
+    }
+}
+
+/* ===================================
+   Toast Notifications
+   =================================== */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 320px;
+    max-width: 420px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease-out;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+}
+
+.toast-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.toast-text {
+    flex: 1;
+}
+
+.toast-title {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1D3557;
+    margin-bottom: 4px;
+}
+
+.toast-message {
+    font-size: 14px;
+    color: #6c757d;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #6c757d;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.toast-close:hover {
+    color: #1D3557;
+}
+
+.toast-success {
+    border-left: 4px solid #16A34A;
+}
+
+.toast-error {
+    border-left: 4px solid #E63946;
+}
+
+.toast-warning {
+    border-left: 4px solid #FFA000;
+}
+
+.toast-info {
+    border-left: 4px solid #457B9D;
+}
+
+@media (max-width: 768px) {
+    .toast {
+        min-width: calc(100vw - 40px);
+        max-width: calc(100vw - 40px);
+        left: 20px;
+        right: 20px;
     }
 }

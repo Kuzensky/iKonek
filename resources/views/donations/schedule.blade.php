@@ -883,7 +883,7 @@ class ScheduleDonationForm {
                 
                 // Navigate to step 2
                 setTimeout(() => {
-                    window.location.href = 'schedule-donation-step2.html';
+                    window.location.href = '{{ route('donations.step2') }}';
                 }, 1500);
             }, 800);
         }
@@ -1606,7 +1606,7 @@ class ScheduleDonationForm {
                 
                 // Navigate to step 2
                 setTimeout(() => {
-                    window.location.href = 'schedule-donation-step2.html';
+                    window.location.href = '{{ route('donations.step2') }}';
                 }, 1500);
             }, 800);
         }

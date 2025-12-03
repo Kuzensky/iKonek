@@ -1,0 +1,452 @@
+/* Ticket Page Styles */
+
+.ticket-header {
+    margin-bottom: 32px;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #457B9D;
+    text-decoration: none;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    color: #E63946;
+    gap: 12px;
+}
+
+.back-btn svg {
+    transition: transform 0.2s ease;
+}
+
+.back-btn:hover svg {
+    transform: translateX(-2px);
+}
+
+.ticket-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1D3557;
+    margin: 0 0 8px 0;
+}
+
+.ticket-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: rgba(29, 53, 87, 0.6);
+    margin: 0;
+}
+
+/* Ticket Container */
+.ticket-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+/* Ticket Card */
+.ticket-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(29, 53, 87, 0.08);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.ticket-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+    border-bottom: 2px dashed rgba(29, 53, 87, 0.1);
+}
+
+.ticket-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ticket-logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1D3557;
+}
+
+.ticket-logo-text .logo-i {
+    color: #E63946;
+}
+
+.ticket-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.badge-confirmed {
+    background: #E63946;
+    color: white;
+}
+
+.badge-pending {
+    background: #FEF9C2;
+    color: #854D0E;
+    border: 1px solid #FDE047;
+}
+
+.badge-cancelled {
+    background: #F3F4F6;
+    color: #6B7280;
+    border: 1px solid #D1D5DB;
+}
+
+/* QR Code Section */
+.ticket-qr-section {
+    padding: 40px 32px;
+    text-align: center;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
+}
+
+.qr-code {
+    display: inline-block;
+    padding: 16px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(29, 53, 87, 0.1);
+    margin-bottom: 24px;
+}
+
+.qr-code img {
+    display: block;
+    border-radius: 8px;
+}
+
+.confirmation-code {
+    background: linear-gradient(135deg, #E63946 0%, #D12835 100%);
+    padding: 16px 24px;
+    border-radius: 12px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
+}
+
+.confirmation-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px 0;
+}
+
+.confirmation-value {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* Ticket Details */
+.ticket-details {
+    padding: 32px;
+}
+
+.ticket-section {
+    margin-bottom: 32px;
+}
+
+.ticket-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(180deg, #E63946 0%, #D12835 100%);
+    border-radius: 2px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.detail-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.detail-item svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.detail-item-location {
+    grid-column: 1 / -1;
+}
+
+.detail-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(29, 53, 87, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px 0;
+}
+
+.detail-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.detail-address {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: rgba(29, 53, 87, 0.65);
+    margin: 4px 0 0 0;
+    line-height: 1.5;
+}
+
+.ticket-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(29, 53, 87, 0.1) 50%, transparent 100%);
+    margin: 32px 0;
+}
+
+.ticket-notes {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #1D3557;
+    line-height: 1.6;
+    padding: 16px;
+    background: #F8F9FA;
+    border-radius: 12px;
+    border-left: 4px solid #457B9D;
+    margin: 0;
+}
+
+/* Instructions List */
+.instructions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #1D3557;
+    padding: 12px 16px;
+    background: #F0FDF4;
+    border-radius: 10px;
+    border: 1px solid #BBF7D0;
+}
+
+.instruction-item svg {
+    flex-shrink: 0;
+}
+
+/* Ticket Actions */
+.ticket-actions {
+    display: flex;
+    gap: 12px;
+    padding: 24px 32px;
+    background: #F8F9FA;
+    border-top: 2px dashed rgba(29, 53, 87, 0.1);
+}
+
+.btn-print {
+    flex: 1;
+}
+
+.cancel-form {
+    flex: 1;
+}
+
+.btn-cancel {
+    width: 100%;
+    background: white;
+    color: #DC2626;
+    border: 2px solid #FEE2E2;
+}
+
+.btn-cancel:hover {
+    background: #FEF2F2;
+    border-color: #DC2626;
+}
+
+/* Help Card */
+.help-card {
+    display: flex;
+    gap: 16px;
+    padding: 24px;
+    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+    border-radius: 16px;
+    border: 1px solid #BAE6FD;
+}
+
+.help-card svg {
+    flex-shrink: 0;
+}
+
+.help-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0 0 8px 0;
+}
+
+.help-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: rgba(29, 53, 87, 0.8);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ticket-title {
+        font-size: 24px;
+    }
+
+    .ticket-subtitle {
+        font-size: 14px;
+    }
+
+    .ticket-card-header {
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .ticket-qr-section {
+        padding: 32px 20px;
+    }
+
+    .ticket-details {
+        padding: 24px 20px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .ticket-actions {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .cancel-form {
+        width: 100%;
+    }
+
+    .help-card {
+        padding: 20px;
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+    }
+
+    .ticket-container {
+        max-width: 100%;
+    }
+
+    .ticket-card {
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+
+    .back-btn,
+    .ticket-actions,
+    .help-card {
+        display: none;
+    }
+}
+
+/* Button Styles Override */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #E63946 0%, #D12835 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #D12835 0%, #B01E2B 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+}
+
+.btn-outline {
+    background: white;
+    color: #457B9D;
+    border: 2px solid #457B9D;
+}
+
+.btn-outline:hover {
+    background: #F0F9FF;
+    border-color: #457B9D;
+}

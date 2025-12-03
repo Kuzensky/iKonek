@@ -535,9 +535,9 @@ class HealthInfoForm {
             this.showMessage('Please complete all previous steps', 'error');
             setTimeout(() => {
                 if (!step1Data) {
-                    window.location.href = 'schedule-donation.html';
+                    window.location.href = '{{ route('donations.schedule') }}';
                 } else {
-                    window.location.href = 'schedule-donation-step2.html';
+                    window.location.href = '{{ route('donations.step2') }}';
                 }
             }, 2000);
             return false;
@@ -687,7 +687,7 @@ class HealthInfoForm {
         appointments.push(appointment);
         localStorage.setItem('appointments', JSON.stringify(appointments));
         console.log('Appointment created:', appointment);
-        setTimeout(() => { window.location.href = 'schedule-donation-confirmation.html'; }, 800);
+        setTimeout(() => { window.location.href = '{{ route('donations.confirmation') }}'; }, 800);
     }
     closeModal() {
         this.modal.style.display = 'none';
@@ -698,9 +698,9 @@ class HealthInfoForm {
         const hasData = this.lastDonationInput.value || this.medicalConditionsInput.value || this.medicationsInput.value || this.confirmationCheckbox.checked;
         if (hasData) {
             const confirm = window.confirm('Your progress has been saved. Go back to Step 2?');
-            if (confirm) { window.location.href = 'schedule-donation-step2.html'; }
+            if (confirm) { window.location.href = '{{ route('donations.step2') }}'; }
         } else {
-            window.location.href = 'schedule-donation-step2.html';
+            window.location.href = '{{ route('donations.step2') }}';
         }
     }
     autoSave() {
@@ -1006,9 +1006,9 @@ class HealthInfoForm {
             this.showMessage('Please complete all previous steps', 'error');
             setTimeout(() => {
                 if (!step1Data) {
-                    window.location.href = 'schedule-donation.html';
+                    window.location.href = '{{ route('donations.schedule') }}';
                 } else {
-                    window.location.href = 'schedule-donation-step2.html';
+                    window.location.href = '{{ route('donations.step2') }}';
                 }
             }, 2000);
             return false;
@@ -1158,7 +1158,7 @@ class HealthInfoForm {
         appointments.push(appointment);
         localStorage.setItem('appointments', JSON.stringify(appointments));
         console.log('Appointment created:', appointment);
-        setTimeout(() => { window.location.href = 'schedule-donation-confirmation.html'; }, 800);
+        setTimeout(() => { window.location.href = '{{ route('donations.confirmation') }}'; }, 800);
     }
     closeModal() {
         this.modal.style.display = 'none';
@@ -1169,9 +1169,9 @@ class HealthInfoForm {
         const hasData = this.lastDonationInput.value || this.medicalConditionsInput.value || this.medicationsInput.value || this.confirmationCheckbox.checked;
         if (hasData) {
             const confirm = window.confirm('Your progress has been saved. Go back to Step 2?');
-            if (confirm) { window.location.href = 'schedule-donation-step2.html'; }
+            if (confirm) { window.location.href = '{{ route('donations.step2') }}'; }
         } else {
-            window.location.href = 'schedule-donation-step2.html';
+            window.location.href = '{{ route('donations.step2') }}';
         }
     }
     autoSave() {

@@ -85,14 +85,19 @@
 /* Campaign View Page Styles */
 
 .campaign-view-main {
-    padding: 32px 40px;
-    max-width: 100% !important;
-    width: 100%;
+    padding: 24px 40px;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(100% - 280px);
 }
 
 /* Back Button */
 .campaign-back {
-    margin-bottom: 32px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 1240px;
 }
 
 .back-link {
@@ -129,20 +134,21 @@
 
 /* Campaign Container */
 .campaign-container {
-    max-width: 1600px;
+    max-width: 1240px;
     margin: 0 auto;
     width: 100%;
+    padding: 0 24px;
 }
 
 /* Campaign Image */
 .campaign-image-container {
     position: relative;
     width: 100%;
-    height: 400px;
-    border-radius: 20px;
+    height: 180px;
+    border-radius: 16px;
     overflow: hidden;
-    margin-bottom: 40px;
-    box-shadow: 0 8px 24px rgba(29, 53, 87, 0.12);
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(29, 53, 87, 0.1);
 }
 
 .campaign-image {
@@ -172,8 +178,8 @@
 /* Campaign Content Grid */
 .campaign-content-grid {
     display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 48px;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
     align-items: start;
 }
 
@@ -181,23 +187,23 @@
 .campaign-main-content {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 28px;
     min-width: 0;
 }
 
 /* Title Section */
 .campaign-title-section {
-    padding-bottom: 24px;
+    padding-bottom: 20px;
     border-bottom: 2px solid rgba(29, 53, 87, 0.08);
 }
 
 .campaign-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 36px;
-    line-height: 46px;
+    font-size: 32px;
+    line-height: 40px;
     color: #1D3557;
     font-weight: 700;
-    margin: 0 0 16px 0;
+    margin: 0 0 12px 0;
     letter-spacing: -0.8px;
 }
 

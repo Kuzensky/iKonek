@@ -54,9 +54,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->first_name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->first_name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
@@ -75,12 +75,12 @@
                 </div>
                 <div class="quick-stats">
                     <div class="quick-stat-item">
-                        <span class="quick-stat-value">4</span>
+                        <span class="quick-stat-value">{{ $fundraisers->total() }}</span>
                         <span class="quick-stat-label">Active Campaigns</span>
                     </div>
                     <div class="quick-stat-divider"></div>
                     <div class="quick-stat-item">
-                        <span class="quick-stat-value">₱1.6M</span>
+                        <span class="quick-stat-value">₱{{ number_format($fundraisers->sum('current_amount'), 0) }}</span>
                         <span class="quick-stat-label">Raised Total</span>
                     </div>
                 </div>
@@ -119,9 +119,75 @@
                 <h2 class="section-title">Active Fundraising Campaigns</h2>
                 <p class="section-subtitle">Make an impact by supporting these causes</p>
             </div>
-            <div class="fundraisers-grid" id="fundraisersGrid">
-                <!-- Campaign cards will be dynamically inserted here -->
+            <div class="fundraisers-grid">
+                @forelse($fundraisers as $fundraiser)
+                    <div class="fundraiser-card" data-id="{{ $fundraiser->id }}">
+                        <div class="fundraiser-header">
+                            <div class="fundraiser-header-top">
+                                <h3 class="fundraiser-title">{{ $fundraiser->title }}</h3>
+                                <span class="fundraiser-category">{{ $fundraiser->category }}</span>
+                            </div>
+                            <p class="fundraiser-organizer">by {{ $fundraiser->creator->name ?? $fundraiser->creator->first_name . ' ' . $fundraiser->creator->last_name }}</p>
+                        </div>
+
+                        <div class="fundraiser-progress">
+                            <div class="fundraiser-amounts">
+                                <span class="fundraiser-raised">₱{{ number_format($fundraiser->current_amount, 0) }}</span>
+                                <span class="fundraiser-goal">of ₱{{ number_format($fundraiser->goal_amount, 0) }}</span>
+                            </div>
+
+                            <div class="fundraiser-progress-bar">
+                                <div class="fundraiser-progress-fill" style="width: {{ $fundraiser->progress_percentage }}%"></div>
+                            </div>
+
+                            <div class="fundraiser-stats">
+                                <div class="fundraiser-stat">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2"/>
+                                        <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    <span>{{ $fundraiser->verifiedContributions()->distinct('user_id')->count('user_id') }} contributors</span>
+                                </div>
+                                <div class="fundraiser-stat">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                    <span>{{ $fundraiser->days_remaining }} days left</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fundraiser-action">
+                            <a href="{{ route('fundraisers.show', $fundraiser) }}" class="btn btn-primary btn-view-campaign">View Campaign</a>
+                            <a href="{{ route('fundraisers.show', $fundraiser) }}" class="btn btn-outline btn-contribute">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Contribute
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="rgba(230, 57, 70, 0.3)" stroke-width="2" fill="rgba(230, 57, 70, 0.05)"/>
+                            </svg>
+                        </div>
+                        <h3 class="empty-state-title">No active fundraisers</h3>
+                        <p class="empty-state-text">There are currently no active fundraising campaigns. Check back soon!</p>
+                    </div>
+                @endforelse
             </div>
+
+            @if($fundraisers->hasPages())
+            <div class="pagination-wrapper" style="margin-top: 40px; display: flex; justify-content: center;">
+                {{ $fundraisers->links() }}
+            </div>
+            @endif
         </div>
 
         <div class="tab-content" id="my-campaigns-tab">
@@ -1107,9 +1173,30 @@
         const startFundraiserBtns = document.querySelectorAll('.btn-start-fundraiser, .empty-state .btn-primary');
         startFundraiserBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                window.location.href = 'start-fundraiser-step1.html';
+                window.location.href = "{{ route('fundraisers.create') }}";
             });
         });
+
+        // Logout functionality
+        const logoutBtn = document.querySelector('.logout-btn');
+        if (logoutBtn) {
+            btn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{{ route('logout') }}";
+
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
     </script>
 @endsection
 
@@ -2079,9 +2166,30 @@
         const startFundraiserBtns = document.querySelectorAll('.btn-start-fundraiser, .empty-state .btn-primary');
         startFundraiserBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                window.location.href = 'start-fundraiser-step1.html';
+                window.location.href = "{{ route('fundraisers.create') }}";
             });
         });
+
+        // Logout functionality
+        const logoutBtn = document.querySelector('.logout-btn');
+        if (logoutBtn) {
+            btn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{{ route('logout') }}";
+
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
     
     </script>
 @endpush

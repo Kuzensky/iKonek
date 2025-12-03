@@ -448,7 +448,7 @@ class ConfirmationPage {
     }
     handleScheduleAnother() {
         this.clearFormData();
-        window.location.href = 'schedule-donation.html';
+        window.location.href = '{{ route('donations.schedule') }}';
     }
     handleDownloadTicket() {
         const appointment = this.currentAppointment;
@@ -975,7 +975,7 @@ class ConfirmationPage {
     }
     handleScheduleAnother() {
         this.clearFormData();
-        window.location.href = 'schedule-donation.html';
+        window.location.href = '{{ route('donations.schedule') }}';
     }
     handleDownloadTicket() {
         const appointment = this.currentAppointment;

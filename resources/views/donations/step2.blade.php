@@ -665,7 +665,7 @@ class ContactInfoForm {
             // Redirect back to step 1 if no data found
             this.showMessage('Please complete Step 1 first', 'error');
             setTimeout(() => {
-                window.location.href = 'schedule-donation.html';
+                window.location.href = '{{ route('donations.schedule') }}';
             }, 2000);
             return;
         }
@@ -990,7 +990,7 @@ class ContactInfoForm {
                 
                 // Navigate to step 3
                 setTimeout(() => {
-                    window.location.href = 'schedule-donation-step3.html';
+                    window.location.href = '{{ route('donations.step3') }}';
                 }, 1500);
             }, 800);
         }
@@ -1007,10 +1007,10 @@ class ContactInfoForm {
         if (hasData) {
             const confirm = window.confirm('Your progress has been saved. Go back to Step 1?');
             if (confirm) {
-                window.location.href = 'schedule-donation.html';
+                window.location.href = '{{ route('donations.schedule') }}';
             }
         } else {
-            window.location.href = 'schedule-donation.html';
+            window.location.href = '{{ route('donations.schedule') }}';
         }
     }
 
@@ -1462,7 +1462,7 @@ class ContactInfoForm {
             // Redirect back to step 1 if no data found
             this.showMessage('Please complete Step 1 first', 'error');
             setTimeout(() => {
-                window.location.href = 'schedule-donation.html';
+                window.location.href = '{{ route('donations.schedule') }}';
             }, 2000);
             return;
         }
@@ -1787,7 +1787,7 @@ class ContactInfoForm {
                 
                 // Navigate to step 3
                 setTimeout(() => {
-                    window.location.href = 'schedule-donation-step3.html';
+                    window.location.href = '{{ route('donations.step3') }}';
                 }, 1500);
             }, 800);
         }
@@ -1804,10 +1804,10 @@ class ContactInfoForm {
         if (hasData) {
             const confirm = window.confirm('Your progress has been saved. Go back to Step 1?');
             if (confirm) {
-                window.location.href = 'schedule-donation.html';
+                window.location.href = '{{ route('donations.schedule') }}';
             }
         } else {
-            window.location.href = 'schedule-donation.html';
+            window.location.href = '{{ route('donations.schedule') }}';
         }
     }
 

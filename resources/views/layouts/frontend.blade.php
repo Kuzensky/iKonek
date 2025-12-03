@@ -24,9 +24,22 @@
 
     <!-- Component Styles -->
     @stack('styles')
+
+    <!-- Vite Assets for Laravel Echo / WebSocket Support -->
+    @vite(['resources/js/app.js'])
 </head>
 <body>
     @yield('content')
+
+    <!-- Laravel Configuration for JavaScript -->
+    <script>
+        window.Laravel = {
+            csrfToken: '{{ csrf_token() }}',
+            @auth
+            userId: {{ auth()->id() }},
+            @endauth
+        };
+    </script>
 
     @stack('scripts')
 </body>

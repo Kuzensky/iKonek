@@ -659,7 +659,7 @@
         if (cancelBtn) {
             cancelBtn.addEventListener('click', function() {
                 if (confirm('Are you sure you want to cancel? All entered data will be lost.')) {
-                    window.location.href = 'fundraisers.html';
+                    window.location.href = '{{ route('fundraisers.index') }}';
                 }
             });
         }
@@ -984,7 +984,7 @@
         if (cancelBtn) {
             cancelBtn.addEventListener('click', function() {
                 if (confirm('Are you sure you want to cancel? All entered data will be lost.')) {
-                    window.location.href = 'fundraisers.html';
+                    window.location.href = '{{ route('fundraisers.index') }}';
                 }
             });
         }

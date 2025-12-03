@@ -54,9 +54,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->first_name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->first_name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
@@ -80,8 +80,8 @@
         <div class="campaign-container">
             <!-- Campaign Header Image -->
             <div class="campaign-image-container">
-                <img id="campaignImage" src="{{ asset('assets/img/campaign-placeholder.jpg') }}" alt="Campaign" class="campaign-image">
-                <div class="campaign-category-badge" id="campaignCategory">Loading...</div>
+                <img src="{{ $fundraiser->featured_image ? asset('storage/' . $fundraiser->featured_image) : asset('assets/img/campaign-placeholder.jpg') }}" alt="{{ $fundraiser->title }}" class="campaign-image">
+                <div class="campaign-category-badge">{{ $fundraiser->category }}</div>
             </div>
 
             <!-- Campaign Content Grid -->
@@ -90,13 +90,13 @@
                 <div class="campaign-main-content">
                     <!-- Campaign Title & Organizer -->
                     <div class="campaign-title-section">
-                        <h1 class="campaign-title" id="campaignTitle">Loading...</h1>
+                        <h1 class="campaign-title">{{ $fundraiser->title }}</h1>
                         <p class="campaign-organizer">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2"/>
                                 <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
                             </svg>
-                            by <span id="campaignOrganizer">Loading...</span>
+                            by <span>{{ $fundraiser->creator->name ?? $fundraiser->creator->first_name . ' ' . $fundraiser->creator->last_name }}</span>
                         </p>
                     </div>
 
@@ -104,19 +104,19 @@
                     <div class="campaign-progress-section">
                         <div class="campaign-amounts">
                             <div class="amount-raised">
-                                <span class="amount-value" id="amountRaised">₱0</span>
+                                <span class="amount-value">₱{{ number_format($fundraiser->current_amount, 0) }}</span>
                                 <span class="amount-label">raised</span>
                             </div>
                             <div class="amount-goal">
                                 <span class="amount-label">of</span>
-                                <span class="amount-value" id="amountGoal">₱0</span>
+                                <span class="amount-value">₱{{ number_format($fundraiser->goal_amount, 0) }}</span>
                             </div>
                         </div>
-                        
+
                         <div class="campaign-progress-bar">
-                            <div class="campaign-progress-fill" id="progressFill" style="width: 0%"></div>
+                            <div class="campaign-progress-fill" style="width: {{ $fundraiser->progress_percentage }}%"></div>
                         </div>
-                        
+
                         <div class="campaign-stats-row">
                             <div class="campaign-stat">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,14 +125,14 @@
                                     <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" stroke-width="2"/>
                                     <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2"/>
                                 </svg>
-                                <span><strong id="contributorsCount">0</strong> contributors</span>
+                                <span><strong>{{ $fundraiser->verifiedContributions()->distinct('user_id')->count('user_id') }}</strong> contributors</span>
                             </div>
                             <div class="campaign-stat">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                                     <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
-                                <span><strong id="daysLeft">0</strong> days left</span>
+                                <span><strong>{{ $fundraiser->days_remaining }}</strong> days left</span>
                             </div>
                         </div>
                     </div>
@@ -140,16 +140,35 @@
                     <!-- Campaign Description -->
                     <div class="campaign-description-section">
                         <h2 class="section-title">About This Campaign</h2>
-                        <div class="campaign-description" id="campaignDescription">
-                            <p>Loading campaign details...</p>
+                        <div class="campaign-description">
+                            {!! nl2br(e($fundraiser->description)) !!}
+                            @if($fundraiser->story)
+                                <h3 style="margin-top: 24px; font-size: 18px; font-weight: 600;">The Story</h3>
+                                {!! nl2br(e($fundraiser->story)) !!}
+                            @endif
                         </div>
                     </div>
 
                     <!-- Recent Donations -->
                     <div class="campaign-donations-section">
                         <h2 class="section-title">Recent Donations</h2>
-                        <div class="donations-list" id="donationsList">
-                            <!-- Donations will be dynamically inserted -->
+                        <div class="donations-list">
+                            @forelse($fundraiser->verifiedContributions()->latest()->limit(10)->get() as $contribution)
+                                <div class="donation-item">
+                                    <div class="donation-avatar">
+                                        {{ strtoupper(substr($contribution->user->first_name, 0, 1)) }}
+                                    </div>
+                                    <div class="donation-info">
+                                        <p class="donation-donor">{{ $contribution->user->name ?? $contribution->user->first_name . ' ' . $contribution->user->last_name }}</p>
+                                        <p class="donation-amount">₱{{ number_format($contribution->amount, 0) }}</p>
+                                        <p class="donation-date">{{ $contribution->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="empty-donations">
+                                    <p style="text-align: center; color: #6c757d; padding: 40px 20px;">No donations yet. Be the first to support this campaign!</p>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -179,14 +198,11 @@
                     <div class="organizer-card">
                         <h3 class="organizer-card-title">Campaign Organizer</h3>
                         <div class="organizer-info">
-                            <div class="organizer-avatar" id="organizerAvatar">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2"/>
-                                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-                                </svg>
+                            <div class="organizer-avatar">
+                                {{ strtoupper(substr($fundraiser->creator->first_name, 0, 1)) }}
                             </div>
                             <div class="organizer-details">
-                                <p class="organizer-name" id="organizerName">Loading...</p>
+                                <p class="organizer-name">{{ $fundraiser->creator->name ?? $fundraiser->creator->first_name . ' ' . $fundraiser->creator->last_name }}</p>
                                 <p class="organizer-badge">Verified Organizer</p>
                             </div>
                         </div>
@@ -195,6 +211,9 @@
             </div>
         </div>
     </main>
+
+    <!-- Donation Modal -->
+    @include('components.donation-modal')
 
     <script>
         // Fundraisers data for view-campaign page
@@ -361,7 +380,7 @@
             }
             
             showError() {
-                window.location.href = 'fundraisers.html';
+                window.location.href = '{{ route('fundraisers.index') }}';
             }
             
             formatCurrency(amount) {
@@ -495,7 +514,7 @@
                     const modal = new DonationModal(this.campaign);
                     modal.open();
                 } else {
-                    window.location.href = `fundraisers.html?donate=${this.campaignId}`;
+                    window.location.href = `{{ route('fundraisers.index') }}?donate=${this.campaignId}`;
                 }
             }
             
@@ -541,7 +560,101 @@
 
         // Initialize campaign view
         document.addEventListener('DOMContentLoaded', () => {
-            new CampaignView();
+            // Pass fundraiser data from Blade to JavaScript
+            const fundraiserData = @json($fundraiser);
+
+            // Show donation modal
+            function showDonationModal(campaign) {
+                const modal = document.getElementById('donationModal');
+
+                // Populate modal with campaign data
+                document.getElementById('modalCampaignSubtitle').textContent = `Support ${campaign.title}`;
+                document.getElementById('modalCampaignTitle').textContent = campaign.title;
+                document.getElementById('modalCurrentAmount').textContent = `₱${Number(campaign.current_amount).toLocaleString()}`;
+                document.getElementById('modalGoalAmount').textContent = `Goal: ₱${Number(campaign.goal_amount).toLocaleString()}`;
+                document.getElementById('modalProgressBar').style.width = `${(campaign.current_amount / campaign.goal_amount * 100)}%`;
+
+                // Show modal
+                modal.style.display = 'flex';
+
+                // Setup event listeners (only once)
+                if (!modal.dataset.initialized) {
+                    setupDonationModalListeners();
+                    modal.dataset.initialized = 'true';
+                }
+            }
+
+            // Close donation modal
+            function closeDonationModal() {
+                document.getElementById('donationModal').style.display = 'none';
+            }
+
+            // Setup modal event listeners
+            function setupDonationModalListeners() {
+                // Amount button clicks
+                document.querySelectorAll('.amount-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.amount-btn').forEach(b => {
+                            b.style.borderColor = '#e0e0e0';
+                            b.style.background = 'white';
+                            b.style.color = '#1D3557';
+                        });
+                        this.style.borderColor = '#E63946';
+                        this.style.background = 'rgba(230, 57, 70, 0.05)';
+                        this.style.color = '#E63946';
+                        document.getElementById('customAmount').value = '';
+                    });
+                });
+
+                // Payment method clicks
+                document.querySelectorAll('.payment-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.payment-btn').forEach(b => {
+                            b.style.borderColor = '#e0e0e0';
+                            b.style.background = 'white';
+                        });
+                        this.style.borderColor = '#E63946';
+                        this.style.background = 'rgba(230, 57, 70, 0.05)';
+                    });
+                });
+
+                // Close button (X) click
+                document.getElementById('closeDonationModalBtn').addEventListener('click', () => {
+                    closeDonationModal();
+                });
+
+                // Cancel button click
+                document.getElementById('cancelDonationBtn').addEventListener('click', () => {
+                    closeDonationModal();
+                });
+
+                // Proceed button
+                document.getElementById('proceedDonation').addEventListener('click', () => {
+                    const selectedAmount = document.querySelector('.amount-btn[style*="rgb(230, 57, 70)"]')?.dataset.amount
+                        || document.getElementById('customAmount').value;
+                    const selectedPayment = document.querySelector('.payment-btn[style*="rgb(230, 57, 70)"]')?.dataset.method;
+
+                    if (!selectedAmount || selectedAmount < 50) {
+                        alert('Please select or enter a valid amount (minimum ₱50)');
+                        return;
+                    }
+                    if (!selectedPayment) {
+                        alert('Please select a payment method');
+                        return;
+                    }
+
+                    alert(`Processing ₱${Number(selectedAmount).toLocaleString()} donation via ${selectedPayment.toUpperCase()}\n\nPayment gateway integration coming soon!`);
+                    closeDonationModal();
+                });
+            }
+
+            // Handle donate button click
+            const donateBtn = document.getElementById('donateBtn');
+            if (donateBtn) {
+                donateBtn.addEventListener('click', () => {
+                    showDonationModal(fundraiserData);
+                });
+            }
         });
 
         // Logout functionality
@@ -729,7 +842,7 @@
             }
             
             showError() {
-                window.location.href = 'fundraisers.html';
+                window.location.href = '{{ route('fundraisers.index') }}';
             }
             
             formatCurrency(amount) {
@@ -863,7 +976,7 @@
                     const modal = new DonationModal(this.campaign);
                     modal.open();
                 } else {
-                    window.location.href = `fundraisers.html?donate=${this.campaignId}`;
+                    window.location.href = `{{ route('fundraisers.index') }}?donate=${this.campaignId}`;
                 }
             }
             
@@ -909,7 +1022,101 @@
 
         // Initialize campaign view
         document.addEventListener('DOMContentLoaded', () => {
-            new CampaignView();
+            // Pass fundraiser data from Blade to JavaScript
+            const fundraiserData = @json($fundraiser);
+
+            // Show donation modal
+            function showDonationModal(campaign) {
+                const modal = document.getElementById('donationModal');
+
+                // Populate modal with campaign data
+                document.getElementById('modalCampaignSubtitle').textContent = `Support ${campaign.title}`;
+                document.getElementById('modalCampaignTitle').textContent = campaign.title;
+                document.getElementById('modalCurrentAmount').textContent = `₱${Number(campaign.current_amount).toLocaleString()}`;
+                document.getElementById('modalGoalAmount').textContent = `Goal: ₱${Number(campaign.goal_amount).toLocaleString()}`;
+                document.getElementById('modalProgressBar').style.width = `${(campaign.current_amount / campaign.goal_amount * 100)}%`;
+
+                // Show modal
+                modal.style.display = 'flex';
+
+                // Setup event listeners (only once)
+                if (!modal.dataset.initialized) {
+                    setupDonationModalListeners();
+                    modal.dataset.initialized = 'true';
+                }
+            }
+
+            // Close donation modal
+            function closeDonationModal() {
+                document.getElementById('donationModal').style.display = 'none';
+            }
+
+            // Setup modal event listeners
+            function setupDonationModalListeners() {
+                // Amount button clicks
+                document.querySelectorAll('.amount-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.amount-btn').forEach(b => {
+                            b.style.borderColor = '#e0e0e0';
+                            b.style.background = 'white';
+                            b.style.color = '#1D3557';
+                        });
+                        this.style.borderColor = '#E63946';
+                        this.style.background = 'rgba(230, 57, 70, 0.05)';
+                        this.style.color = '#E63946';
+                        document.getElementById('customAmount').value = '';
+                    });
+                });
+
+                // Payment method clicks
+                document.querySelectorAll('.payment-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.payment-btn').forEach(b => {
+                            b.style.borderColor = '#e0e0e0';
+                            b.style.background = 'white';
+                        });
+                        this.style.borderColor = '#E63946';
+                        this.style.background = 'rgba(230, 57, 70, 0.05)';
+                    });
+                });
+
+                // Close button (X) click
+                document.getElementById('closeDonationModalBtn').addEventListener('click', () => {
+                    closeDonationModal();
+                });
+
+                // Cancel button click
+                document.getElementById('cancelDonationBtn').addEventListener('click', () => {
+                    closeDonationModal();
+                });
+
+                // Proceed button
+                document.getElementById('proceedDonation').addEventListener('click', () => {
+                    const selectedAmount = document.querySelector('.amount-btn[style*="rgb(230, 57, 70)"]')?.dataset.amount
+                        || document.getElementById('customAmount').value;
+                    const selectedPayment = document.querySelector('.payment-btn[style*="rgb(230, 57, 70)"]')?.dataset.method;
+
+                    if (!selectedAmount || selectedAmount < 50) {
+                        alert('Please select or enter a valid amount (minimum ₱50)');
+                        return;
+                    }
+                    if (!selectedPayment) {
+                        alert('Please select a payment method');
+                        return;
+                    }
+
+                    alert(`Processing ₱${Number(selectedAmount).toLocaleString()} donation via ${selectedPayment.toUpperCase()}\n\nPayment gateway integration coming soon!`);
+                    closeDonationModal();
+                });
+            }
+
+            // Handle donate button click
+            const donateBtn = document.getElementById('donateBtn');
+            if (donateBtn) {
+                donateBtn.addEventListener('click', () => {
+                    showDonationModal(fundraiserData);
+                });
+            }
         });
 
         // Logout functionality
