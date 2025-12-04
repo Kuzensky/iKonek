@@ -9,6 +9,8 @@ use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminHospitalController;
+use App\Http\Controllers\Admin\AdminFundraiserController;
+use App\Http\Controllers\Admin\AdminContributionController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -140,6 +142,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
         Route::resource('hospitals', AdminHospitalController::class)->only(['index', 'store', 'update', 'destroy']);
+
+        // Donation Management
+        Route::get('/donations', [App\Http\Controllers\Admin\AdminDonationController::class, 'index'])->name('donations.index');
+        Route::post('/donations/{donation}/update-status', [App\Http\Controllers\Admin\AdminDonationController::class, 'updateStatus'])->name('donations.updateStatus');
+
+        // Fundraising Management
+        Route::get('/fundraising', [AdminFundraiserController::class, 'index'])->name('fundraising.index');
+        Route::get('/fundraising/{fundraiser}', [AdminFundraiserController::class, 'show'])->name('fundraising.show');
+        Route::post('/fundraising/{fundraiser}/update-status', [AdminFundraiserController::class, 'updateStatus'])->name('fundraising.updateStatus');
+        Route::post('/fundraising/{fundraiser}/toggle-featured', [AdminFundraiserController::class, 'toggleFeatured'])->name('fundraising.toggleFeatured');
+        Route::post('/contributions/{contribution}/verify', [AdminContributionController::class, 'verify'])->name('contributions.verify');
+        Route::post('/contributions/{contribution}/reject', [AdminContributionController::class, 'reject'])->name('contributions.reject');
+
+        // Settings Management
+        Route::get('/settings', [App\Http\Controllers\Admin\AdminSettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings/general', [App\Http\Controllers\Admin\AdminSettingsController::class, 'updateGeneral'])->name('settings.updateGeneral');
+        Route::post('/settings/password', [App\Http\Controllers\Admin\AdminSettingsController::class, 'updatePassword'])->name('settings.updatePassword');
+
         Route::post('/logout', [App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('logout');
     });
 });

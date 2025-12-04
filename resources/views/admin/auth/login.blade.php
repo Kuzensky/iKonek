@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - iKonek</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bakbak+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/variables.css') }}">
     <link rel="stylesheet" href="{{ asset('css/typography.css') }}">
@@ -13,8 +16,8 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="logo">
-                    <img src="{{ asset('assets/img/ikonek-logo.png') }}" alt="iKonek Logo" width="50">
+                <div class="login-logo">
+                    <span class="logo-text"><span class="logo-i">i</span>Konek</span>
                 </div>
                 <h1 class="login-title"><span class="logo-i">i</span>Konek Admin</h1>
                 <p class="login-subtitle">Monitor and manage iKonek platform</p>

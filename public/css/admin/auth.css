@@ -26,12 +26,24 @@
     margin-bottom: 40px;
 }
 
-.login-header .logo {
+.login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     margin-bottom: 20px;
 }
 
-.login-header .logo img {
-    border-radius: 12px;
+.login-logo .logo-text {
+    font-family: 'Bakbak One', sans-serif;
+    font-size: 48px;
+    color: #1D3557;
+    line-height: 1;
+    letter-spacing: -0.6px;
+}
+
+.login-logo .logo-i {
+    color: #E63946;
 }
 
 .login-title {

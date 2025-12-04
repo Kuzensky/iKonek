@@ -740,43 +740,53 @@
 }
 
 /* Form Groups in Modal */
-.modal-body .form-group {
-    margin-bottom: 20px;
+.form-group {
+    margin-bottom: 24px;
 }
 
-.modal-body .form-group label {
+.form-group label {
     display: block;
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 8px;
+    color: #1e293b;
+    margin-bottom: 10px;
+    line-height: 1.5;
 }
 
-.modal-body .form-input,
-.modal-body .form-select {
+.form-input,
+.form-select,
+.form-textarea {
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid var(--border-color);
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
     border-radius: 8px;
     font-size: 14px;
+    line-height: 1.6;
     transition: all 0.2s;
+    font-family: inherit;
 }
 
-.modal-body .form-input:focus,
-.modal-body .form-select:focus {
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
     outline: none;
-    border-color: var(--primary-red);
-    box-shadow: 0 0 0 3px var(--primary-red-light);
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-.modal-body .form-row {
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #94a3b8;
+}
+
+.form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 20px;
+    margin-bottom: 24px;
 }
 
-.modal-body .form-row .form-group {
+.form-row .form-group {
     margin-bottom: 0;
 }
 
@@ -791,14 +801,14 @@
 .blood-types-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 14px;
 }
 
 .checkbox-inline {
     display: flex;
     align-items: center;
-    padding: 10px 14px;
-    border: 1px solid var(--border-color);
+    padding: 12px 16px;
+    border: 1px solid #e5e7eb;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
@@ -806,25 +816,28 @@
 }
 
 .checkbox-inline:hover {
-    background: var(--background);
-    border-color: var(--text-secondary);
+    background: #f8fafc;
+    border-color: #cbd5e1;
 }
 
 .checkbox-inline input[type="checkbox"] {
-    margin-right: 8px;
+    margin-right: 10px;
     cursor: pointer;
-    accent-color: var(--primary-red);
+    accent-color: #ef4444;
+    width: 18px;
+    height: 18px;
 }
 
 .checkbox-inline:has(input:checked) {
-    background: var(--primary-red-light);
-    border-color: var(--primary-red);
+    background: #fee2e2;
+    border-color: #ef4444;
 }
 
 .checkbox-inline span {
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-primary);
+    color: #1e293b;
+    line-height: 1.5;
 }
 
 .required {

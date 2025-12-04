@@ -5,6 +5,7 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/admin/hospitals.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/hospitals-row.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/modal.css') }}">
 @endpush
 
 @section('content')
@@ -33,7 +34,7 @@
             </svg>
         </div>
         <div class="stat-content">
-            <p class="stat-label">Total</p>
+            <p class="stat-label">Total Hospitals</p>
             <p class="stat-value">{{ number_format($stats['total']) }}</p>
         </div>
     </div>
@@ -45,7 +46,7 @@
             </svg>
         </div>
         <div class="stat-content">
-            <p class="stat-label">Blood Banks</p>
+            <p class="stat-label">Active</p>
             <p class="stat-value">{{ number_format($stats['blood_banks']) }}</p>
         </div>
     </div>
@@ -58,7 +59,7 @@
             </svg>
         </div>
         <div class="stat-content">
-            <p class="stat-label">Pend</p>
+            <p class="stat-label">Pending Review</p>
             <p class="stat-value">{{ number_format($stats['pending']) }}</p>
         </div>
     </div>
@@ -71,7 +72,7 @@
             </svg>
         </div>
         <div class="stat-content">
-            <p class="stat-label">Total</p>
+            <p class="stat-label">Total Capacity</p>
             <p class="stat-value">{{ number_format($stats['total_capacity'] ?? 0) }}</p>
         </div>
     </div>
@@ -203,7 +204,9 @@
         </div>
 
         <div class="hospital-row-right">
-            <button @click="openEditModal({{ $hospital->id }}, @js($hospital))" class="action-btn edit-btn" title="Edit">
+            <button @click="openEditModal({{ $hospital->id }}, {{ json_encode($hospital->toArray()) }})"
+                    class="action-btn edit-btn"
+                    title="Edit">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/>
@@ -263,17 +266,17 @@
 function hospitalManager() {
     return {
         openCreateModal() {
+            console.log('openCreateModal clicked');
             window.dispatchEvent(new CustomEvent('open-hospital-modal', {
                 detail: { mode: 'create' }
             }));
-            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'hospital-form' }));
         },
 
         openEditModal(id, hospital) {
+            console.log('openEditModal clicked', id, hospital);
             window.dispatchEvent(new CustomEvent('open-hospital-modal', {
                 detail: { mode: 'edit', hospital: hospital }
             }));
-            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'hospital-form' }));
         }
     }
 }
