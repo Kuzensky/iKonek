@@ -269,13 +269,157 @@
 
 <!-- Fundraising Analytics Section -->
 <div x-show="activeAnalytics === 'fundraising'" x-cloak>
-    <div class="placeholder-content">
-        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2V22M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2"/>
-        </svg>
-        <h2>Fundraising Analytics</h2>
-        <p>Fundraising analytics dashboard coming soon...</p>
+
+<!-- Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2"/>
+                <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <p class="stat-label">Total Donors</p>
+            <p class="stat-value">{{ number_format($fundraisingAnalytics['stats']['total_donors']['value']) }}</p>
+            <p class="stat-change {{ $fundraisingAnalytics['stats']['total_donors']['growth'] >= 0 ? 'positive' : 'negative' }}">
+                {{ $fundraisingAnalytics['stats']['total_donors']['growth'] >= 0 ? '+' : '' }}{{ number_format($fundraisingAnalytics['stats']['total_donors']['growth'], 1) }}%
+                <span>{{ $fundraisingAnalytics['stats']['total_donors']['comparison'] }}</span>
+            </p>
+        </div>
     </div>
+
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-pink">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2V22M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <p class="stat-label">Blood Bank</p>
+            <p class="stat-value">{{ number_format($fundraisingAnalytics['stats']['contributions_this_week']['value']) }}</p>
+            <p class="stat-change positive">{{ $fundraisingAnalytics['stats']['contributions_this_week']['period'] }}</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <p class="stat-label">Active Campaigns</p>
+            <p class="stat-value">{{ $fundraisingAnalytics['stats']['active_campaigns']['value'] }}</p>
+            <p class="stat-change positive">{{ $fundraisingAnalytics['stats']['active_campaigns']['pending'] }} <span>In pending approval</span></p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2V22M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <p class="stat-label">Total Raised</p>
+            <p class="stat-value">₱{{ number_format($fundraisingAnalytics['stats']['total_raised']['value'], 2) }}</p>
+            <p class="stat-change {{ $fundraisingAnalytics['stats']['total_raised']['growth'] >= 0 ? 'positive' : 'negative' }}">
+                {{ $fundraisingAnalytics['stats']['total_raised']['growth'] >= 0 ? '+' : '' }}{{ number_format($fundraisingAnalytics['stats']['total_raised']['growth'], 1) }}%
+                <span>vs last month</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="charts-section">
+    <div class="chart-card" style="grid-column: span 2;">
+        <div class="chart-header">
+            <div>
+                <h3 class="chart-title">Monthly Fundraising</h3>
+                <p class="chart-subtitle">Amount raised over the past 6 months</p>
+            </div>
+        </div>
+        <div class="chart-body">
+            <canvas id="fundraisingChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-header">
+            <div>
+                <h3 class="chart-title">Campaign Categories</h3>
+                <p class="chart-subtitle">Distribution by category</p>
+            </div>
+        </div>
+        <div class="chart-body">
+            <canvas id="categoriesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Category Breakdown -->
+<div class="stats-grid" style="margin-top: 32px;">
+    @foreach($fundraisingAnalytics['categoryData'] as $category)
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-{{ $category['icon_color'] }}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2V22M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <p class="stat-label">{{ $category['display_name'] }}</p>
+            <p class="stat-value">₱{{ number_format($category['total_raised'], 2) }}</p>
+            <p class="stat-meta">{{ $category['campaign_count'] }} campaigns</p>
+        </div>
+    </div>
+    @endforeach
+</div>
+
+<!-- Recent Campaigns -->
+<div class="recent-campaigns-card" style="margin-top: 32px;">
+    <div class="card-header">
+        <h3 class="section-title">Recent Campaigns</h3>
+        <p class="section-subtitle">Latest fundraising campaigns</p>
+    </div>
+
+    <div class="campaigns-list">
+        @forelse($fundraisingAnalytics['recentCampaigns'] as $index => $campaign)
+        <div class="campaign-item {{ !$loop->last ? 'campaign-item-divider' : '' }}">
+            <div class="campaign-header">
+                <div>
+                    <h4 class="campaign-title">{{ $campaign['title'] }}</h4>
+                    <p class="campaign-creator">By {{ $campaign['creator_name'] }}</p>
+                </div>
+                <span class="status-badge badge-{{ str_replace('_', '-', $campaign['status']) }}">
+                    {{ ucfirst(str_replace('_', ' ', $campaign['status'])) }}
+                </span>
+            </div>
+            <div class="campaign-progress">
+                <div class="progress-info">
+                    <span>₱{{ number_format($campaign['current_amount'], 2) }} raised</span>
+                    <span>{{ number_format($campaign['progress_percentage'], 0) }}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ $campaign['progress_percentage'] }}%"></div>
+                </div>
+                <div class="campaign-meta">
+                    <span>{{ number_format($campaign['donor_count']) }} donors</span>
+                    <span class="category-badge category-{{ $campaign['category'] }}">
+                        {{ ucfirst(str_replace('_', ' ', $campaign['category'])) }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        @empty
+        <p class="no-data">No recent campaigns</p>
+        @endforelse
+    </div>
+</div>
+
 </div>
 </div>
 @endsection
@@ -316,6 +460,116 @@ if (ctx) {
                     beginAtZero: true
                 }
             }
+        }
+    });
+}
+
+// Fundraising Line Chart
+const fundraisingCtx = document.getElementById('fundraisingChart');
+if (fundraisingCtx) {
+    const monthlyData = @json($fundraisingAnalytics['monthlyData']);
+
+    new Chart(fundraisingCtx, {
+        type: 'line',
+        data: {
+            labels: monthlyData.map(d => d.month),
+            datasets: [{
+                label: 'Amount Raised (₱)',
+                data: monthlyData.map(d => d.amount),
+                backgroundColor: 'rgba(230, 57, 70, 0.1)',
+                borderColor: 'rgba(230, 57, 70, 0.9)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: '#E63946',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₱' + context.parsed.y.toLocaleString('en-PH', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + (value / 1000).toFixed(0) + 'K';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Campaign Categories Pie Chart
+const categoriesCtx = document.getElementById('categoriesChart');
+if (categoriesCtx) {
+    const categoryData = @json($fundraisingAnalytics['categoryData']);
+
+    new Chart(categoriesCtx, {
+        type: 'doughnut',
+        data: {
+            labels: categoryData.map(d => d.display_name),
+            datasets: [{
+                data: categoryData.map(d => d.total_raised),
+                backgroundColor: [
+                    'rgba(230, 57, 70, 0.9)',    // Medical
+                    'rgba(59, 130, 246, 0.9)',   // Disaster Relief
+                    'rgba(139, 92, 246, 0.9)',   // Education
+                    'rgba(34, 197, 94, 0.9)',    // Community
+                    'rgba(156, 163, 175, 0.9)'   // Other
+                ],
+                borderWidth: 3,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                            return [
+                                context.label,
+                                '₱' + value.toLocaleString('en-PH', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }),
+                                percentage + '%'
+                            ];
+                        }
+                    }
+                }
+            },
+            cutout: '65%'
         }
     });
 }

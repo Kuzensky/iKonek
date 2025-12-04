@@ -568,3 +568,299 @@
     color: rgba(29, 53, 87, 0.6);
     margin: 0;
 }
+
+/* Category Stats Grid */
+.category-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.category-stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #E9ECEF;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.category-stat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.category-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.category-icon-pink {
+    background: rgba(236, 72, 153, 0.1);
+    color: #EC4899;
+}
+
+.category-icon-blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+.category-icon-purple {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8B5CF6;
+}
+
+.category-icon-green {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22C55E;
+}
+
+.category-stat-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0;
+}
+
+.category-stat-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1D3557;
+    margin: 0 0 8px 0;
+}
+
+.category-stat-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(29, 53, 87, 0.6);
+    margin: 0;
+}
+
+/* Recent Campaigns Card */
+.recent-campaigns-card {
+    background: transparent;
+}
+
+/* Campaigns List */
+.campaigns-list {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.campaign-item {
+    padding: 20px 0;
+    transition: opacity 0.2s ease;
+}
+
+.campaign-item:first-child {
+    padding-top: 0;
+}
+
+.campaign-item:last-child {
+    padding-bottom: 0;
+}
+
+.campaign-item-divider {
+    border-bottom: 1px solid #E9ECEF;
+    padding-bottom: 24px;
+    margin-bottom: 4px;
+}
+
+.campaign-item:hover {
+    opacity: 0.85;
+}
+
+.campaign-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.campaign-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0 0 4px 0;
+    line-height: 1.4;
+}
+
+.campaign-creator {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(29, 53, 87, 0.6);
+    margin: 0;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.badge-active {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+.badge-pending-review {
+    background: #FEF9C3;
+    color: #CA8A04;
+}
+
+.badge-completed {
+    background: #DBEAFE;
+    color: #2563EB;
+}
+
+.badge-rejected {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+/* Campaign Progress */
+.campaign-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+}
+
+.progress-info span:first-child {
+    font-weight: 600;
+    color: #1D3557;
+}
+
+.progress-info span:last-child {
+    font-weight: 600;
+    color: #E63946;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #E63946 0%, #DC2626 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.campaign-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: rgba(29, 53, 87, 0.6);
+}
+
+.category-badge {
+    padding: 4px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-transform: capitalize;
+}
+
+.category-medical {
+    background: rgba(236, 72, 153, 0.1);
+    color: #EC4899;
+}
+
+.category-disaster_relief {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+.category-education {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8B5CF6;
+}
+
+.category-community {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22C55E;
+}
+
+/* Stat Meta */
+.stat-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: rgba(29, 53, 87, 0.6);
+    margin: 4px 0 0 0;
+}
+
+.stat-pending {
+    color: #CA8A04;
+    font-weight: 500;
+}
+
+/* Responsive adjustments for fundraising section */
+@media (max-width: 1440px) {
+    .category-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .category-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .campaign-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .status-badge {
+        align-self: flex-start;
+    }
+
+    .campaign-title {
+        font-size: 15px;
+    }
+
+    .category-stat-value {
+        font-size: 24px;
+    }
+}
