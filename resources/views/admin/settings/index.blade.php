@@ -52,8 +52,8 @@
         <form method="POST" action="{{ route('admin.settings.updateGeneral') }}" class="settings-form">
             @csrf
 
-            <!-- Platform Information -->
             <div class="settings-section">
+                <!-- Platform Information -->
                 <h2 class="section-title">Platform Information</h2>
                 <div class="form-row">
                     <div class="form-group">
@@ -81,10 +81,10 @@
                         @enderror
                     </div>
                 </div>
-            </div>
 
-            <!-- Contact Information -->
-            <div class="settings-section">
+                <hr class="section-separator">
+
+                <!-- Contact Information -->
                 <h2 class="section-title">Contact Information</h2>
                 <div class="form-row">
                     <div class="form-group">
@@ -123,10 +123,10 @@
                     <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
-            </div>
 
-            <!-- Regional Settings -->
-            <div class="settings-section">
+                <hr class="section-separator">
+
+                <!-- Regional Settings -->
                 <h2 class="section-title">Regional Settings</h2>
                 <div class="form-row">
                     <div class="form-group">
@@ -164,10 +164,10 @@
                         @enderror
                     </div>
                 </div>
-            </div>
 
-            <!-- System Status -->
-            <div class="settings-section">
+                <hr class="section-separator">
+
+                <!-- System Status -->
                 <h2 class="section-title">System Status</h2>
                 <div class="maintenance-mode-wrapper">
                     <div class="maintenance-mode-info">
@@ -190,37 +190,6 @@
                                {{ old('maintenance_mode', $settings['maintenance_mode'] ?? '0') === '1' ? 'checked' : '' }}>
                         <span class="toggle-slider"></span>
                     </label>
-                </div>
-            </div>
-
-            <!-- Admin Profile -->
-            <div class="settings-section">
-                <h2 class="section-title">Admin Profile</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="admin_name">Name</label>
-                        <input type="text"
-                               id="admin_name"
-                               name="admin_name"
-                               value="{{ old('admin_name', $admin->name) }}"
-                               class="form-input @error('admin_name') error @enderror"
-                               required>
-                        @error('admin_name')
-                        <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="admin_email">Email</label>
-                        <input type="email"
-                               id="admin_email"
-                               name="admin_email"
-                               value="{{ old('admin_email', $admin->email) }}"
-                               class="form-input @error('admin_email') error @enderror"
-                               required>
-                        @error('admin_email')
-                        <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
                 </div>
             </div>
 

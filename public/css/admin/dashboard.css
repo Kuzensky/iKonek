@@ -532,3 +532,39 @@
         width: 100%;
     }
 }
+
+/* Alpine.js x-cloak */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Placeholder Content */
+.placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.placeholder-content svg {
+    color: #E63946;
+    margin-bottom: 24px;
+    opacity: 0.5;
+}
+
+.placeholder-content h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1D3557;
+    margin: 0 0 8px 0;
+}
+
+.placeholder-content p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: rgba(29, 53, 87, 0.6);
+    margin: 0;
+}
