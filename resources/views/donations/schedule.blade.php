@@ -155,11 +155,11 @@
                             <div class="custom-select">
                                 <select id="hospital" name="hospital" class="form-select" required aria-required="true">
                                     <option value="" disabled selected>Choose your preferred hospital or blood bank</option>
-                                    <option value="philippine-general">Philippine General Hospital - Manila</option>
-                                    <option value="makati-medical">Makati Medical Center - Makati City</option>
-                                    <option value="st-lukes">St. Luke's Medical Center - Quezon City</option>
-                                    <option value="manila-doctors">Manila Doctors Hospital - Manila</option>
-                                    <option value="chinese-general">Chinese General Hospital - Manila</option>
+                                    @foreach($hospitals as $hospital)
+                                        <option value="{{ $hospital->id }}" data-blood-types="{{ json_encode($hospital->blood_types_available ?? []) }}">
+                                            {{ $hospital->name }} - {{ $hospital->city }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1032,16 +1032,61 @@ document.head.appendChild(style);
 document.addEventListener('DOMContentLoaded', () => {
     new Navigation();
     new ScheduleDonationForm();
+
+    // Blood type filtering based on selected hospital
+    const hospitalSelect = document.getElementById('hospital');
+    const bloodTypeSelect = document.getElementById('bloodType');
+
+    if (hospitalSelect && bloodTypeSelect) {
+        hospitalSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const bloodTypes = JSON.parse(selectedOption.dataset.bloodTypes || '[]');
+
+            console.log('Selected hospital blood types:', bloodTypes);
+
+            // Store all blood type options
+            const allBloodTypes = {
+                'O+': 'O+ (Positive) - Most common, can donate to O+, A+, B+, AB+',
+                'O-': 'O- (Negative) - Universal donor, can donate to all types',
+                'A+': 'A+ (Positive) - Can donate to A+ and AB+',
+                'A-': 'A- (Negative) - Can donate to A+, A-, AB+, AB-',
+                'B+': 'B+ (Positive) - Can donate to B+ and AB+',
+                'B-': 'B- (Negative) - Can donate to B+, B-, AB+, AB-',
+                'AB+': 'AB+ (Positive) - Universal recipient, can receive from all',
+                'AB-': 'AB- (Negative) - Rarest type, can receive from all negative types'
+            };
+
+            // Clear and rebuild blood type dropdown
+            const currentValue = bloodTypeSelect.value;
+            bloodTypeSelect.innerHTML = '<option value="" disabled selected>Select your blood type</option>';
+
+            // If no blood types specified, show all
+            const typesToShow = bloodTypes.length > 0 ? bloodTypes : Object.keys(allBloodTypes);
+
+            typesToShow.forEach(bloodType => {
+                if (allBloodTypes[bloodType]) {
+                    const option = document.createElement('option');
+                    option.value = bloodType;
+                    option.textContent = allBloodTypes[bloodType];
+                    bloodTypeSelect.appendChild(option);
+                }
+            });
+
+            // Add "unknown" option
+            const unknownOption = document.createElement('option');
+            unknownOption.value = 'unknown';
+            unknownOption.textContent = "I don't know my blood type";
+            bloodTypeSelect.appendChild(unknownOption);
+
+            // Restore selection if still available
+            if (currentValue && Array.from(bloodTypeSelect.options).some(opt => opt.value === currentValue)) {
+                bloodTypeSelect.value = currentValue;
+            }
+        });
+    }
 });
     </script>
 @endsection
-
-@push('scripts')
-    <script>
-
-// Navigation Module - Enhanced UX
-
-class Navigation {
     constructor() {
         this.nav = document.getElementById('mainNav');
         this.menuToggle = document.getElementById('mobileMenuToggle');

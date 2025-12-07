@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Fundraiser extends Model
 {
     // Status constants
-    const STATUS_DRAFT = 'draft';
-    const STATUS_PENDING_REVIEW = 'pending_review';
+    const STATUS_PENDING = 'pending';
     const STATUS_ACTIVE = 'active';
     const STATUS_COMPLETED = 'completed';
     const STATUS_CANCELLED = 'cancelled';
@@ -19,7 +18,7 @@ class Fundraiser extends Model
     const CATEGORY_DISASTER = 'disaster_relief';
     const CATEGORY_EDUCATION = 'education';
     const CATEGORY_COMMUNITY = 'community';
-    const CATEGORY_OTHER = 'other';
+    const CATEGORY_EMERGENCY = 'emergency';
 
     protected $fillable = [
         'user_id',
@@ -30,12 +29,26 @@ class Fundraiser extends Model
         'goal_amount',
         'current_amount',
         'beneficiary_name',
+        'beneficiary_relationship',
         'beneficiary_contact',
+        'beneficiary_address',
+        'organizer_name',
+        'organizer_email',
+        'organizer_phone',
+        'payment_method',
+        'account_number',
+        'account_name',
+        'campaign_duration_days',
         'start_date',
         'end_date',
         'status',
         'featured_image',
         'is_featured',
+        'admin_notes',
+        'verified_at',
+        'verified_by',
+        'terms_agreed',
+        'information_accurate',
     ];
 
     protected $casts = [
@@ -43,7 +56,11 @@ class Fundraiser extends Model
         'current_amount' => 'decimal:2',
         'start_date' => 'date',
         'end_date' => 'date',
+        'verified_at' => 'datetime',
         'is_featured' => 'boolean',
+        'terms_agreed' => 'boolean',
+        'information_accurate' => 'boolean',
+        'campaign_duration_days' => 'integer',
     ];
 
     public function creator()
@@ -59,6 +76,11 @@ class Fundraiser extends Model
     public function verifiedContributions()
     {
         return $this->hasMany(FundraiserContribution::class)->where('status', 'verified');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(FundraiserImage::class)->orderBy('order');
     }
 
     public function getProgressPercentageAttribute()

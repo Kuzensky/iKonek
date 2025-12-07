@@ -102,7 +102,20 @@ class AdminDonationController extends Controller
             $donation->donation_date = now();
         }
 
+        // Store old status before saving
+        $oldStatus = $donation->getOriginal('status');
+
         $donation->save();
+
+        // Dispatch real-time events
+        event(new \App\Events\DonationStatusChanged($donation, $oldStatus, $validated['status']));
+        event(new \App\Events\PlatformStatsUpdated());
+        event(new \App\Events\AdminDashboardStatsUpdated());
+
+        // Send email notification for verified donations
+        if ($validated['status'] === 'verified') {
+            $donation->user->notify(new \App\Notifications\DonationVerifiedEmail($donation));
+        }
 
         return redirect()
             ->route('admin.donations.index')

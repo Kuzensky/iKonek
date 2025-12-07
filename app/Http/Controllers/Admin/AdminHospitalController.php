@@ -67,7 +67,12 @@ class AdminHospitalController extends Controller
         // Sync is_active with status for backwards compatibility
         $validated['is_active'] = $validated['status'] === 'active';
 
-        Hospital::create($validated);
+        $hospital = Hospital::create($validated);
+
+        // Broadcast new hospital to all visitors
+        event(new \App\Events\HospitalCreated($hospital));
+        event(new \App\Events\PlatformStatsUpdated());
+        event(new \App\Events\AdminDashboardStatsUpdated());
 
         return redirect()
             ->route('admin.hospitals.index')
@@ -100,7 +105,18 @@ class AdminHospitalController extends Controller
         // Sync is_active with status for backwards compatibility
         $validated['is_active'] = $validated['status'] === 'active';
 
+        // Track changed fields
+        $changedFields = array_keys($hospital->getDirty());
+
         $hospital->update($validated);
+
+        // Broadcast hospital update
+        event(new \App\Events\HospitalUpdated($hospital, $changedFields));
+
+        // If status changed to/from active, update platform stats
+        if (in_array('status', $changedFields) || in_array('is_active', $changedFields)) {
+            event(new \App\Events\PlatformStatsUpdated());
+        }
 
         return redirect()
             ->route('admin.hospitals.index')
@@ -117,7 +133,13 @@ class AdminHospitalController extends Controller
             return back()->with('error', 'Cannot delete hospital with existing appointments or donations.');
         }
 
+        $hospitalId = $hospital->id;
         $hospital->delete();
+
+        // Broadcast hospital deletion
+        event(new \App\Events\HospitalDeleted($hospitalId));
+        event(new \App\Events\PlatformStatsUpdated());
+        event(new \App\Events\AdminDashboardStatsUpdated());
 
         return redirect()
             ->route('admin.hospitals.index')

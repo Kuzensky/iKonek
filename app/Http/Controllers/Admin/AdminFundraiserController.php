@@ -161,6 +161,22 @@ class AdminFundraiserController extends Controller
 
         $fundraiser->save();
 
+        // Dispatch real-time events
+        event(new \App\Events\CampaignStatusChanged($fundraiser, $oldStatus, $newStatus, $request->notes));
+
+        if ($newStatus === Fundraiser::STATUS_ACTIVE) {
+            event(new \App\Events\PlatformStatsUpdated());
+        }
+
+        event(new \App\Events\AdminDashboardStatsUpdated());
+
+        // Send email notifications
+        if ($newStatus === Fundraiser::STATUS_ACTIVE) {
+            $fundraiser->creator->notify(new \App\Notifications\CampaignApprovedNotification($fundraiser));
+        } elseif (in_array($newStatus, [Fundraiser::STATUS_SUSPENDED, Fundraiser::STATUS_CANCELLED])) {
+            $fundraiser->creator->notify(new \App\Notifications\CampaignRejectedNotification($fundraiser, $request->notes));
+        }
+
         return redirect()->route('admin.fundraising.index')
             ->with('success', "Campaign status updated to " . $fundraiser->getStatusDisplayName());
     }
@@ -168,6 +184,9 @@ class AdminFundraiserController extends Controller
     public function toggleFeatured(Fundraiser $fundraiser)
     {
         $isFeatured = $fundraiser->toggleFeatured();
+
+        // Broadcast featured campaign change to all visitors
+        event(new \App\Events\CampaignFeaturedToggled($fundraiser));
 
         $message = $isFeatured
             ? 'Campaign has been marked as featured.'

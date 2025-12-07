@@ -1271,5 +1271,162 @@
         document.addEventListener('DOMContentLoaded', () => {
             window.iKonekApp = new App();
         });
+
+        // Real-time WebSocket Listeners for Landing Page
+        if (window.Echo) {
+            // Listen for platform stats updates
+            window.Echo.channel('platform.stats')
+                .listen('.PlatformStatsUpdated', (e) => {
+                    console.log('Platform stats updated:', e);
+                    updateHeroStats(e);
+                });
+
+            // Listen for hospital updates
+            window.Echo.channel('hospitals.updates')
+                .listen('.HospitalCreated', (e) => {
+                    console.log('New hospital added:', e);
+                    updateHospitalCount(e.total_hospitals);
+                    showToast('New Hospital', `${e.name} has been added to our network!`, 'info');
+                })
+                .listen('.HospitalUpdated', (e) => {
+                    console.log('Hospital updated:', e);
+                    showToast('Hospital Updated', `${e.name} information has been updated.`, 'info');
+                })
+                .listen('.HospitalDeleted', (e) => {
+                    console.log('Hospital deleted:', e);
+                    updateHospitalCount(e.total_hospitals);
+                });
+
+            // Listen for campaign updates
+            window.Echo.channel('campaigns.updates')
+                .listen('.CampaignStatusChanged', (e) => {
+                    console.log('Campaign status changed:', e);
+                    if (e.new_status === 'active') {
+                        showToast('New Campaign', `${e.title} is now accepting contributions!`, 'success');
+                    }
+                });
+
+            // Listen for featured campaign changes
+            window.Echo.channel('campaigns.featured')
+                .listen('.CampaignFeaturedToggled', (e) => {
+                    console.log('Featured campaign toggled:', e);
+                });
+        }
+
+        // Helper Functions
+        function updateHeroStats(stats) {
+            // Update Active Donors
+            const statsElements = document.querySelectorAll('.stat-value');
+            if (statsElements[0] && stats.active_donors) {
+                animateCounter(statsElements[0],
+                    parseInt(statsElements[0].textContent.replace(/\D/g, '')) || 0,
+                    stats.active_donors, '+');
+            }
+
+            // Update Lives Saved
+            if (statsElements[1] && stats.lives_saved) {
+                animateCounter(statsElements[1],
+                    parseInt(statsElements[1].textContent.replace(/\D/g, '')) || 0,
+                    stats.lives_saved, '+');
+            }
+
+            // Update Partner Hospitals
+            if (statsElements[2] && stats.partner_hospitals) {
+                animateCounter(statsElements[2],
+                    parseInt(statsElements[2].textContent.replace(/\D/g, '')) || 0,
+                    stats.partner_hospitals, '+');
+            }
+
+            // Show toast notification
+            showToast('Stats Updated', 'Platform statistics have been updated in real-time', 'info');
+        }
+
+        function animateCounter(element, from, to, suffix = '+') {
+            const duration = 1000;
+            const steps = 30;
+            const increment = (to - from) / steps;
+            const stepDuration = duration / steps;
+            let current = from;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= to) || (increment < 0 && current <= to)) {
+                    current = to;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString() + suffix;
+            }, stepDuration);
+        }
+
+        function updateHospitalCount(count) {
+            const statsElements = document.querySelectorAll('.stat-value');
+            if (statsElements[2]) {
+                animateCounter(statsElements[2],
+                    parseInt(statsElements[2].textContent.replace(/\D/g, '')) || 0,
+                    count, '+');
+            }
+        }
+
+        function showToast(title, message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                padding: 16px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 9999;
+                max-width: 350px;
+                animation: slideIn 0.3s ease-out;
+                border-left: 4px solid ${type === 'success' ? '#22C55E' : type === 'error' ? '#EF4444' : '#3B82F6'};
+            `;
+            toast.innerHTML = `
+                <div style="display: flex; align-items: start; gap: 12px;">
+                    <div style="font-size: 24px;">${getToastIcon(type)}</div>
+                    <div style="flex: 1;">
+                        <strong style="display: block; margin-bottom: 4px; color: #1D3557;">${title}</strong>
+                        <p style="margin: 0; color: #64748B; font-size: 14px;">${message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: #94A3B8;">×</button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(400px)';
+                toast.style.transition = 'all 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        function getToastIcon(type) {
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            return icons[type] || icons.info;
+        }
+
+        // Add slideIn animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 @endpush

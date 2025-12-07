@@ -52,13 +52,16 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
-            <button class="btn btn-outline logout-btn">Logout</button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-outline logout-btn">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -116,9 +119,22 @@
             </div>
         </div>
 
+        <!-- Validation Errors -->
+        @if ($errors->any())
+            <div class="alert alert-danger" style="margin: 20px; padding: 15px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33;">
+                <strong>Please fix the following errors:</strong>
+                <ul style="margin-top: 10px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Form Container -->
         <div class="fundraiser-form-container">
-            <form class="fundraiser-form" id="fundraiserForm">
+            <form class="fundraiser-form" id="fundraiserForm" method="POST" action="{{ route('fundraisers.create.step1.store') }}" enctype="multipart/form-data">
+                @csrf
                 <!-- Campaign Details Section -->
                 <div class="form-section-card">
                     <div class="form-section-header">
@@ -132,18 +148,21 @@
                     <div class="form-grid">
                         <!-- Campaign Title -->
                         <div class="form-group full-width">
-                            <label class="form-label" for="campaignTitle">
+                            <label class="form-label" for="title">
                                 Campaign Title
                                 <span class="required">*</span>
                             </label>
-                            <input 
-                                type="text" 
-                                id="campaignTitle" 
-                                class="form-input" 
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                class="form-input @error('title') is-invalid @enderror"
                                 placeholder="e.g., Help Maria Fight Leukemia - Urgent Medical Support Needed"
-                                maxlength="120"
+                                maxlength="100"
+                                value="{{ old('title', $data['title'] ?? '') }}"
+                                required
                             >
-                            <p class="form-helper"><span id="titleCharCount">0</span> / 120 characters</p>
+                            <p class="form-helper"><span id="titleCharCount">{{ strlen(old('title', $data['title'] ?? '')) }}</span> / 100 characters</p>
                         </div>
 
                         <!-- Category Selection -->
@@ -154,7 +173,7 @@
                             </label>
                             <div class="category-grid">
                                 <label class="category-card">
-                                    <input type="radio" name="category" value="medical-emergency" class="category-radio">
+                                    <input type="radio" name="category" value="medical" class="category-radio" {{ old('category', $data['category'] ?? '') == 'medical' ? 'checked' : '' }} required>
                                     <div class="category-content">
                                         <img src="{{ asset('assets/icons/red-heart.svg') }}" alt="" class="category-icon">
                                         <div class="category-info">
@@ -165,7 +184,7 @@
                                 </label>
 
                                 <label class="category-card">
-                                    <input type="radio" name="category" value="disaster-relief" class="category-radio">
+                                    <input type="radio" name="category" value="disaster_relief" class="category-radio" {{ old('category', $data['category'] ?? '') == 'disaster_relief' ? 'checked' : '' }}>
                                     <div class="category-content">
                                         <img src="{{ asset('assets/icons/shield.svg') }}" alt="" class="category-icon">
                                         <div class="category-info">
@@ -176,7 +195,7 @@
                                 </label>
 
                                 <label class="category-card">
-                                    <input type="radio" name="category" value="education-support" class="category-radio">
+                                    <input type="radio" name="category" value="education" class="category-radio" {{ old('category', $data['category'] ?? '') == 'education' ? 'checked' : '' }}>
                                     <div class="category-content">
                                         <img src="{{ asset('assets/icons/achievement.svg') }}" alt="" class="category-icon">
                                         <div class="category-info">
@@ -187,7 +206,7 @@
                                 </label>
 
                                 <label class="category-card">
-                                    <input type="radio" name="category" value="emergency-assistance" class="category-radio">
+                                    <input type="radio" name="category" value="emergency" class="category-radio" {{ old('category', $data['category'] ?? '') == 'emergency' ? 'checked' : '' }}>
                                     <div class="category-content">
                                         <img src="{{ asset('assets/icons/red-blood-2.svg') }}" alt="" class="category-icon">
                                         <div class="category-info">
@@ -201,18 +220,20 @@
 
                         <!-- Campaign Description -->
                         <div class="form-group full-width">
-                            <label class="form-label" for="campaignDescription">
+                            <label class="form-label" for="description">
                                 Campaign Description
                                 <span class="required">*</span>
                             </label>
-                            <textarea 
-                                id="campaignDescription" 
-                                class="form-textarea"
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-textarea @error('description') is-invalid @enderror"
                                 placeholder="Share your story in detail... Tell donors why their support matters and how the funds will be used. Be specific about the medical treatment needed, expenses, and impact their donation will make."
-                                maxlength="3000"
+                                maxlength="2000"
                                 rows="8"
-                            ></textarea>
-                            <p class="form-helper"><span id="descCharCount">0</span> / 3000 characters (minimum 150)</p>
+                                required
+                            >{{ old('description', $data['description'] ?? '') }}</textarea>
+                            <p class="form-helper"><span id="descCharCount">{{ strlen(old('description', $data['description'] ?? '')) }}</span> / 2000 characters (minimum 50)</p>
                         </div>
 
                         <!-- Campaign Images -->
@@ -224,45 +245,47 @@
                                 <img src="{{ asset('assets/icons/donate.svg') }}" alt="" class="upload-icon">
                                 <div class="upload-content">
                                     <p class="upload-title">Click to upload images</p>
-                                    <p class="upload-subtitle">Maximum 5 images, 3MB each (JPG, PNG, GIF)</p>
+                                    <p class="upload-subtitle">Maximum 5 images, 5MB each (JPG, PNG, GIF)</p>
                                 </div>
-                                <input type="file" id="campaignImages" accept="image/*" multiple hidden>
+                                <input type="file" id="images" name="images[]" accept="image/*" multiple hidden>
                             </div>
                             <div class="upload-preview" id="uploadPreview"></div>
                         </div>
 
                         <!-- Goal Amount -->
                         <div class="form-group">
-                            <label class="form-label" for="goalAmount">
+                            <label class="form-label" for="goal_amount">
                                 Goal Amount (₱)
                                 <span class="required">*</span>
                             </label>
                             <div class="input-with-prefix">
                                 <span class="input-prefix">₱</span>
-                                <input 
-                                    type="number" 
-                                    id="goalAmount" 
-                                    class="form-input with-prefix" 
+                                <input
+                                    type="number"
+                                    id="goal_amount"
+                                    name="goal_amount"
+                                    class="form-input with-prefix @error('goal_amount') is-invalid @enderror"
                                     placeholder="50000"
-                                    min="5000"
+                                    min="1000"
                                     max="10000000"
+                                    value="{{ old('goal_amount', $data['goal_amount'] ?? '') }}"
+                                    required
                                 >
                             </div>
-                            <p class="form-helper">Minimum: ₱5,000 | Maximum: ₱10,000,000</p>
+                            <p class="form-helper">Minimum: ₱1,000 | Maximum: ₱10,000,000</p>
                         </div>
 
                         <!-- Campaign Duration -->
                         <div class="form-group">
-                            <label class="form-label" for="campaignDuration">
+                            <label class="form-label" for="campaign_duration">
                                 Campaign Duration
                                 <span class="required">*</span>
                             </label>
-                            <select id="campaignDuration" class="form-select">
+                            <select id="campaign_duration" name="campaign_duration" class="form-select @error('campaign_duration') is-invalid @enderror" required>
                                 <option value="">Select duration</option>
-                                <option value="30" selected>30 days (Recommended)</option>
-                                <option value="60">60 days</option>
-                                <option value="90">90 days</option>
-                                <option value="custom">Custom duration</option>
+                                <option value="30" {{ old('campaign_duration', $data['campaign_duration'] ?? '30') == '30' ? 'selected' : '' }}>30 days (Recommended)</option>
+                                <option value="60" {{ old('campaign_duration', $data['campaign_duration'] ?? '') == '60' ? 'selected' : '' }}>60 days</option>
+                                <option value="90" {{ old('campaign_duration', $data['campaign_duration'] ?? '') == '90' ? 'selected' : '' }}>90 days</option>
                             </select>
                         </div>
                     </div>
@@ -313,25 +336,13 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="info-notice-box">
-                        <div class="info-notice-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="10" stroke="#16A34A" stroke-width="2"/>
-                                <path d="M12 16V12M12 8H12.01" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div class="info-notice-text">
-                            <p><strong>💾 Auto-Save Enabled!</strong> Your progress is automatically saved. You can return anytime to continue creating your campaign.</p>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="form-actions">
-                    <button type="button" class="btn btn-outline btn-cancel">
+                    <a href="{{ route('fundraisers.index') }}" class="btn btn-outline btn-cancel">
                         Cancel
-                    </button>
+                    </a>
                     <button type="submit" class="btn btn-primary btn-continue">
                         Continue
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -342,652 +353,75 @@
             </form>
         </div>
     </main>
-
-    <script>
-        // Start Fundraiser Step 1 - Inline JavaScript
-        class StartFundraiser {
-            constructor() {
-                this.form = document.getElementById('fundraiserForm');
-                this.titleInput = document.getElementById('campaignTitle');
-                this.descriptionInput = document.getElementById('campaignDescription');
-                this.imagesInput = document.getElementById('campaignImages');
-                this.uploadArea = document.getElementById('uploadArea');
-                this.uploadPreview = document.getElementById('uploadPreview');
-                this.goalAmountInput = document.getElementById('goalAmount');
-                this.durationSelect = document.getElementById('campaignDuration');
-                
-                this.selectedImages = [];
-                this.maxImages = 5;
-                this.maxImageSize = 3 * 1024 * 1024; // 3MB
-                
-                this.init();
-            }
-            
-            init() {
-                this.attachEventListeners();
-                this.loadDraftData();
-            }
-            
-            attachEventListeners() {
-                // Character counters
-                if (this.titleInput) {
-                    this.titleInput.addEventListener('input', () => this.updateCharCount('title'));
-                }
-                
-                if (this.descriptionInput) {
-                    this.descriptionInput.addEventListener('input', () => this.updateCharCount('description'));
-                }
-                
-                // Upload area
-                if (this.uploadArea) {
-                    this.uploadArea.addEventListener('click', () => this.imagesInput.click());
-                    this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
-                    this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
-                }
-                
-                if (this.imagesInput) {
-                    this.imagesInput.addEventListener('change', (e) => this.handleImageSelect(e));
-                }
-                
-                // Form submission
-                if (this.form) {
-                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                }
-                
-                // Auto-save draft
-                const formInputs = this.form.querySelectorAll('input, textarea, select');
-                formInputs.forEach(input => {
-                    input.addEventListener('change', () => this.saveDraft());
-                });
-            }
-            
-            updateCharCount(type) {
-                if (type === 'title') {
-                    const count = this.titleInput.value.length;
-                    const counter = document.getElementById('titleCharCount');
-                    if (counter) {
-                        counter.textContent = count;
-                    }
-                } else if (type === 'description') {
-                    const count = this.descriptionInput.value.length;
-                    const counter = document.getElementById('descCharCount');
-                    if (counter) {
-                        counter.textContent = count;
-                    }
-                }
-            }
-            
-            handleDragOver(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.uploadArea.style.borderColor = '#E63946';
-                this.uploadArea.style.background = 'rgba(230, 57, 70, 0.08)';
-            }
-            
-            handleDrop(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.uploadArea.style.borderColor = '';
-                this.uploadArea.style.background = '';
-                
-                const files = Array.from(e.dataTransfer.files);
-                this.processImages(files);
-            }
-            
-            handleImageSelect(e) {
-                const files = Array.from(e.target.files);
-                this.processImages(files);
-            }
-            
-            processImages(files) {
-                const imageFiles = files.filter(file => file.type.startsWith('image/'));
-                
-                if (this.selectedImages.length + imageFiles.length > this.maxImages) {
-                    alert(`You can only upload a maximum of ${this.maxImages} images.`);
-                    return;
-                }
-                
-                imageFiles.forEach(file => {
-                    if (file.size > this.maxImageSize) {
-                        alert(`${file.name} is too large. Maximum size is 3MB.`);
-                        return;
-                    }
-                    
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.selectedImages.push({
-                            file: file,
-                            dataUrl: e.target.result,
-                            name: file.name
-                        });
-                        this.renderImagePreviews();
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-            
-            renderImagePreviews() {
-                if (!this.uploadPreview) return;
-                
-                this.uploadPreview.innerHTML = this.selectedImages.map((img, index) => `
-                    <div class="preview-item">
-                        <img src="${img.dataUrl}" alt="${img.name}" class="preview-image">
-                        <button type="button" class="preview-remove" data-index="${index}" aria-label="Remove image">
-                            &times;
-                        </button>
-                    </div>
-                `).join('');
-                
-                // Attach remove handlers
-                this.uploadPreview.querySelectorAll('.preview-remove').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const index = parseInt(e.currentTarget.getAttribute('data-index'));
-                        this.removeImage(index);
-                    });
-                });
-            }
-            
-            removeImage(index) {
-                this.selectedImages.splice(index, 1);
-                this.renderImagePreviews();
-                this.saveDraft();
-            }
-            
-            validateForm() {
-                const errors = [];
-                
-                // Title validation
-                const title = this.titleInput.value.trim();
-                if (!title) {
-                    errors.push('Campaign title is required');
-                } else if (title.length < 10) {
-                    errors.push('Campaign title must be at least 10 characters');
-                }
-                
-                // Category validation
-                const category = this.form.querySelector('input[name="category"]:checked');
-                if (!category) {
-                    errors.push('Please select a category');
-                }
-                
-                // Description validation
-                const description = this.descriptionInput.value.trim();
-                if (!description) {
-                    errors.push('Campaign description is required');
-                } else if (description.length < 150) {
-                    errors.push('Campaign description must be at least 150 characters');
-                }
-                
-                // Goal amount validation
-                const goalAmount = parseFloat(this.goalAmountInput.value);
-                if (!goalAmount) {
-                    errors.push('Goal amount is required');
-                } else if (goalAmount < 5000) {
-                    errors.push('Goal amount must be at least ₱5,000');
-                } else if (goalAmount > 10000000) {
-                    errors.push('Goal amount cannot exceed ₱10,000,000');
-                }
-                
-                // Duration validation
-                const duration = this.durationSelect.value;
-                if (!duration) {
-                    errors.push('Please select campaign duration');
-                }
-                
-                return errors;
-            }
-            
-            handleSubmit(e) {
-                e.preventDefault();
-                
-                const errors = this.validateForm();
-                
-                if (errors.length > 0) {
-                    alert('Please fix the following errors:\n\n' + errors.join('\n'));
-                    return;
-                }
-                
-                // Get form data
-                const formData = this.getFormData();
-                
-                // Save to localStorage
-                localStorage.setItem('fundraiserDraft', JSON.stringify(formData));
-                
-                // Navigate to next step
-                window.location.href = 'start-fundraiser-step2.html';
-            }
-            
-            getFormData() {
-                const category = this.form.querySelector('input[name="category"]:checked');
-                
-                return {
-                    title: this.titleInput.value.trim(),
-                    category: category ? category.value : '',
-                    description: this.descriptionInput.value.trim(),
-                    goalAmount: parseFloat(this.goalAmountInput.value),
-                    duration: this.durationSelect.value,
-                    images: this.selectedImages.map(img => ({
-                        name: img.name,
-                        dataUrl: img.dataUrl
-                    })),
-                    timestamp: new Date().toISOString()
-                };
-            }
-            
-            saveDraft() {
-                try {
-                    const formData = this.getFormData();
-                    localStorage.setItem('fundraiserDraft', JSON.stringify(formData));
-                    console.log('Draft saved');
-                } catch (error) {
-                    console.error('Error saving draft:', error);
-                }
-            }
-            
-            loadDraftData() {
-                try {
-                    const draftData = localStorage.getItem('fundraiserDraft');
-                    if (!draftData) return;
-                    
-                    const data = JSON.parse(draftData);
-                    
-                    // Restore form values
-                    if (data.title) {
-                        this.titleInput.value = data.title;
-                        this.updateCharCount('title');
-                    }
-                    
-                    if (data.category) {
-                        const categoryRadio = this.form.querySelector(`input[name="category"][value="${data.category}"]`);
-                        if (categoryRadio) {
-                            categoryRadio.checked = true;
-                        }
-                    }
-                    
-                    if (data.description) {
-                        this.descriptionInput.value = data.description;
-                        this.updateCharCount('description');
-                    }
-                    
-                    if (data.goalAmount) {
-                        this.goalAmountInput.value = data.goalAmount;
-                    }
-                    
-                    if (data.duration) {
-                        this.durationSelect.value = data.duration;
-                    }
-                    
-                    if (data.images && data.images.length > 0) {
-                        this.selectedImages = data.images;
-                        this.renderImagePreviews();
-                    }
-                    
-                    console.log('Draft loaded');
-                } catch (error) {
-                    console.error('Error loading draft:', error);
-                }
-            }
-        }
-
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                new StartFundraiser();
-            });
-        } else {
-            new StartFundraiser();
-        }
-
-        // Logout functionality
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    this.textContent = 'Logging out...';
-                    this.disabled = true;
-                    setTimeout(() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = "{{ route('login') }}";
-                    }, 800);
-                }
-            });
-        }
-
-        // Cancel button
-        const cancelBtn = document.querySelector('.btn-cancel');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to cancel? All entered data will be lost.')) {
-                    window.location.href = '{{ route('fundraisers.index') }}';
-                }
-            });
-        }
-    </script>
 @endsection
 
 @push('scripts')
-    <script>
+<script>
+    // Character counters
+    const titleInput = document.getElementById('title');
+    const descriptionInput = document.getElementById('description');
+    const imagesInput = document.getElementById('images');
+    const uploadArea = document.getElementById('uploadArea');
+    const uploadPreview = document.getElementById('uploadPreview');
 
-        // Start Fundraiser Step 1 - Inline JavaScript
-        class StartFundraiser {
-            constructor() {
-                this.form = document.getElementById('fundraiserForm');
-                this.titleInput = document.getElementById('campaignTitle');
-                this.descriptionInput = document.getElementById('campaignDescription');
-                this.imagesInput = document.getElementById('campaignImages');
-                this.uploadArea = document.getElementById('uploadArea');
-                this.uploadPreview = document.getElementById('uploadPreview');
-                this.goalAmountInput = document.getElementById('goalAmount');
-                this.durationSelect = document.getElementById('campaignDuration');
-                
-                this.selectedImages = [];
-                this.maxImages = 5;
-                this.maxImageSize = 3 * 1024 * 1024; // 3MB
-                
-                this.init();
+    let selectedFiles = [];
+
+    if (titleInput) {
+        titleInput.addEventListener('input', () => {
+            document.getElementById('titleCharCount').textContent = titleInput.value.length;
+        });
+    }
+
+    if (descriptionInput) {
+        descriptionInput.addEventListener('input', () => {
+            document.getElementById('descCharCount').textContent = descriptionInput.value.length;
+        });
+    }
+
+    // Image upload handling
+    if (uploadArea && imagesInput) {
+        uploadArea.addEventListener('click', () => imagesInput.click());
+
+        imagesInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 5) {
+                alert('You can only upload a maximum of 5 images');
+                return;
             }
-            
-            init() {
-                this.attachEventListeners();
-                this.loadDraftData();
-            }
-            
-            attachEventListeners() {
-                // Character counters
-                if (this.titleInput) {
-                    this.titleInput.addEventListener('input', () => this.updateCharCount('title'));
-                }
-                
-                if (this.descriptionInput) {
-                    this.descriptionInput.addEventListener('input', () => this.updateCharCount('description'));
-                }
-                
-                // Upload area
-                if (this.uploadArea) {
-                    this.uploadArea.addEventListener('click', () => this.imagesInput.click());
-                    this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
-                    this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
-                }
-                
-                if (this.imagesInput) {
-                    this.imagesInput.addEventListener('change', (e) => this.handleImageSelect(e));
-                }
-                
-                // Form submission
-                if (this.form) {
-                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                }
-                
-                // Auto-save draft
-                const formInputs = this.form.querySelectorAll('input, textarea, select');
-                formInputs.forEach(input => {
-                    input.addEventListener('change', () => this.saveDraft());
+            displayImagePreviews(files);
+        });
+    }
+
+    function displayImagePreviews(files) {
+        uploadPreview.innerHTML = '';
+        files.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                    <img src="${e.target.result}" alt="${file.name}" class="preview-image">
+                    <button type="button" class="preview-remove" data-index="${index}" aria-label="Remove image">×</button>
+                `;
+                uploadPreview.appendChild(div);
+
+                div.querySelector('.preview-remove').addEventListener('click', function() {
+                    const dt = new DataTransfer();
+                    const input = imagesInput;
+                    const { files } = input;
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        if (index !== i)
+                            dt.items.add(file);
+                    }
+
+                    input.files = dt.files;
+                    div.remove();
                 });
-            }
-            
-            updateCharCount(type) {
-                if (type === 'title') {
-                    const count = this.titleInput.value.length;
-                    const counter = document.getElementById('titleCharCount');
-                    if (counter) {
-                        counter.textContent = count;
-                    }
-                } else if (type === 'description') {
-                    const count = this.descriptionInput.value.length;
-                    const counter = document.getElementById('descCharCount');
-                    if (counter) {
-                        counter.textContent = count;
-                    }
-                }
-            }
-            
-            handleDragOver(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.uploadArea.style.borderColor = '#E63946';
-                this.uploadArea.style.background = 'rgba(230, 57, 70, 0.08)';
-            }
-            
-            handleDrop(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.uploadArea.style.borderColor = '';
-                this.uploadArea.style.background = '';
-                
-                const files = Array.from(e.dataTransfer.files);
-                this.processImages(files);
-            }
-            
-            handleImageSelect(e) {
-                const files = Array.from(e.target.files);
-                this.processImages(files);
-            }
-            
-            processImages(files) {
-                const imageFiles = files.filter(file => file.type.startsWith('image/'));
-                
-                if (this.selectedImages.length + imageFiles.length > this.maxImages) {
-                    alert(`You can only upload a maximum of ${this.maxImages} images.`);
-                    return;
-                }
-                
-                imageFiles.forEach(file => {
-                    if (file.size > this.maxImageSize) {
-                        alert(`${file.name} is too large. Maximum size is 3MB.`);
-                        return;
-                    }
-                    
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.selectedImages.push({
-                            file: file,
-                            dataUrl: e.target.result,
-                            name: file.name
-                        });
-                        this.renderImagePreviews();
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-            
-            renderImagePreviews() {
-                if (!this.uploadPreview) return;
-                
-                this.uploadPreview.innerHTML = this.selectedImages.map((img, index) => `
-                    <div class="preview-item">
-                        <img src="${img.dataUrl}" alt="${img.name}" class="preview-image">
-                        <button type="button" class="preview-remove" data-index="${index}" aria-label="Remove image">
-                            &times;
-                        </button>
-                    </div>
-                `).join('');
-                
-                // Attach remove handlers
-                this.uploadPreview.querySelectorAll('.preview-remove').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const index = parseInt(e.currentTarget.getAttribute('data-index'));
-                        this.removeImage(index);
-                    });
-                });
-            }
-            
-            removeImage(index) {
-                this.selectedImages.splice(index, 1);
-                this.renderImagePreviews();
-                this.saveDraft();
-            }
-            
-            validateForm() {
-                const errors = [];
-                
-                // Title validation
-                const title = this.titleInput.value.trim();
-                if (!title) {
-                    errors.push('Campaign title is required');
-                } else if (title.length < 10) {
-                    errors.push('Campaign title must be at least 10 characters');
-                }
-                
-                // Category validation
-                const category = this.form.querySelector('input[name="category"]:checked');
-                if (!category) {
-                    errors.push('Please select a category');
-                }
-                
-                // Description validation
-                const description = this.descriptionInput.value.trim();
-                if (!description) {
-                    errors.push('Campaign description is required');
-                } else if (description.length < 150) {
-                    errors.push('Campaign description must be at least 150 characters');
-                }
-                
-                // Goal amount validation
-                const goalAmount = parseFloat(this.goalAmountInput.value);
-                if (!goalAmount) {
-                    errors.push('Goal amount is required');
-                } else if (goalAmount < 5000) {
-                    errors.push('Goal amount must be at least ₱5,000');
-                } else if (goalAmount > 10000000) {
-                    errors.push('Goal amount cannot exceed ₱10,000,000');
-                }
-                
-                // Duration validation
-                const duration = this.durationSelect.value;
-                if (!duration) {
-                    errors.push('Please select campaign duration');
-                }
-                
-                return errors;
-            }
-            
-            handleSubmit(e) {
-                e.preventDefault();
-                
-                const errors = this.validateForm();
-                
-                if (errors.length > 0) {
-                    alert('Please fix the following errors:\n\n' + errors.join('\n'));
-                    return;
-                }
-                
-                // Get form data
-                const formData = this.getFormData();
-                
-                // Save to localStorage
-                localStorage.setItem('fundraiserDraft', JSON.stringify(formData));
-                
-                // Navigate to next step
-                window.location.href = 'start-fundraiser-step2.html';
-            }
-            
-            getFormData() {
-                const category = this.form.querySelector('input[name="category"]:checked');
-                
-                return {
-                    title: this.titleInput.value.trim(),
-                    category: category ? category.value : '',
-                    description: this.descriptionInput.value.trim(),
-                    goalAmount: parseFloat(this.goalAmountInput.value),
-                    duration: this.durationSelect.value,
-                    images: this.selectedImages.map(img => ({
-                        name: img.name,
-                        dataUrl: img.dataUrl
-                    })),
-                    timestamp: new Date().toISOString()
-                };
-            }
-            
-            saveDraft() {
-                try {
-                    const formData = this.getFormData();
-                    localStorage.setItem('fundraiserDraft', JSON.stringify(formData));
-                    console.log('Draft saved');
-                } catch (error) {
-                    console.error('Error saving draft:', error);
-                }
-            }
-            
-            loadDraftData() {
-                try {
-                    const draftData = localStorage.getItem('fundraiserDraft');
-                    if (!draftData) return;
-                    
-                    const data = JSON.parse(draftData);
-                    
-                    // Restore form values
-                    if (data.title) {
-                        this.titleInput.value = data.title;
-                        this.updateCharCount('title');
-                    }
-                    
-                    if (data.category) {
-                        const categoryRadio = this.form.querySelector(`input[name="category"][value="${data.category}"]`);
-                        if (categoryRadio) {
-                            categoryRadio.checked = true;
-                        }
-                    }
-                    
-                    if (data.description) {
-                        this.descriptionInput.value = data.description;
-                        this.updateCharCount('description');
-                    }
-                    
-                    if (data.goalAmount) {
-                        this.goalAmountInput.value = data.goalAmount;
-                    }
-                    
-                    if (data.duration) {
-                        this.durationSelect.value = data.duration;
-                    }
-                    
-                    if (data.images && data.images.length > 0) {
-                        this.selectedImages = data.images;
-                        this.renderImagePreviews();
-                    }
-                    
-                    console.log('Draft loaded');
-                } catch (error) {
-                    console.error('Error loading draft:', error);
-                }
-            }
-        }
-
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                new StartFundraiser();
-            });
-        } else {
-            new StartFundraiser();
-        }
-
-        // Logout functionality
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    this.textContent = 'Logging out...';
-                    this.disabled = true;
-                    setTimeout(() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = "{{ route('login') }}";
-                    }, 800);
-                }
-            });
-        }
-
-        // Cancel button
-        const cancelBtn = document.querySelector('.btn-cancel');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to cancel? All entered data will be lost.')) {
-                    window.location.href = '{{ route('fundraisers.index') }}';
-                }
-            });
-        }
-    
-    </script>
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
 @endpush

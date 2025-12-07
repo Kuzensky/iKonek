@@ -5,6 +5,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\FundraiserController;
+use App\Http\Controllers\FundraiserSessionController;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
@@ -61,9 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Schedule Donation Flow
-    Route::get('/donations/schedule', function () {
-        return view('donations.schedule');
-    })->name('donations.schedule');
+    Route::get('/donations/schedule', [App\Http\Controllers\DonationController::class, 'schedule'])->name('donations.schedule');
 
     Route::get('/donations/schedule/step2', function () {
         return view('donations.step2');
@@ -77,22 +76,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('donations.confirmation');
     })->name('donations.confirmation');
 
-    // Start Fundraiser Flow
+    // Start Fundraiser Flow (Session-based multi-step)
+    Route::prefix('fundraisers/create')->name('fundraisers.create.')->group(function () {
+        Route::get('/step1', [FundraiserSessionController::class, 'step1'])->name('step1');
+        Route::post('/step1', [FundraiserSessionController::class, 'storeStep1'])->name('step1.store');
+
+        Route::get('/step2', [FundraiserSessionController::class, 'step2'])->name('step2');
+        Route::post('/step2', [FundraiserSessionController::class, 'storeStep2'])->name('step2.store');
+
+        Route::get('/step3', [FundraiserSessionController::class, 'step3'])->name('step3');
+        Route::post('/step3', [FundraiserSessionController::class, 'storeStep3'])->name('step3.store');
+
+        Route::get('/step4', [FundraiserSessionController::class, 'step4'])->name('step4');
+        Route::post('/review', [FundraiserSessionController::class, 'review'])->name('review');
+        Route::post('/submit', [FundraiserSessionController::class, 'submit'])->name('submit');
+
+        Route::post('/clear-session', [FundraiserSessionController::class, 'clearSession'])->name('clearSession');
+    });
+
+    // Legacy route for backwards compatibility
     Route::get('/fundraisers/create', function () {
-        return view('fundraisers.create.step1');
+        return redirect()->route('fundraisers.create.step1');
     })->name('fundraisers.create');
-
-    Route::get('/fundraisers/create/step2', function () {
-        return view('fundraisers.create.step2');
-    })->name('fundraisers.create.step2');
-
-    Route::get('/fundraisers/create/step3', function () {
-        return view('fundraisers.create.step3');
-    })->name('fundraisers.create.step3');
-
-    Route::get('/fundraisers/create/step4', function () {
-        return view('fundraisers.create.step4');
-    })->name('fundraisers.create.step4');
 
     Route::get('/fundraisers/success', function () {
         return view('fundraisers.create.success');

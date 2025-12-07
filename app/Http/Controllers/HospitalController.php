@@ -25,4 +25,15 @@ class HospitalController extends Controller
     {
         return view('hospitals.show', compact('hospital'));
     }
+
+    public function apiIndex()
+    {
+        $hospitals = Hospital::where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name', 'city', 'region', 'status', 'is_active', 'blood_types_available']);
+
+        return response()->json([
+            'hospitals' => $hospitals
+        ]);
+    }
 }

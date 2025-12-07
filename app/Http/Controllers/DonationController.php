@@ -3,11 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\BloodDonation;
+use App\Models\Hospital;
 use App\Http\Requests\StoreDonationRequest;
 use Illuminate\Http\Request;
 
 class DonationController extends Controller
 {
+    public function schedule()
+    {
+        $hospitals = Hospital::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        // Pass hospitals with blood types as JSON for JavaScript
+        $hospitalsJson = $hospitals->map(function ($hospital) {
+            return [
+                'id' => $hospital->id,
+                'name' => $hospital->name,
+                'city' => $hospital->city,
+                'blood_types_available' => $hospital->blood_types_available ?? []
+            ];
+        });
+
+        return view('donations.schedule', compact('hospitals', 'hospitalsJson'));
+    }
+
     public function index(Request $request)
     {
         $query = BloodDonation::forUser(auth()->id())

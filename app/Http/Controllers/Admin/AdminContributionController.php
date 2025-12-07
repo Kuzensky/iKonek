@@ -18,6 +18,8 @@ class AdminContributionController extends Controller
             return redirect()->back()->with('error', 'Cannot verify a rejected contribution');
         }
 
+        $oldStatus = $contribution->status;
+
         $contribution->status = 'verified';
         $contribution->verified_at = now();
         $contribution->verified_by = auth()->guard('admin')->id();
@@ -25,6 +27,14 @@ class AdminContributionController extends Controller
 
         // The FundraiserContribution model's boot method will automatically
         // update the fundraiser's current_amount
+
+        // Dispatch real-time events
+        event(new \App\Events\ContributionStatusChanged($contribution, $oldStatus, 'verified'));
+        event(new \App\Events\PlatformStatsUpdated());
+        event(new \App\Events\AdminDashboardStatsUpdated());
+
+        // Send email notification
+        $contribution->user->notify(new \App\Notifications\ContributionVerifiedEmail($contribution));
 
         return redirect()->route('admin.fundraising.index', ['tab' => 'donations'])
             ->with('success', 'Contribution verified successfully');
@@ -46,11 +56,16 @@ class AdminContributionController extends Controller
             return redirect()->back()->with('error', 'Contribution is already rejected');
         }
 
+        $oldStatus = $contribution->status;
+
         $contribution->status = 'rejected';
         $contribution->notes = $request->notes;
         $contribution->verified_by = auth()->guard('admin')->id();
         $contribution->verified_at = now();
         $contribution->save();
+
+        // Dispatch real-time events
+        event(new \App\Events\ContributionStatusChanged($contribution, $oldStatus, 'rejected'));
 
         return redirect()->route('admin.fundraising.index', ['tab' => 'donations'])
             ->with('success', 'Contribution rejected');

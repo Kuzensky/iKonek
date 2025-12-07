@@ -15,3 +15,28 @@ Broadcast::channel('user.{userId}', function ($user, $userId) {
 Broadcast::channel('fundraiser.{fundraiserId}', function () {
     return true;
 });
+
+// Public platform stats channel
+Broadcast::channel('platform.stats', function () {
+    return true;
+});
+
+// Public hospitals updates channel
+Broadcast::channel('hospitals.updates', function () {
+    return true;
+});
+
+// Public campaigns updates channel
+Broadcast::channel('campaigns.updates', function () {
+    return true;
+});
+
+// Public featured campaigns channel
+Broadcast::channel('campaigns.featured', function () {
+    return true;
+});
+
+// Private admin dashboard channel
+Broadcast::channel('admin.dashboard', function ($user) {
+    return $user instanceof \App\Models\Admin;
+});

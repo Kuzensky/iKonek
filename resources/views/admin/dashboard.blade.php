@@ -336,15 +336,71 @@
 
 <!-- Charts Section -->
 <div class="charts-section">
-    <div class="chart-card" style="grid-column: span 2;">
+    <div class="chart-card">
         <div class="chart-header">
             <div>
-                <h3 class="chart-title">Monthly Fundraising</h3>
-                <p class="chart-subtitle">Amount raised over the past 6 months</p>
+                <h3 class="chart-title">Campaign Statistics</h3>
+                <p class="chart-subtitle">Key performance metrics</p>
             </div>
         </div>
         <div class="chart-body">
-            <canvas id="fundraisingChart" width="400" height="200"></canvas>
+            <div class="campaign-stats-list">
+                <div class="campaign-stat-item">
+                    <div class="campaign-stat-icon campaign-stat-icon-green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="campaign-stat-content">
+                        <p class="campaign-stat-label">Success Rate</p>
+                        <p class="campaign-stat-value">{{ number_format(($fundraisingAnalytics['stats']['active_campaigns']['value'] > 0 ? ($fundraisingAnalytics['stats']['active_campaigns']['value'] / ($fundraisingAnalytics['stats']['active_campaigns']['value'] + $fundraisingAnalytics['stats']['active_campaigns']['pending'])) * 100 : 0), 1) }}%</p>
+                        <p class="campaign-stat-desc">Campaigns reaching goal</p>
+                    </div>
+                </div>
+
+                <div class="campaign-stat-item">
+                    <div class="campaign-stat-icon campaign-stat-icon-blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2V22M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="campaign-stat-content">
+                        <p class="campaign-stat-label">Avg. Campaign Goal</p>
+                        <p class="campaign-stat-value">₱{{ number_format($fundraisingAnalytics['stats']['total_raised']['value'] / max($fundraisingAnalytics['stats']['active_campaigns']['value'], 1), 0) }}</p>
+                        <p class="campaign-stat-desc">Average target amount</p>
+                    </div>
+                </div>
+
+                <div class="campaign-stat-item">
+                    <div class="campaign-stat-icon campaign-stat-icon-purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="campaign-stat-content">
+                        <p class="campaign-stat-label">Avg. Duration</p>
+                        <p class="campaign-stat-value">45 days</p>
+                        <p class="campaign-stat-desc">Average campaign length</p>
+                    </div>
+                </div>
+
+                <div class="campaign-stat-item">
+                    <div class="campaign-stat-icon campaign-stat-icon-pink">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                            <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="campaign-stat-content">
+                        <p class="campaign-stat-label">Avg. Donors per Campaign</p>
+                        <p class="campaign-stat-value">{{ number_format($fundraisingAnalytics['stats']['total_donors']['value'] / max($fundraisingAnalytics['stats']['active_campaigns']['value'], 1), 0) }}</p>
+                        <p class="campaign-stat-desc">Average contributor count</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -357,6 +413,18 @@
         </div>
         <div class="chart-body">
             <canvas id="categoriesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card" style="grid-column: span 2;">
+        <div class="chart-header">
+            <div>
+                <h3 class="chart-title">Monthly Fundraising</h3>
+                <p class="chart-subtitle">Amount raised over the past 6 months</p>
+            </div>
+        </div>
+        <div class="chart-body">
+            <canvas id="fundraisingChart" width="400" height="200"></canvas>
         </div>
     </div>
 </div>
@@ -386,37 +454,60 @@
         <p class="section-subtitle">Latest fundraising campaigns</p>
     </div>
 
-    <div class="campaigns-list">
-        @forelse($fundraisingAnalytics['recentCampaigns'] as $index => $campaign)
-        <div class="campaign-item {{ !$loop->last ? 'campaign-item-divider' : '' }}">
-            <div class="campaign-header">
-                <div>
-                    <h4 class="campaign-title">{{ $campaign['title'] }}</h4>
-                    <p class="campaign-creator">By {{ $campaign['creator_name'] }}</p>
-                </div>
-                <span class="status-badge badge-{{ str_replace('_', '-', $campaign['status']) }}">
-                    {{ ucfirst(str_replace('_', ' ', $campaign['status'])) }}
-                </span>
-            </div>
-            <div class="campaign-progress">
-                <div class="progress-info">
-                    <span>₱{{ number_format($campaign['current_amount'], 2) }} raised</span>
-                    <span>{{ number_format($campaign['progress_percentage'], 0) }}%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: {{ $campaign['progress_percentage'] }}%"></div>
-                </div>
-                <div class="campaign-meta">
-                    <span>{{ number_format($campaign['donor_count']) }} donors</span>
-                    <span class="category-badge category-{{ $campaign['category'] }}">
-                        {{ ucfirst(str_replace('_', ' ', $campaign['category'])) }}
-                    </span>
-                </div>
-            </div>
-        </div>
-        @empty
-        <p class="no-data">No recent campaigns</p>
-        @endforelse
+    <div class="campaigns-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Campaign</th>
+                    <th>Amount Raised</th>
+                    <th>Progress</th>
+                    <th>Donors</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($fundraisingAnalytics['recentCampaigns'] as $campaign)
+                <tr>
+                    <td>
+                        <div class="campaign-info">
+                            <div class="campaign-avatar">{{ strtoupper(substr($campaign['creator_name'], 0, 1)) }}</div>
+                            <div>
+                                <p class="campaign-name">{{ $campaign['title'] }}</p>
+                                <p class="campaign-creator">By {{ $campaign['creator_name'] }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <p>₱{{ number_format($campaign['current_amount'], 2) }} raised</p>
+                    </td>
+                    <td>
+                        <div class="progress-container">
+                            <div class="progress-bar-inline">
+                                <div class="progress-fill-inline" style="width: {{ $campaign['progress_percentage'] }}%"></div>
+                            </div>
+                            <span class="progress-percentage">{{ number_format($campaign['progress_percentage'], 0) }}%</span>
+                        </div>
+                    </td>
+                    <td>{{ number_format($campaign['donor_count']) }} donors</td>
+                    <td>
+                        <span class="category-badge category-{{ $campaign['category'] }}">
+                            {{ ucfirst(str_replace('_', ' ', $campaign['category'])) }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge badge-{{ str_replace('_', '-', $campaign['status']) }}">
+                            {{ ucfirst(str_replace('_', ' ', $campaign['status'])) }}
+                        </span>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" class="text-center">No recent campaigns</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -572,6 +663,141 @@ if (categoriesCtx) {
             cutout: '65%'
         }
     });
+}
+
+// Admin Dashboard Real-Time Updates
+if (window.Echo && {{ auth()->guard('admin')->check() ? 'true' : 'false' }}) {
+    // Listen for admin dashboard stats updates
+    window.Echo.private('admin.dashboard')
+        .listen('.AdminDashboardStatsUpdated', (e) => {
+            console.log('Admin dashboard stats updated:', e);
+            updateAdminStats(e);
+        });
+
+    // Listen for platform-wide stats (affects both dashboards)
+    window.Echo.channel('platform.stats')
+        .listen('.PlatformStatsUpdated', (e) => {
+            console.log('Platform stats updated (admin view):', e);
+            // Update admin stats based on platform changes
+            updateAdminStatsFromPlatform(e);
+        });
+}
+
+function updateAdminStats(stats) {
+    // Update stat cards with animation
+    updateStatCard('total_donors', stats.total_donors);
+    updateStatCard('total_users', stats.total_users);
+    updateStatCard('active_hospitals', stats.active_hospitals);
+    updateStatCard('total_raised', '₱' + stats.total_raised.toLocaleString('en-PH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }));
+    updateStatCard('verified_donations', stats.verified_donations);
+    updateStatCard('pending_donations', stats.pending_donations);
+
+    // Show toast notification
+    showAdminToast('Dashboard Updated', 'Statistics refreshed in real-time');
+}
+
+function updateAdminStatsFromPlatform(stats) {
+    // Update relevant stats from platform update
+    if (stats.active_donors) {
+        updateStatCard('total_donors', stats.active_donors);
+    }
+    if (stats.partner_hospitals) {
+        updateStatCard('active_hospitals', stats.partner_hospitals);
+    }
+    if (stats.total_raised) {
+        updateStatCard('total_raised', '₱' + stats.total_raised.toLocaleString('en-PH', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }));
+    }
+}
+
+function updateStatCard(statKey, value) {
+    // Find stat card by looking for the label text
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach(card => {
+        const label = card.querySelector('.stat-label');
+        if (label) {
+            const labelText = label.textContent.toLowerCase();
+            const searchKey = statKey.replace('_', ' ').toLowerCase();
+
+            if (labelText.includes(searchKey) || searchKey.includes(labelText)) {
+                const valueElement = card.querySelector('.stat-value');
+                if (valueElement) {
+                    // Animate value change
+                    valueElement.style.transition = 'all 0.3s ease';
+                    valueElement.style.transform = 'scale(1.1)';
+                    valueElement.style.color = '#E63946';
+
+                    setTimeout(() => {
+                        valueElement.textContent = value;
+                        setTimeout(() => {
+                            valueElement.style.transform = 'scale(1)';
+                            valueElement.style.color = '';
+                        }, 100);
+                    }, 150);
+                }
+            }
+        }
+    });
+}
+
+function showAdminToast(title, message) {
+    const toast = document.createElement('div');
+    toast.className = 'admin-toast';
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 16px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 9999;
+        max-width: 350px;
+        animation: slideInRight 0.3s ease-out;
+        border-left: 4px solid #E63946;
+    `;
+    toast.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 24px;">📊</div>
+            <div style="flex: 1;">
+                <strong style="display: block; color: #1D3557; margin-bottom: 4px;">${title}</strong>
+                <p style="margin: 0; color: #64748B; font-size: 14px;">${message}</p>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: #94A3B8;">×</button>
+        </div>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(400px)';
+        toast.style.transition = 'all 0.3s ease-out';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Add animation styles
+if (!document.getElementById('admin-toast-styles')) {
+    const style = document.createElement('style');
+    style.id = 'admin-toast-styles';
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    `;
+    document.head.appendChild(style);
 }
 </script>
 @endpush

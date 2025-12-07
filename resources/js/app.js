@@ -57,7 +57,94 @@ if (window.Laravel && window.Laravel.userId && window.Echo) {
             if (document.getElementById('totalContributions')) {
                 document.getElementById('totalContributions').textContent = '₱' + e.total_contributions.toLocaleString();
             }
+        })
+        .listen('.CampaignStatusChanged', (e) => {
+            console.log('Your campaign status changed:', e);
+
+            const statusMessages = {
+                'active': `Your campaign "${e.title}" has been approved and is now live!`,
+                'suspended': `Your campaign "${e.title}" has been suspended. ${e.admin_notes || 'Please contact support.'}`,
+                'cancelled': `Your campaign "${e.title}" has been cancelled.`,
+                'rejected': `Your campaign "${e.title}" was not approved. ${e.admin_notes || 'Please review guidelines.'}`
+            };
+
+            const message = statusMessages[e.new_status] || `Campaign status updated to ${e.status_display}`;
+            const toastType = e.new_status === 'active' ? 'success' :
+                             e.new_status === 'suspended' ? 'warning' : 'info';
+
+            showToast('Campaign Update', message, toastType);
+
+            // Refresh dashboard stats
+            refreshDashboardStats();
+        })
+        .listen('.DonationStatusChanged', (e) => {
+            console.log('Donation status changed:', e);
+
+            if (e.new_status === 'verified') {
+                showToast('Donation Verified!',
+                         `Your donation at ${e.hospital_name} has been verified. You've saved ${e.lives_impacted} lives!`,
+                         'success');
+            } else if (e.new_status === 'failed') {
+                showToast('Donation Update',
+                         `Your donation status has been updated to ${e.new_status}`,
+                         'warning');
+            }
+
+            // Update dashboard stats
+            if (document.getElementById('totalDonations')) {
+                document.getElementById('totalDonations').textContent = e.total_donations;
+            }
+            if (document.getElementById('totalLivesImpacted')) {
+                document.getElementById('totalLivesImpacted').textContent = e.total_lives_impacted;
+            }
+        })
+        .listen('.ContributionStatusChanged', (e) => {
+            console.log('Contribution status changed:', e);
+
+            if (e.new_status === 'verified') {
+                showToast('Contribution Verified!',
+                         `Your contribution to "${e.fundraiser_title}" has been verified!`,
+                         'success');
+            } else if (e.new_status === 'rejected') {
+                showToast('Contribution Rejected',
+                         `Your contribution to "${e.fundraiser_title}" was rejected. Please contact support.`,
+                         'error');
+            }
+
+            // Update total contributions
+            if (document.getElementById('totalContributions')) {
+                document.getElementById('totalContributions').textContent =
+                    '₱' + e.user_total_contributions.toLocaleString();
+            }
         });
+}
+
+/**
+ * Refresh dashboard stats via AJAX
+ */
+function refreshDashboardStats() {
+    if (!window.Laravel || !window.Laravel.csrfToken) return;
+
+    fetch('/api/dashboard/stats', {
+        headers: {
+            'X-CSRF-TOKEN': window.Laravel.csrfToken,
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (document.getElementById('totalDonations')) {
+            document.getElementById('totalDonations').textContent = data.total_donations;
+        }
+        if (document.getElementById('totalLivesImpacted')) {
+            document.getElementById('totalLivesImpacted').textContent = data.total_lives_impacted;
+        }
+        if (document.getElementById('totalContributions')) {
+            document.getElementById('totalContributions').textContent =
+                '₱' + data.total_contributions.toLocaleString();
+        }
+    })
+    .catch(err => console.error('Failed to refresh stats:', err));
 }
 
 /**

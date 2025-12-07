@@ -30,12 +30,23 @@ class FundraiserController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = auth()->id();
-        $data['status'] = 'active';
+        $data['status'] = 'pending'; // Set to pending for admin approval
+        $data['current_amount'] = 0; // Initialize current amount
+        $data['is_featured'] = false; // Not featured by default
 
         $fundraiser = Fundraiser::create($data);
 
-        return redirect()->route('fundraisers.show', $fundraiser)
-            ->with('success', 'Fundraiser created successfully!');
+        // Dispatch events for real-time updates
+        event(new \App\Events\PlatformStatsUpdated());
+        event(new \App\Events\AdminDashboardStatsUpdated());
+
+        // Send notification to user
+        $fundraiser->creator->notify(
+            new \App\Notifications\CampaignSubmittedNotification($fundraiser)
+        );
+
+        return redirect()->route('fundraisers.success')
+            ->with('success', 'Your fundraiser has been submitted for review!');
     }
 
     public function show(Fundraiser $fundraiser)

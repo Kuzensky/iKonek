@@ -122,7 +122,7 @@
 /* Charts Section */
 .charts-section {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
     margin-bottom: 32px;
 }
@@ -652,61 +652,73 @@
 
 /* Recent Campaigns Card */
 .recent-campaigns-card {
-    background: transparent;
-}
-
-/* Campaigns List */
-.campaigns-list {
-    display: flex;
-    flex-direction: column;
     background: white;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E9ECEF;
 }
 
-.campaign-item {
-    padding: 20px 0;
-    transition: opacity 0.2s ease;
+/* Campaigns Table */
+.campaigns-table {
+    overflow-x: auto;
 }
 
-.campaign-item:first-child {
-    padding-top: 0;
+.campaigns-table table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.campaign-item:last-child {
-    padding-bottom: 0;
+.campaigns-table th {
+    padding: 12px;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(29, 53, 87, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #E9ECEF;
 }
 
-.campaign-item-divider {
-    border-bottom: 1px solid #E9ECEF;
-    padding-bottom: 24px;
-    margin-bottom: 4px;
+.campaigns-table td {
+    padding: 16px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #1D3557;
+    border-bottom: 1px solid #F3F4F6;
 }
 
-.campaign-item:hover {
-    opacity: 0.85;
-}
-
-.campaign-header {
+.campaign-info {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
+    align-items: center;
+    gap: 12px;
 }
 
-.campaign-title {
+.campaign-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.9) 0%, rgba(209, 40, 53, 0.9) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.campaign-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
     font-weight: 600;
     color: #1D3557;
-    margin: 0 0 4px 0;
-    line-height: 1.4;
+    margin: 0 0 2px 0;
 }
 
 .campaign-creator {
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     color: rgba(29, 53, 87, 0.6);
     margin: 0;
 }
@@ -741,53 +753,40 @@
     color: #DC2626;
 }
 
-/* Campaign Progress */
-.campaign-progress {
+.badge-cancelled {
+    background: #F3F4F6;
+    color: #6B7280;
+}
+
+/* Progress Bar Inline (for table cells) */
+.progress-container {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 8px;
 }
 
-.progress-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-}
-
-.progress-info span:first-child {
-    font-weight: 600;
-    color: #1D3557;
-}
-
-.progress-info span:last-child {
-    font-weight: 600;
-    color: #E63946;
-}
-
-.progress-bar {
-    width: 100%;
+.progress-bar-inline {
+    flex: 1;
+    min-width: 80px;
     height: 8px;
     background: #E5E7EB;
     border-radius: 4px;
     overflow: hidden;
 }
 
-.progress-fill {
+.progress-fill-inline {
     height: 100%;
     background: linear-gradient(90deg, #E63946 0%, #DC2626 100%);
     border-radius: 4px;
     transition: width 0.3s ease;
 }
 
-.campaign-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.progress-percentage {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    color: rgba(29, 53, 87, 0.6);
+    font-size: 13px;
+    font-weight: 600;
+    color: #E63946;
+    white-space: nowrap;
 }
 
 .category-badge {
@@ -830,6 +829,90 @@
 .stat-pending {
     color: #CA8A04;
     font-weight: 500;
+}
+
+/* Campaign Statistics List */
+.campaign-stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.campaign-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #F8F9FA;
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campaign-stat-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.campaign-stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.campaign-stat-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.campaign-stat-icon-green {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22C55E;
+}
+
+.campaign-stat-icon-blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+.campaign-stat-icon-purple {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8B5CF6;
+}
+
+.campaign-stat-icon-pink {
+    background: rgba(236, 72, 153, 0.1);
+    color: #EC4899;
+}
+
+.campaign-stat-content {
+    flex: 1;
+}
+
+.campaign-stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(29, 53, 87, 0.6);
+    margin: 0 0 2px 0;
+}
+
+.campaign-stat-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1D3557;
+    margin: 0 0 2px 0;
+}
+
+.campaign-stat-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: rgba(29, 53, 87, 0.5);
+    margin: 0;
 }
 
 /* Responsive adjustments for fundraising section */
