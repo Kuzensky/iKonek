@@ -79,7 +79,7 @@
                 <h1 class="success-title">Donation Scheduled Successfully!</h1>
                 <p class="success-description">
                     Your appointment has been confirmed. We've sent the details to<br>
-                    <strong id="confirmEmail">aguzarjoel07@gmail.com</strong>
+                    <strong id="confirmEmail">{{ auth()->user()->email }}</strong>
                 </p>
                 <p class="success-description" style="margin-top: 8px; font-size: 14px;">
                     Please arrive 15 minutes early and bring a valid ID.
@@ -145,11 +145,11 @@
                             <p class="info-box-label">Contact Information</p>
                             <p class="info-box-subvalue">
                                 <img src="{{ asset('assets/icons/notification.svg') }}" alt="" width="14" height="14" class="inline-icon">
-                                <span id="appointmentEmail">aguzarjoel07@gmail.com</span>
+                                <span id="appointmentEmail">{{ auth()->user()->email }}</span>
                             </p>
                             <p class="info-box-subvalue">
                                 <img src="{{ asset('assets/icons/phone.svg') }}" alt="" width="14" height="14" class="inline-icon">
-                                <span id="appointmentContactPhone">+639184648984</span>
+                                <span id="appointmentContactPhone">{{ auth()->user()->contact_number }}</span>
                             </p>
                         </div>
                     </div>

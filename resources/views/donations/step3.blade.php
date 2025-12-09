@@ -671,26 +671,76 @@ class HealthInfoForm {
         this.modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
-    processFinalConfirmation() {
+    async processFinalConfirmation() {
         const finalConfirmBtn = document.getElementById('finalConfirmBtn');
         finalConfirmBtn.disabled = true;
         finalConfirmBtn.textContent = 'Processing...';
+
         const step1Data = JSON.parse(localStorage.getItem('scheduleFormData') || '{}');
         const step2Data = JSON.parse(localStorage.getItem('contactFormData') || '{}');
         const healthData = JSON.parse(localStorage.getItem('healthFormData') || '{}');
-        const appointment = {
-            id: 'APT-' + Date.now(),
-            ...step1Data,
-            ...step2Data,
-            ...healthData,
-            status: 'confirmed',
-            createdAt: new Date().toISOString()
+
+        // Combine date and time to create appointment_date
+        const appointmentDateTime = `${step1Data.date} ${step1Data.time}`;
+        const appointmentDate = new Date(appointmentDateTime);
+
+        // Calculate end_time (1 hour after appointment)
+        const endDate = new Date(appointmentDate);
+        endDate.setHours(endDate.getHours() + 1);
+
+        // Prepare appointment data for server
+        const appointmentData = {
+            hospital_id: step1Data.hospital,
+            appointment_date: appointmentDate.toISOString().slice(0, 19).replace('T', ' '),
+            end_time: endDate.toISOString().slice(0, 19).replace('T', ' '),
+            notes: healthData.medicalConditions || null
         };
-        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
-        appointments.push(appointment);
-        localStorage.setItem('appointments', JSON.stringify(appointments));
-        console.log('Appointment created:', appointment);
-        setTimeout(() => { window.location.href = '{{ route('donations.confirmation') }}'; }, 800);
+
+        try {
+            // Get CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            // Submit to server
+            const response = await fetch('{{ route('appointments.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(appointmentData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to create appointment');
+            }
+
+            const result = await response.json();
+            console.log('Appointment created successfully:', result);
+
+            // Store appointment data in localStorage for confirmation page display
+            const displayData = {
+                id: result.appointment?.id || 'APT-' + Date.now(),
+                ...step1Data,
+                ...step2Data,
+                ...healthData,
+                status: 'confirmed',
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('lastAppointment', JSON.stringify(displayData));
+
+            // Redirect to confirmation page
+            setTimeout(() => { window.location.href = '{{ route('donations.confirmation') }}'; }, 800);
+
+        } catch (error) {
+            console.error('Error creating appointment:', error);
+            finalConfirmBtn.disabled = false;
+            finalConfirmBtn.textContent = 'Confirm Appointment';
+
+            // Show error message to user
+            alert('Failed to create appointment. Please try again. Error: ' + error.message);
+        }
     }
     closeModal() {
         this.modal.style.display = 'none';
@@ -1142,26 +1192,76 @@ class HealthInfoForm {
         this.modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
-    processFinalConfirmation() {
+    async processFinalConfirmation() {
         const finalConfirmBtn = document.getElementById('finalConfirmBtn');
         finalConfirmBtn.disabled = true;
         finalConfirmBtn.textContent = 'Processing...';
+
         const step1Data = JSON.parse(localStorage.getItem('scheduleFormData') || '{}');
         const step2Data = JSON.parse(localStorage.getItem('contactFormData') || '{}');
         const healthData = JSON.parse(localStorage.getItem('healthFormData') || '{}');
-        const appointment = {
-            id: 'APT-' + Date.now(),
-            ...step1Data,
-            ...step2Data,
-            ...healthData,
-            status: 'confirmed',
-            createdAt: new Date().toISOString()
+
+        // Combine date and time to create appointment_date
+        const appointmentDateTime = `${step1Data.date} ${step1Data.time}`;
+        const appointmentDate = new Date(appointmentDateTime);
+
+        // Calculate end_time (1 hour after appointment)
+        const endDate = new Date(appointmentDate);
+        endDate.setHours(endDate.getHours() + 1);
+
+        // Prepare appointment data for server
+        const appointmentData = {
+            hospital_id: step1Data.hospital,
+            appointment_date: appointmentDate.toISOString().slice(0, 19).replace('T', ' '),
+            end_time: endDate.toISOString().slice(0, 19).replace('T', ' '),
+            notes: healthData.medicalConditions || null
         };
-        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
-        appointments.push(appointment);
-        localStorage.setItem('appointments', JSON.stringify(appointments));
-        console.log('Appointment created:', appointment);
-        setTimeout(() => { window.location.href = '{{ route('donations.confirmation') }}'; }, 800);
+
+        try {
+            // Get CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            // Submit to server
+            const response = await fetch('{{ route('appointments.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(appointmentData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to create appointment');
+            }
+
+            const result = await response.json();
+            console.log('Appointment created successfully:', result);
+
+            // Store appointment data in localStorage for confirmation page display
+            const displayData = {
+                id: result.appointment?.id || 'APT-' + Date.now(),
+                ...step1Data,
+                ...step2Data,
+                ...healthData,
+                status: 'confirmed',
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('lastAppointment', JSON.stringify(displayData));
+
+            // Redirect to confirmation page
+            setTimeout(() => { window.location.href = '{{ route('donations.confirmation') }}'; }, 800);
+
+        } catch (error) {
+            console.error('Error creating appointment:', error);
+            finalConfirmBtn.disabled = false;
+            finalConfirmBtn.textContent = 'Confirm Appointment';
+
+            // Show error message to user
+            alert('Failed to create appointment. Please try again. Error: ' + error.message);
+        }
     }
     closeModal() {
         this.modal.style.display = 'none';

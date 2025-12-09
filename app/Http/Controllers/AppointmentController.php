@@ -31,8 +31,20 @@ class AppointmentController extends Controller
             'notes' => $request->notes,
         ]);
 
+        // Load hospital relationship for response
+        $appointment->load('hospital');
+
         // Broadcast event
         event(new AppointmentCreated($appointment));
+
+        // Return JSON for AJAX requests
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Appointment scheduled successfully!',
+                'appointment' => $appointment
+            ], 201);
+        }
 
         return redirect()->route('dashboard')
             ->with('success', 'Appointment scheduled successfully!');
