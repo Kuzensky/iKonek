@@ -26,6 +26,15 @@ class FundraiserContribution extends Model
 
     protected static function booted()
     {
+        // Handle contributions created with 'verified' status
+        static::created(function ($contribution) {
+            if ($contribution->status === 'verified') {
+                $contribution->fundraiser->updateCurrentAmount();
+                event(new \App\Events\ContributionVerified($contribution));
+            }
+        });
+
+        // Handle contributions updated to 'verified' status
         static::updated(function ($contribution) {
             if ($contribution->isDirty('status') && $contribution->status === 'verified') {
                 $contribution->verified_at = now();

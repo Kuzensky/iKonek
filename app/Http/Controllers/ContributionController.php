@@ -21,18 +21,21 @@ class ContributionController extends Controller
 
     public function store(StoreContributionRequest $request, Fundraiser $fundraiser)
     {
+        // For demo purposes, auto-approve contributions
         $contribution = FundraiserContribution::create([
             'fundraiser_id' => $fundraiser->id,
             'user_id' => auth()->id(),
             'amount' => $request->amount,
-            'status' => 'pending',
+            'status' => 'verified', // Auto-approve for demo
             'payment_method' => $request->payment_method,
-            'reference_number' => $request->reference_number,
+            'reference_number' => $request->reference_number ?? 'DEMO-' . strtoupper(uniqid()),
             'notes' => $request->notes,
+            'verified_at' => now(),
+            'verified_by' => auth()->id(),
         ]);
 
         return redirect()->route('fundraisers.show', $fundraiser)
-            ->with('success', 'Thank you for your contribution! It will be verified shortly.');
+            ->with('success', 'Thank you for your contribution! Your payment has been processed.');
     }
 
     public function show(FundraiserContribution $contribution)
