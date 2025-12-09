@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{{ asset('css/components/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fundraisers.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/start-fundraiser.css') }}">
+    <style>
+        main.dashboard-main { max-width: 100% !important; }
+    </style>
 @endpush
 
 @section('content')

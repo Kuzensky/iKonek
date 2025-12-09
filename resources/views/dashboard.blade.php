@@ -15,6 +15,12 @@
     <link rel="stylesheet" href="{{ asset('css/components/buttons.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/cards.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/dashboard.css') }}">
+    <style>
+        /* Override max-width for dashboard page */
+        main.dashboard-main {
+            max-width: 100% !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -53,9 +59,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->first_name, 0, 1)) }}</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">{{ auth()->user()->first_name }}</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
@@ -69,7 +75,7 @@
     <main class="dashboard-main">
         <header class="dashboard-header">
             <div class="header-left">
-                <h1 class="header-title">Welcome back, {{ auth()->user()->first_name }}!</h1>
+                <h1 class="header-title">Welcome back, {{ auth()->user()->name }}!</h1>
                 <p class="header-subtitle">Track your impact and manage your donations</p>
             </div>
             <div class="header-right">
@@ -158,6 +164,7 @@
         </div>
 
         <!-- Next Appointment Card -->
+        @if($nextAppointment)
         <div class="appointment-card">
             <div class="appointment-card-header">
                 <div class="appointment-header-left">
@@ -170,11 +177,11 @@
                         <p class="appointment-card-subtitle">Your upcoming blood donation</p>
                     </div>
                 </div>
-                <span class="badge badge-{{ strtolower($nextAppointment?->status ?? 'confirmed') }}">
+                <span class="badge badge-{{ strtolower($nextAppointment->status) }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    {{ ucfirst($nextAppointment?->status ?? 'Confirmed') }}
+                    {{ ucfirst($nextAppointment->status) }}
                 </span>
             </div>
 
@@ -188,8 +195,8 @@
                     </div>
                     <div class="appointment-column-content">
                         <p class="appointment-column-label">Date & Time</p>
-                        <p class="appointment-column-value">{{ $nextAppointment?->appointment_date?->format('F j, Y') ?? 'April 18, 2026' }}</p>
-                        <p class="appointment-column-time">{{ $nextAppointment?->appointment_date?->format('g:i A') ?? '10:00 AM' }}</p>
+                        <p class="appointment-column-value">{{ $nextAppointment->appointment_date->format('F j, Y') }}</p>
+                        <p class="appointment-column-time">{{ $nextAppointment->appointment_date->format('g:i A') }}</p>
                     </div>
                 </div>
 
@@ -202,18 +209,16 @@
                     </div>
                     <div class="appointment-column-content">
                         <p class="appointment-column-label">Location</p>
-                        <p class="appointment-column-value">{{ $nextAppointment?->hospital?->name ?? 'Philippine' }}</p>
-                        <p class="appointment-column-sublabel">{{ $nextAppointment?->hospital?->name ?? 'General Hospital' }}</p>
-                        @if($nextAppointment)
+                        <p class="appointment-column-value">{{ $nextAppointment->hospital->name }}</p>
+                        <p class="appointment-column-sublabel">{{ $nextAppointment->hospital->city }}</p>
                         <a href="#" class="appointment-column-link">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M15 3H21V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Taft Avenue, Manila
+                            {{ $nextAppointment->hospital->address }}
                         </a>
-                        @endif
                     </div>
                 </div>
 
@@ -227,13 +232,13 @@
                     <div class="appointment-column-content">
                         <p class="appointment-column-label">Duration</p>
                         <p class="appointment-column-value">Approx. 1 hour</p>
-                        <a href="{{ $nextAppointment ? route('appointments.show', $nextAppointment) : route('donations.schedule') }}" class="appointment-column-link">
+                        <a href="{{ route('appointments.show', $nextAppointment) }}" class="appointment-column-link">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M15 3H21V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            {{ $nextAppointment ? 'View Ticket' : 'Schedule Now' }}
+                            View Ticket
                         </a>
                     </div>
                 </div>
@@ -250,6 +255,23 @@
                 </div>
             </div>
         </div>
+        @else
+        <!-- No Appointment - Call to Action -->
+        <div class="appointment-card" style="text-align: center; padding: 48px 24px;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 16px; opacity: 0.3;">
+                <rect x="3" y="4" width="18" height="18" rx="2" stroke="#E63946" stroke-width="2"/>
+                <path d="M16 2V6M8 2V6M3 10H21" stroke="#E63946" stroke-width="2"/>
+            </svg>
+            <h3 style="font-size: 20px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">No Upcoming Appointments</h3>
+            <p style="color: #666; margin-bottom: 24px;">You don't have any scheduled blood donation appointments yet.</p>
+            <a href="{{ route('donations.schedule') }}" class="btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 11H5M12 18V4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Schedule Your First Donation</span>
+            </a>
+        </div>
+        @endif
 
         <!-- Stats Cards -->
         <div class="stats-section">

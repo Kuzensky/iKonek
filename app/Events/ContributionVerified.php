@@ -34,6 +34,8 @@ class ContributionVerified implements ShouldBroadcast
     {
         return [
             new PrivateChannel('user.' . $this->contribution->user_id),
+            new PrivateChannel('admin.dashboard'),
+            new Channel('fundraiser.' . $this->contribution->fundraiser_id),
         ];
     }
 
@@ -41,9 +43,12 @@ class ContributionVerified implements ShouldBroadcast
     {
         return [
             'contribution_id' => $this->contribution->id,
+            'fundraiser_id' => $this->contribution->fundraiser_id,
             'amount' => $this->contribution->amount,
             'fundraiser_title' => $this->contribution->fundraiser->title,
             'total_contributions' => $this->contribution->user->total_contributions,
+            'fundraiser_current_amount' => $this->contribution->fundraiser->current_amount,
+            'fundraiser_contributors_count' => $this->contribution->fundraiser->contributors_count,
         ];
     }
 }

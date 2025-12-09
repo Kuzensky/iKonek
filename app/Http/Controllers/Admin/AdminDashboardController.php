@@ -177,7 +177,7 @@ class AdminDashboardController extends Controller
 
         // Get Recent Campaigns
         $recentCampaigns = Fundraiser::with([
-                'creator:id,first_name,last_name,email',
+                'creator:id,name,email',
                 'contributions'
             ])
             ->whereIn('status', ['active', 'pending_review'])
@@ -195,7 +195,7 @@ class AdminDashboardController extends Controller
                 return [
                     'id' => $campaign->id,
                     'title' => $campaign->title,
-                    'creator_name' => $campaign->creator->first_name . ' ' . $campaign->creator->last_name,
+                    'creator_name' => $campaign->creator->name,
                     'goal_amount' => $campaign->goal_amount,
                     'current_amount' => $campaign->current_amount,
                     'progress_percentage' => $campaign->goal_amount > 0

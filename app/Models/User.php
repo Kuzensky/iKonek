@@ -21,6 +21,7 @@ class User extends Authenticatable
         'sex',
         'blood_type',
         'contact_number',
+        'avatar',
     ];
 
     protected $hidden = [

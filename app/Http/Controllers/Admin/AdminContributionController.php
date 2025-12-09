@@ -29,6 +29,7 @@ class AdminContributionController extends Controller
         // update the fundraiser's current_amount
 
         // Dispatch real-time events
+        event(new \App\Events\ContributionVerified($contribution));
         event(new \App\Events\ContributionStatusChanged($contribution, $oldStatus, 'verified'));
         event(new \App\Events\PlatformStatsUpdated());
         event(new \App\Events\AdminDashboardStatsUpdated());

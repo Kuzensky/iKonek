@@ -12,6 +12,12 @@
     <link rel="stylesheet" href="{{ asset('css/components/cards.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/profile.css') }}">
+    <style>
+        /* Override max-width for profile page */
+        main.dashboard-main {
+            max-width: 100% !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -51,9 +57,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
@@ -78,13 +84,13 @@
                                 <path d="M12 1v6m0 6v10M1 12h6m6 0h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
                         </button>
-                        <button class="btn btn-primary btn-edit-profile">
+                        <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-edit-profile">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                             Edit Profile
-                        </button>
+                        </a>
                     </div>
                 </div>
                 
@@ -95,7 +101,7 @@
                             <img src="{{ asset('assets/icons/red-blood-1.svg') }}" alt="" width="24" height="24">
                         </div>
                         <div class="stat-banner-content">
-                            <span class="stat-banner-value">12</span>
+                            <span class="stat-banner-value">{{ $totalDonations }}</span>
                             <span class="stat-banner-label">Total Donations</span>
                         </div>
                     </div>
@@ -105,7 +111,7 @@
                             <img src="{{ asset('assets/icons/lives-saved.svg') }}" alt="" width="24" height="24">
                         </div>
                         <div class="stat-banner-content">
-                            <span class="stat-banner-value">36</span>
+                            <span class="stat-banner-value">{{ $totalLivesImpacted }}</span>
                             <span class="stat-banner-label">Lives Saved</span>
                         </div>
                     </div>
@@ -115,7 +121,7 @@
                             <img src="{{ asset('assets/icons/achievement.svg') }}" alt="" width="24" height="24">
                         </div>
                         <div class="stat-banner-content">
-                            <span class="stat-banner-value">2</span>
+                            <span class="stat-banner-value">{{ auth()->user()->created_at->diffInYears(now()) }}</span>
                             <span class="stat-banner-label">Years Active</span>
                         </div>
                     </div>
@@ -139,7 +145,15 @@
             <aside class="profile-summary-card">
                 <div class="profile-avatar-section">
                     <div class="profile-avatar-container">
-                        <div class="profile-avatar-large" id="profileAvatar">PR</div>
+                        <div class="profile-avatar-large" id="profileAvatar">
+                            @php
+                                $nameParts = explode(' ', auth()->user()->name);
+                                $firstName = $nameParts[0] ?? '';
+                                $lastName = isset($nameParts[1]) ? $nameParts[count($nameParts) - 1] : '';
+                                $initials = strtoupper(substr($firstName, 0, 1) . ($lastName ? substr($lastName, 0, 1) : ''));
+                            @endphp
+                            {{ $initials }}
+                        </div>
                         <button class="avatar-upload-btn" id="avatarUploadBtn" aria-label="Change avatar">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -151,7 +165,7 @@
                 </div>
                 
                 <div class="profile-summary-info">
-                    <h2 class="profile-name">Priya Reyes</h2>
+                    <h2 class="profile-name">{{ auth()->user()->name }}</h2>
                     <p class="profile-donor-status">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#28A745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -160,7 +174,7 @@
                     </p>
                     <div class="profile-blood-type-badge">
                         <img src="{{ asset('assets/icons/white-blood-fill.svg') }}" alt="" width="14" height="14">
-                        <span>O POSITIVE</span>
+                        <span>{{ auth()->user()->blood_type ?? 'Not specified' }}</span>
                     </div>
                 </div>
 
@@ -174,7 +188,7 @@
                             </div>
                             <div class="profile-stat-details">
                                 <span class="profile-stat-label">Member since</span>
-                                <p class="profile-stat-value">January 2023</p>
+                                <p class="profile-stat-value">{{ auth()->user()->created_at->format('F Y') }}</p>
                             </div>
                         </div>
 
@@ -184,7 +198,7 @@
                             </div>
                             <div class="profile-stat-details">
                                 <span class="profile-stat-label">Total donations</span>
-                                <p class="profile-stat-value">12 donations</p>
+                                <p class="profile-stat-value">{{ $totalDonations }} {{ $totalDonations === 1 ? 'donation' : 'donations' }}</p>
                             </div>
                         </div>
 
@@ -194,7 +208,7 @@
                             </div>
                             <div class="profile-stat-details">
                                 <span class="profile-stat-label">Lives saved</span>
-                                <p class="profile-stat-value">36 lives</p>
+                                <p class="profile-stat-value">{{ $totalLivesImpacted }} {{ $totalLivesImpacted === 1 ? 'life' : 'lives' }}</p>
                             </div>
                         </div>
                     </div>
@@ -237,13 +251,13 @@
                             <div class="profile-field">
                                 <label class="profile-field-label">First Name</label>
                                 <div class="profile-field-value-wrapper">
-                                    <p class="profile-field-value">Priya</p>
+                                    <p class="profile-field-value">{{ auth()->user()->first_name ?? auth()->user()->name }}</p>
                                 </div>
                             </div>
                             <div class="profile-field">
                                 <label class="profile-field-label">Middle Name</label>
                                 <div class="profile-field-value-wrapper">
-                                    <p class="profile-field-value">Santos</p>
+                                    <p class="profile-field-value">{{ auth()->user()->middle_name ?? 'N/A' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -251,7 +265,7 @@
                         <div class="profile-field">
                             <label class="profile-field-label">Last Name</label>
                             <div class="profile-field-value-wrapper">
-                                <p class="profile-field-value">Reyes</p>
+                                <p class="profile-field-value">{{ auth()->user()->last_name ?? 'N/A' }}</p>
                             </div>
                         </div>
 
@@ -262,8 +276,10 @@
                                     <label class="profile-field-label">Date of Birth</label>
                                 </div>
                                 <div class="profile-field-value-wrapper">
-                                    <p class="profile-field-value">June 15, 1995</p>
-                                    <span class="profile-field-meta">(29 years old)</span>
+                                    <p class="profile-field-value">{{ auth()->user()->birthdate ? auth()->user()->birthdate->format('F j, Y') : 'N/A' }}</p>
+                                    @if(auth()->user()->birthdate)
+                                        <span class="profile-field-meta">({{ auth()->user()->birthdate->age }} years old)</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="profile-field">
@@ -272,8 +288,10 @@
                                     <label class="profile-field-label">Blood Type</label>
                                 </div>
                                 <div class="profile-field-value-wrapper">
-                                    <p class="profile-field-value">O POSITIVE</p>
-                                    <span class="profile-field-badge">Universal Donor</span>
+                                    <p class="profile-field-value">{{ auth()->user()->blood_type ?? 'N/A' }}</p>
+                                    @if(auth()->user()->blood_type === 'O-')
+                                        <span class="profile-field-badge">Universal Donor</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -296,7 +314,7 @@
                         <div class="profile-field">
                             <label class="profile-field-label">Email Address</label>
                             <div class="profile-field-value-wrapper">
-                                <p class="profile-field-value">priya.reyes@email.com</p>
+                                <p class="profile-field-value">{{ auth()->user()->email }}</p>
                                 <span class="profile-field-status verified">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#28A745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -312,7 +330,7 @@
                                 <label class="profile-field-label">Phone Number</label>
                             </div>
                             <div class="profile-field-value-wrapper">
-                                <p class="profile-field-value">+63 912 345 6789</p>
+                                <p class="profile-field-value">{{ auth()->user()->contact_number ?? 'N/A' }}</p>
                                 <span class="profile-field-status verified">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#28A745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -328,7 +346,7 @@
                                 <label class="profile-field-label">Address</label>
                             </div>
                             <div class="profile-field-value-wrapper">
-                                <p class="profile-field-value">Quezon City, Metro Manila</p>
+                                <p class="profile-field-value">{{ auth()->user()->address ?? 'Not specified' }}</p>
                             </div>
                         </div>
                     </div>
@@ -350,22 +368,24 @@
                         <div class="profile-field">
                             <label class="profile-field-label">Contact Name</label>
                             <div class="profile-field-value-wrapper">
-                                <p class="profile-field-value">Maria Reyes</p>
-                                <span class="profile-field-meta">Mother</span>
+                                <p class="profile-field-value">{{ auth()->user()->emergency_contact_name ?? 'Not specified' }}</p>
+                                @if(auth()->user()->emergency_contact_relationship)
+                                    <span class="profile-field-meta">{{ auth()->user()->emergency_contact_relationship }}</span>
+                                @endif
                             </div>
                         </div>
 
                         <div class="profile-field">
                             <label class="profile-field-label">Contact Phone</label>
                             <div class="profile-field-value-wrapper">
-                                <p class="profile-field-value">+63 917 123 4567</p>
+                                <p class="profile-field-value">{{ auth()->user()->emergency_contact_phone ?? 'Not specified' }}</p>
                             </div>
                         </div>
 
                         <div class="profile-field">
                             <label class="profile-field-label">Relationship</label>
                             <div class="profile-field-value-wrapper">
-                                <p class="profile-field-value">Mother</p>
+                                <p class="profile-field-value">{{ auth()->user()->emergency_contact_relationship ?? 'Not specified' }}</p>
                             </div>
                         </div>
                     </div>
@@ -550,22 +570,22 @@
 
         getUserData() {
             const defaultUser = {
-                firstName: 'Priya',
-                middleName: 'Santos',
-                lastName: 'Reyes',
-                dateOfBirth: 'June 15, 1995',
-                bloodType: 'O POSITIVE',
-                email: 'priya.reyes@email.com',
-                phone: '+63 912 345 6789',
-                address: 'Quezon City, Metro Manila',
-                emergencyContactName: 'Maria Reyes',
-                emergencyContactPhone: '+63 917 123 4567',
-                emergencyContactRelationship: 'Mother',
-                memberSince: 'January 2023',
-                totalDonations: 12,
-                livesSaved: 36,
-                yearsActive: 2,
-                avatar: 'PR',
+                firstName: '{{ auth()->user()->name }}',
+                middleName: '{{ auth()->user()->middle_name ?? "" }}',
+                lastName: '{{ auth()->user()->last_name ?? "" }}',
+                dateOfBirth: '{{ auth()->user()->birthdate ? auth()->user()->birthdate->format("F j, Y") : "" }}',
+                bloodType: '{{ auth()->user()->blood_type ?? "Not specified" }}',
+                email: '{{ auth()->user()->email }}',
+                phone: '{{ auth()->user()->contact_number ?? "Not specified" }}',
+                address: '{{ auth()->user()->address ?? "Not specified" }}',
+                emergencyContactName: '{{ auth()->user()->emergency_contact_name ?? "Not specified" }}',
+                emergencyContactPhone: '{{ auth()->user()->emergency_contact_phone ?? "Not specified" }}',
+                emergencyContactRelationship: '{{ auth()->user()->emergency_contact_relationship ?? "Not specified" }}',
+                memberSince: '{{ auth()->user()->created_at->format("F Y") }}',
+                totalDonations: {{ $totalDonations }},
+                livesSaved: {{ $totalLivesImpacted }},
+                yearsActive: {{ auth()->user()->created_at->diffInYears(now()) }},
+                avatar: '{{ $initials }}',
                 verified: true
             };
 
@@ -883,22 +903,22 @@
 
         getUserData() {
             const defaultUser = {
-                firstName: 'Priya',
-                middleName: 'Santos',
-                lastName: 'Reyes',
-                dateOfBirth: 'June 15, 1995',
-                bloodType: 'O POSITIVE',
-                email: 'priya.reyes@email.com',
-                phone: '+63 912 345 6789',
-                address: 'Quezon City, Metro Manila',
-                emergencyContactName: 'Maria Reyes',
-                emergencyContactPhone: '+63 917 123 4567',
-                emergencyContactRelationship: 'Mother',
-                memberSince: 'January 2023',
-                totalDonations: 12,
-                livesSaved: 36,
-                yearsActive: 2,
-                avatar: 'PR',
+                firstName: '{{ auth()->user()->name }}',
+                middleName: '{{ auth()->user()->middle_name ?? "" }}',
+                lastName: '{{ auth()->user()->last_name ?? "" }}',
+                dateOfBirth: '{{ auth()->user()->birthdate ? auth()->user()->birthdate->format("F j, Y") : "" }}',
+                bloodType: '{{ auth()->user()->blood_type ?? "Not specified" }}',
+                email: '{{ auth()->user()->email }}',
+                phone: '{{ auth()->user()->contact_number ?? "Not specified" }}',
+                address: '{{ auth()->user()->address ?? "Not specified" }}',
+                emergencyContactName: '{{ auth()->user()->emergency_contact_name ?? "Not specified" }}',
+                emergencyContactPhone: '{{ auth()->user()->emergency_contact_phone ?? "Not specified" }}',
+                emergencyContactRelationship: '{{ auth()->user()->emergency_contact_relationship ?? "Not specified" }}',
+                memberSince: '{{ auth()->user()->created_at->format("F Y") }}',
+                totalDonations: {{ $totalDonations }},
+                livesSaved: {{ $totalLivesImpacted }},
+                yearsActive: {{ auth()->user()->created_at->diffInYears(now()) }},
+                avatar: '{{ $initials }}',
                 verified: true
             };
 

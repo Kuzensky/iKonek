@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Fundraiser extends Model
 {
     // Status constants
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PENDING_REVIEW = 'pending_review';
     const STATUS_PENDING = 'pending';
     const STATUS_ACTIVE = 'active';
     const STATUS_COMPLETED = 'completed';
@@ -19,6 +21,7 @@ class Fundraiser extends Model
     const CATEGORY_EDUCATION = 'education';
     const CATEGORY_COMMUNITY = 'community';
     const CATEGORY_EMERGENCY = 'emergency';
+    const CATEGORY_OTHER = 'other';
 
     protected $fillable = [
         'user_id',
@@ -28,6 +31,7 @@ class Fundraiser extends Model
         'category',
         'goal_amount',
         'current_amount',
+        'contributors_count',
         'beneficiary_name',
         'beneficiary_relationship',
         'beneficiary_contact',
@@ -106,6 +110,7 @@ class Fundraiser extends Model
     public function updateCurrentAmount()
     {
         $this->current_amount = $this->verifiedContributions()->sum('amount');
+        $this->contributors_count = $this->verifiedContributions()->distinct('user_id')->count('user_id');
         $this->save();
 
         event(new \App\Events\FundraiserProgressUpdated($this));

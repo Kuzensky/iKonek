@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{{ asset('css/components/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fundraisers.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/start-fundraiser.css') }}">
+    <style>
+        main.dashboard-main { max-width: 100% !important; }
+    </style>
 @endpush
 
 @section('content')
@@ -52,13 +55,16 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
-            <button class="btn btn-outline logout-btn">Logout</button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-outline logout-btn">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -109,9 +115,22 @@
             </div>
         </div>
 
+        <!-- Validation Errors -->
+        @if ($errors->any())
+            <div class="alert alert-danger" style="margin: 20px; padding: 15px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33;">
+                <strong>Please fix the following errors:</strong>
+                <ul style="margin-top: 10px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Form Container -->
         <div class="fundraiser-form-container">
-            <form class="fundraiser-form" id="fundraiserForm">
+            <form class="fundraiser-form" id="fundraiserForm" method="POST" action="{{ route('fundraisers.create.step2.store') }}">
+                @csrf
                 <!-- Beneficiary Information Section -->
                 <div class="form-section-card">
                     <div class="form-section-header">
@@ -125,63 +144,70 @@
                     <div class="form-grid">
                         <!-- Beneficiary Full Name -->
                         <div class="form-group full-width">
-                            <label class="form-label" for="beneficiaryName">
+                            <label class="form-label" for="beneficiary_name">
                                 Beneficiary Full Name
                                 <span class="required">*</span>
                             </label>
-                            <input 
-                                type="text" 
-                                id="beneficiaryName" 
-                                class="form-input" 
+                            <input
+                                type="text"
+                                id="beneficiary_name"
+                                name="beneficiary_name"
+                                class="form-input @error('beneficiary_name') is-invalid @enderror"
                                 placeholder="e.g., Maria Santos Cruz"
+                                value="{{ old('beneficiary_name', $data['beneficiary_name'] ?? '') }}"
+                                required
                             >
                         </div>
 
                         <!-- Your Relationship to Beneficiary -->
                         <div class="form-group full-width">
-                            <label class="form-label" for="relationship">
+                            <label class="form-label" for="beneficiary_relationship">
                                 Your Relationship to Beneficiary
                                 <span class="required">*</span>
                             </label>
-                            <select id="relationship" class="form-select">
+                            <select id="beneficiary_relationship" name="beneficiary_relationship" class="form-select @error('beneficiary_relationship') is-invalid @enderror" required>
                                 <option value="">Select relationship</option>
-                                <option value="self">Self (I am the beneficiary)</option>
-                                <option value="family">Family Member</option>
-                                <option value="friend">Friend</option>
-                                <option value="organization">Organization/Charity</option>
-                                <option value="community">Community Member</option>
-                                <option value="other">Other</option>
+                                <option value="Self (I am the beneficiary)" {{ old('beneficiary_relationship', $data['beneficiary_relationship'] ?? '') == 'Self (I am the beneficiary)' ? 'selected' : '' }}>Self (I am the beneficiary)</option>
+                                <option value="Family Member" {{ old('beneficiary_relationship', $data['beneficiary_relationship'] ?? '') == 'Family Member' ? 'selected' : '' }}>Family Member</option>
+                                <option value="Friend" {{ old('beneficiary_relationship', $data['beneficiary_relationship'] ?? '') == 'Friend' ? 'selected' : '' }}>Friend</option>
+                                <option value="Organization/Charity" {{ old('beneficiary_relationship', $data['beneficiary_relationship'] ?? '') == 'Organization/Charity' ? 'selected' : '' }}>Organization/Charity</option>
+                                <option value="Community Member" {{ old('beneficiary_relationship', $data['beneficiary_relationship'] ?? '') == 'Community Member' ? 'selected' : '' }}>Community Member</option>
+                                <option value="Other" {{ old('beneficiary_relationship', $data['beneficiary_relationship'] ?? '') == 'Other' ? 'selected' : '' }}>Other</option>
                             </select>
                         </div>
 
                         <!-- Beneficiary Contact Number -->
                         <div class="form-group full-width">
-                            <label class="form-label" for="beneficiaryPhone">
+                            <label class="form-label" for="beneficiary_contact">
                                 Beneficiary Contact Number
                                 <span class="required">*</span>
                             </label>
-                            <input 
-                                type="tel" 
-                                id="beneficiaryPhone" 
-                                class="form-input" 
+                            <input
+                                type="tel"
+                                id="beneficiary_contact"
+                                name="beneficiary_contact"
+                                class="form-input @error('beneficiary_contact') is-invalid @enderror"
                                 placeholder="+63 912 345 6789"
-                                value="+63 "
-                                maxlength="16"
+                                value="{{ old('beneficiary_contact', $data['beneficiary_contact'] ?? '') }}"
+                                maxlength="20"
+                                required
                             >
                         </div>
 
                         <!-- Beneficiary Address -->
                         <div class="form-group full-width">
-                            <label class="form-label" for="beneficiaryAddress">
+                            <label class="form-label" for="beneficiary_address">
                                 Beneficiary Address
                                 <span class="required">*</span>
                             </label>
-                            <textarea 
-                                id="beneficiaryAddress" 
-                                class="form-textarea"
+                            <textarea
+                                id="beneficiary_address"
+                                name="beneficiary_address"
+                                class="form-textarea @error('beneficiary_address') is-invalid @enderror"
                                 placeholder="Complete address (Street, Barangay, City/Municipality, Province)"
                                 rows="3"
-                            ></textarea>
+                                required
+                            >{{ old('beneficiary_address', $data['beneficiary_address'] ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -208,7 +234,7 @@
                         </p>
                     </div>
                 </div>
-                
+
                 <div class="help-tip-box">
                     <div class="help-tip-icon">📝</div>
                     <div class="help-tip-content">
@@ -218,12 +244,12 @@
 
                 <!-- Form Actions -->
                 <div class="form-actions">
-                    <button type="button" class="btn btn-outline btn-previous">
+                    <a href="{{ route('fundraisers.create.step1') }}" class="btn btn-outline btn-previous">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Previous
-                    </button>
+                    </a>
                     <button type="submit" class="btn btn-primary btn-continue">
                         Continue
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -234,498 +260,40 @@
             </form>
         </div>
     </main>
-
-    <script>
-        // Start Fundraiser Step 2 - Beneficiary Information
-        class BeneficiaryForm {
-            constructor() {
-                this.form = document.getElementById('fundraiserForm');
-                this.nameInput = document.getElementById('beneficiaryName');
-                this.relationshipSelect = document.getElementById('relationship');
-                this.phoneInput = document.getElementById('beneficiaryPhone');
-                this.addressInput = document.getElementById('beneficiaryAddress');
-                
-                this.init();
-            }
-            
-            init() {
-                this.attachEventListeners();
-                this.loadDraftData();
-            }
-            
-            attachEventListeners() {
-                // Phone number formatting
-                if (this.phoneInput) {
-                    this.phoneInput.addEventListener('input', (e) => this.formatPhoneNumber(e));
-                    this.phoneInput.addEventListener('click', (e) => this.handlePhoneClick(e));
-                    this.phoneInput.addEventListener('keydown', (e) => this.handlePhoneKeydown(e));
-                }
-                
-                // Form submission
-                if (this.form) {
-                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                }
-                
-                // Auto-save draft
-                const formInputs = this.form.querySelectorAll('input, textarea, select');
-                formInputs.forEach(input => {
-                    input.addEventListener('change', () => this.saveDraft());
-                });
-                
-                // Previous button
-                const prevBtn = document.querySelector('.btn-previous');
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', () => {
-                        window.location.href = 'start-fundraiser-step1.html';
-                    });
-                }
-            }
-            
-            formatPhoneNumber(e) {
-                let value = e.target.value;
-                
-                // Ensure +63 prefix is always present
-                if (!value.startsWith('+63')) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Prevent removing the +63 prefix
-                if (value.length < 4) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Format the phone number: +63 XXX XXX XXXX
-                const numbers = value.slice(3).replace(/\D/g, '');
-                if (numbers.length > 0) {
-                    let formatted = '+63 ';
-                    if (numbers.length <= 3) {
-                        formatted += numbers;
-                    } else if (numbers.length <= 6) {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3);
-                    } else {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3, 6) + ' ' + numbers.slice(6, 10);
-                    }
-                    e.target.value = formatted;
-                }
-            }
-            
-            handlePhoneClick(e) {
-                if (e.target.selectionStart < 4) {
-                    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
-                }
-            }
-            
-            handlePhoneKeydown(e) {
-                const input = e.target;
-                // Prevent deleting the +63 prefix
-                if ((e.key === 'Backspace' || e.key === 'Delete') && input.selectionStart <= 4) {
-                    e.preventDefault();
-                }
-            }
-            
-            validateForm() {
-                const errors = [];
-                
-                // Name validation
-                const name = this.nameInput.value.trim();
-                if (!name) {
-                    errors.push('Beneficiary full name is required');
-                } else if (name.length < 3) {
-                    errors.push('Beneficiary name must be at least 3 characters');
-                }
-                
-                // Relationship validation
-                const relationship = this.relationshipSelect.value;
-                if (!relationship) {
-                    errors.push('Please select your relationship to the beneficiary');
-                }
-                
-                // Phone validation
-                const phone = this.phoneInput.value;
-                if (phone.length < 13) {
-                    errors.push('Please enter a valid contact number');
-                }
-                
-                // Address validation
-                const address = this.addressInput.value.trim();
-                if (!address) {
-                    errors.push('Beneficiary address is required');
-                } else if (address.length < 10) {
-                    errors.push('Please enter a complete address');
-                }
-                
-                return errors;
-            }
-            
-            handleSubmit(e) {
-                e.preventDefault();
-                
-                const errors = this.validateForm();
-                
-                if (errors.length > 0) {
-                    alert('Please fix the following errors:\n\n' + errors.join('\n'));
-                    return;
-                }
-                
-                // Get form data
-                const formData = this.getFormData();
-                
-                // Get existing draft from Step 1
-                const step1Data = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                
-                // Merge with Step 2 data
-                const combinedData = {
-                    ...step1Data,
-                    beneficiary: formData,
-                    currentStep: 2
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('fundraiserDraft', JSON.stringify(combinedData));
-                
-                // Navigate to next step
-                window.location.href = 'start-fundraiser-step3.html';
-            }
-            
-            getFormData() {
-                return {
-                    name: this.nameInput.value.trim(),
-                    relationship: this.relationshipSelect.value,
-                    phone: this.phoneInput.value,
-                    address: this.addressInput.value.trim(),
-                    timestamp: new Date().toISOString()
-                };
-            }
-            
-            saveDraft() {
-                try {
-                    const formData = this.getFormData();
-                    
-                    // Get existing draft
-                    const existingDraft = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                    
-                    // Update with beneficiary data
-                    const updatedDraft = {
-                        ...existingDraft,
-                        beneficiary: formData,
-                        currentStep: 2
-                    };
-                    
-                    localStorage.setItem('fundraiserDraft', JSON.stringify(updatedDraft));
-                    console.log('Beneficiary draft saved');
-                } catch (error) {
-                    console.error('Error saving draft:', error);
-                }
-            }
-            
-            loadDraftData() {
-                try {
-                    const draftData = localStorage.getItem('fundraiserDraft');
-                    if (!draftData) return;
-                    
-                    const data = JSON.parse(draftData);
-                    const beneficiary = data.beneficiary;
-                    
-                    if (!beneficiary) return;
-                    
-                    // Restore form values
-                    if (beneficiary.name) {
-                        this.nameInput.value = beneficiary.name;
-                    }
-                    
-                    if (beneficiary.relationship) {
-                        this.relationshipSelect.value = beneficiary.relationship;
-                    }
-                    
-                    if (beneficiary.phone) {
-                        this.phoneInput.value = beneficiary.phone;
-                    }
-                    
-                    if (beneficiary.address) {
-                        this.addressInput.value = beneficiary.address;
-                    }
-                    
-                    console.log('Beneficiary draft loaded');
-                } catch (error) {
-                    console.error('Error loading draft:', error);
-                }
-            }
-        }
-
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                new BeneficiaryForm();
-            });
-        } else {
-            new BeneficiaryForm();
-        }
-
-        // Logout functionality
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    this.textContent = 'Logging out...';
-                    this.disabled = true;
-                    setTimeout(() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = "{{ route('login') }}";
-                    }, 800);
-                }
-            });
-        }
-    </script>
 @endsection
 
 @push('scripts')
-    <script>
+<script>
+    // Phone number formatting
+    const phoneInput = document.getElementById('beneficiary_contact');
 
-        // Start Fundraiser Step 2 - Beneficiary Information
-        class BeneficiaryForm {
-            constructor() {
-                this.form = document.getElementById('fundraiserForm');
-                this.nameInput = document.getElementById('beneficiaryName');
-                this.relationshipSelect = document.getElementById('relationship');
-                this.phoneInput = document.getElementById('beneficiaryPhone');
-                this.addressInput = document.getElementById('beneficiaryAddress');
-                
-                this.init();
+    if (phoneInput && !phoneInput.value) {
+        phoneInput.value = '+63 ';
+    }
+
+    if (phoneInput) {
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+
+            // Ensure +63 prefix
+            if (!value.startsWith('+63')) {
+                value = '+63 ';
+                e.target.value = value;
             }
-            
-            init() {
-                this.attachEventListeners();
-                this.loadDraftData();
+
+            // Prevent removing prefix
+            if (value.length < 4) {
+                value = '+63 ';
+                e.target.value = value;
             }
-            
-            attachEventListeners() {
-                // Phone number formatting
-                if (this.phoneInput) {
-                    this.phoneInput.addEventListener('input', (e) => this.formatPhoneNumber(e));
-                    this.phoneInput.addEventListener('click', (e) => this.handlePhoneClick(e));
-                    this.phoneInput.addEventListener('keydown', (e) => this.handlePhoneKeydown(e));
-                }
-                
-                // Form submission
-                if (this.form) {
-                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                }
-                
-                // Auto-save draft
-                const formInputs = this.form.querySelectorAll('input, textarea, select');
-                formInputs.forEach(input => {
-                    input.addEventListener('change', () => this.saveDraft());
-                });
-                
-                // Previous button
-                const prevBtn = document.querySelector('.btn-previous');
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', () => {
-                        window.location.href = 'start-fundraiser-step1.html';
-                    });
-                }
-            }
-            
-            formatPhoneNumber(e) {
-                let value = e.target.value;
-                
-                // Ensure +63 prefix is always present
-                if (!value.startsWith('+63')) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Prevent removing the +63 prefix
-                if (value.length < 4) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Format the phone number: +63 XXX XXX XXXX
-                const numbers = value.slice(3).replace(/\D/g, '');
-                if (numbers.length > 0) {
-                    let formatted = '+63 ';
-                    if (numbers.length <= 3) {
-                        formatted += numbers;
-                    } else if (numbers.length <= 6) {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3);
-                    } else {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3, 6) + ' ' + numbers.slice(6, 10);
-                    }
-                    e.target.value = formatted;
-                }
-            }
-            
-            handlePhoneClick(e) {
-                if (e.target.selectionStart < 4) {
-                    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
-                }
-            }
-            
-            handlePhoneKeydown(e) {
-                const input = e.target;
-                // Prevent deleting the +63 prefix
-                if ((e.key === 'Backspace' || e.key === 'Delete') && input.selectionStart <= 4) {
-                    e.preventDefault();
-                }
-            }
-            
-            validateForm() {
-                const errors = [];
-                
-                // Name validation
-                const name = this.nameInput.value.trim();
-                if (!name) {
-                    errors.push('Beneficiary full name is required');
-                } else if (name.length < 3) {
-                    errors.push('Beneficiary name must be at least 3 characters');
-                }
-                
-                // Relationship validation
-                const relationship = this.relationshipSelect.value;
-                if (!relationship) {
-                    errors.push('Please select your relationship to the beneficiary');
-                }
-                
-                // Phone validation
-                const phone = this.phoneInput.value;
-                if (phone.length < 13) {
-                    errors.push('Please enter a valid contact number');
-                }
-                
-                // Address validation
-                const address = this.addressInput.value.trim();
-                if (!address) {
-                    errors.push('Beneficiary address is required');
-                } else if (address.length < 10) {
-                    errors.push('Please enter a complete address');
-                }
-                
-                return errors;
-            }
-            
-            handleSubmit(e) {
+        });
+
+        phoneInput.addEventListener('keydown', (e) => {
+            // Prevent deleting the +63 prefix
+            if ((e.key === 'Backspace' || e.key === 'Delete') && e.target.selectionStart <= 4) {
                 e.preventDefault();
-                
-                const errors = this.validateForm();
-                
-                if (errors.length > 0) {
-                    alert('Please fix the following errors:\n\n' + errors.join('\n'));
-                    return;
-                }
-                
-                // Get form data
-                const formData = this.getFormData();
-                
-                // Get existing draft from Step 1
-                const step1Data = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                
-                // Merge with Step 2 data
-                const combinedData = {
-                    ...step1Data,
-                    beneficiary: formData,
-                    currentStep: 2
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('fundraiserDraft', JSON.stringify(combinedData));
-                
-                // Navigate to next step
-                window.location.href = 'start-fundraiser-step3.html';
             }
-            
-            getFormData() {
-                return {
-                    name: this.nameInput.value.trim(),
-                    relationship: this.relationshipSelect.value,
-                    phone: this.phoneInput.value,
-                    address: this.addressInput.value.trim(),
-                    timestamp: new Date().toISOString()
-                };
-            }
-            
-            saveDraft() {
-                try {
-                    const formData = this.getFormData();
-                    
-                    // Get existing draft
-                    const existingDraft = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                    
-                    // Update with beneficiary data
-                    const updatedDraft = {
-                        ...existingDraft,
-                        beneficiary: formData,
-                        currentStep: 2
-                    };
-                    
-                    localStorage.setItem('fundraiserDraft', JSON.stringify(updatedDraft));
-                    console.log('Beneficiary draft saved');
-                } catch (error) {
-                    console.error('Error saving draft:', error);
-                }
-            }
-            
-            loadDraftData() {
-                try {
-                    const draftData = localStorage.getItem('fundraiserDraft');
-                    if (!draftData) return;
-                    
-                    const data = JSON.parse(draftData);
-                    const beneficiary = data.beneficiary;
-                    
-                    if (!beneficiary) return;
-                    
-                    // Restore form values
-                    if (beneficiary.name) {
-                        this.nameInput.value = beneficiary.name;
-                    }
-                    
-                    if (beneficiary.relationship) {
-                        this.relationshipSelect.value = beneficiary.relationship;
-                    }
-                    
-                    if (beneficiary.phone) {
-                        this.phoneInput.value = beneficiary.phone;
-                    }
-                    
-                    if (beneficiary.address) {
-                        this.addressInput.value = beneficiary.address;
-                    }
-                    
-                    console.log('Beneficiary draft loaded');
-                } catch (error) {
-                    console.error('Error loading draft:', error);
-                }
-            }
-        }
-
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                new BeneficiaryForm();
-            });
-        } else {
-            new BeneficiaryForm();
-        }
-
-        // Logout functionality
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    this.textContent = 'Logging out...';
-                    this.disabled = true;
-                    setTimeout(() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = "{{ route('login') }}";
-                    }, 800);
-                }
-            });
-        }
-    
-    </script>
+        });
+    }
+</script>
 @endpush

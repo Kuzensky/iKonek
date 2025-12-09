@@ -25,6 +25,25 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'], // 5MB max
+            'dateOfBirth' => ['required', 'date', 'before:today'],
+            'bloodType' => ['required', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'],
+            'gender' => ['nullable', 'in:male,female,other'],
+            'phone' => ['required', 'string', 'max:20'],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Map form field names to database column names
+        $this->merge([
+            'birthdate' => $this->dateOfBirth,
+            'blood_type' => $this->bloodType,
+            'sex' => $this->gender,
+            'contact_number' => $this->phone,
+        ]);
     }
 }

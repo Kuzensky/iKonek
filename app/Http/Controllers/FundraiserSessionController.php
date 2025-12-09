@@ -163,7 +163,7 @@ class FundraiserSessionController extends Controller
 
         // Calculate dates
         $startDate = now();
-        $duration = $draftData['step1']['campaign_duration'];
+        $duration = (int) $draftData['step1']['campaign_duration'];
         $endDate = now()->addDays($duration);
 
         // Create fundraiser
@@ -220,7 +220,10 @@ class FundraiserSessionController extends Controller
             new \App\Notifications\CampaignSubmittedNotification($fundraiser)
         );
 
-        // Store fundraiser ID in session for success page
+        // Store fundraiser ID in session for success page (use flash to persist for next request)
+        session()->flash('last_created_fundraiser_id', $fundraiser->id);
+
+        // Also store in regular session as backup
         session()->put('last_created_fundraiser_id', $fundraiser->id);
 
         // Clear draft data

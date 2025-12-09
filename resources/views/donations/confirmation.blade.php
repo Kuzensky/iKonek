@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="{{ asset('css/components/cards.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/confirmation.css') }}">
+    <style>
+        main.dashboard-main { max-width: 100% !important; }
+    </style>
 @endpush
 
 @section('content')
@@ -51,9 +54,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>

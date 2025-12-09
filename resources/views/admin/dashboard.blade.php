@@ -126,17 +126,25 @@
         </div>
         <div class="chart-body">
             <div class="blood-type-list">
-                @foreach(['O+' => 2589, 'A+' => 2217, 'B+' => 1823, 'AB+' => 773, 'O-' => 456, 'A-' => 389, 'B-' => 298, 'AB-' => 125] as $type => $count)
-                <div class="blood-type-item">
-                    <div class="blood-type-info">
-                        <span class="blood-type-label">{{ $type }}</span>
-                        <span class="blood-type-count">{{ number_format($count) }}</span>
+                @php
+                    $maxCount = !empty($bloodTypeDistribution) ? max($bloodTypeDistribution) : 1;
+                    $bloodTypes = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-'];
+                @endphp
+                @foreach($bloodTypes as $type)
+                    @php
+                        $count = $bloodTypeDistribution[$type] ?? 0;
+                        $percentage = $maxCount > 0 ? ($count / $maxCount) * 100 : 0;
+                    @endphp
+                    <div class="blood-type-item">
+                        <div class="blood-type-info">
+                            <span class="blood-type-label">{{ $type }}</span>
+                            <span class="blood-type-count">{{ number_format($count) }}</span>
+                        </div>
+                        <div class="blood-type-bar">
+                            <div class="blood-type-fill" style="width: {{ $percentage }}%"></div>
+                        </div>
+                        <span class="blood-type-percent">{{ number_format($percentage, 2) }}%</span>
                     </div>
-                    <div class="blood-type-bar">
-                        <div class="blood-type-fill" style="width: {{ ($count / 2589) * 100 }}%"></div>
-                    </div>
-                    <span class="blood-type-percent">{{ number_format(($count / 2589) * 100, 2) }}%</span>
-                </div>
                 @endforeach
             </div>
         </div>

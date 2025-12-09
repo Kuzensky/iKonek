@@ -12,6 +12,12 @@
     <link rel="stylesheet" href="{{ asset('css/components/cards.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/history.css') }}">
+    <style>
+        /* Override max-width for history page */
+        main.dashboard-main {
+            max-width: 100% !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -51,9 +57,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
@@ -72,12 +78,12 @@
                 </div>
                 <div class="quick-stats">
                     <div class="quick-stat-item">
-                        <span class="quick-stat-value">12</span>
+                        <span class="quick-stat-value">{{ $totalDonations }}</span>
                         <span class="quick-stat-label">Donations</span>
                     </div>
                     <div class="quick-stat-divider"></div>
                     <div class="quick-stat-item">
-                        <span class="quick-stat-value">₱3.5K</span>
+                        <span class="quick-stat-value">₱{{ $totalContributions >= 1000 ? number_format($totalContributions / 1000, 1) . 'K' : number_format($totalContributions) }}</span>
                         <span class="quick-stat-label">Contributed</span>
                     </div>
                 </div>
@@ -105,13 +111,13 @@
                     <h4 class="stat-title">Blood Donations</h4>
                 </div>
                 <div class="stat-content">
-                    <p class="stat-value">12</p>
+                    <p class="stat-value">{{ $totalDonations }}</p>
                     <p class="stat-label">Total donations</p>
                     <div class="stat-progress">
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 60%;"></div>
+                            <div class="progress-fill" style="width: {{ $goldProgress }}%;"></div>
                         </div>
-                        <p class="progress-text">8 more to Gold Donor status</p>
+                        <p class="progress-text">{{ $donationsToGold > 0 ? $donationsToGold . ' more to Gold Donor status' : 'Gold Donor status achieved!' }}</p>
                     </div>
                 </div>
             </div>
@@ -126,14 +132,16 @@
                     <h4 class="stat-title">Fundraisers</h4>
                 </div>
                 <div class="stat-content">
-                    <p class="stat-value">₱3,500</p>
+                    <p class="stat-value">₱{{ number_format($totalContributions, 2) }}</p>
                     <p class="stat-label">Total contributions</p>
+                    @if($campaignsSupported > 0)
                     <div class="stat-badge">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" fill="#16A34A" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <span>4 campaigns supported</span>
+                        <span>{{ $campaignsSupported }} {{ $campaignsSupported == 1 ? 'campaign' : 'campaigns' }} supported</span>
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -150,8 +158,8 @@
                     <h4 class="stat-title">Member Since</h4>
                 </div>
                 <div class="stat-content">
-                    <p class="stat-value">Jan 2023</p>
-                    <p class="stat-label">2+ years as donor</p>
+                    <p class="stat-value">{{ $memberSince }}</p>
+                    <p class="stat-label">{{ $accountAge }} as donor</p>
                     <div class="stat-link">
                         <a href="#">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -181,7 +189,9 @@
                             <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
                         </svg>
                         <span>Scheduled</span>
-                        <span class="tab-badge">2</span>
+                        @if($scheduledDonations->count() > 0)
+                            <span class="tab-badge">{{ $scheduledDonations->count() }}</span>
+                        @endif
                     </button>
                     <button class="history-tab active" data-tab="history">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -203,6 +213,15 @@
             <div class="history-tab-content">
                 <!-- Scheduled Tab -->
                 <div class="tab-panel" id="scheduled-panel">
+                    @if($scheduledDonations->isEmpty())
+                        <div style="text-align: center; padding: 80px 24px;">
+                            <h3>No Scheduled Appointments</h3>
+                            <p style="color: #666; margin-top: 8px;">You don't have any upcoming blood donation appointments.</p>
+                            <a href="{{ route('donations.schedule') }}" class="btn-action-primary" style="margin-top: 24px; display: inline-flex; align-items: center; gap: 8px;">
+                                Schedule Donation
+                            </a>
+                        </div>
+                    @else
                     <div class="history-list">
                         <!-- Scheduled Donation 1 -->
                         <div class="history-record scheduled-record">
@@ -336,10 +355,20 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
 
                 <!-- History Tab -->
                 <div class="tab-panel active" id="history-panel">
+                    @if($completedDonations->isEmpty())
+                        <div style="text-align: center; padding: 80px 24px;">
+                            <h3>No Donation History</h3>
+                            <p style="color: #666; margin-top: 8px;">You haven't completed any blood donations yet.</p>
+                            <a href="{{ route('donations.schedule') }}" class="btn-action-primary" style="margin-top: 24px; display: inline-flex; align-items: center; gap: 8px;">
+                                Schedule Your First Donation
+                            </a>
+                        </div>
+                    @else
                     <div class="history-list">
                         <!-- Donation Record 1 -->
                         <div class="history-record">
@@ -506,10 +535,20 @@
                             </button>
                         </div>
                     </div>
+                    @endif
                 </div>
 
                 <!-- Fundraisers Tab -->
                 <div class="tab-panel" id="fundraisers-panel">
+                    @if($contributions->isEmpty())
+                        <div style="text-align: center; padding: 80px 24px;">
+                            <h3>No Fundraiser Contributions</h3>
+                            <p style="color: #666; margin-top: 8px;">You haven't contributed to any fundraisers yet.</p>
+                            <a href="{{ route('fundraisers.index') }}" class="btn-action-primary" style="margin-top: 24px; display: inline-flex; align-items: center; gap: 8px;">
+                                View Fundraisers
+                            </a>
+                        </div>
+                    @else
                     <div class="history-list">
                         <!-- Fundraiser Contribution 1 -->
                         <div class="history-record">
@@ -723,6 +762,7 @@
                             </button>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{{ asset('css/components/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fundraisers.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/start-fundraiser.css') }}">
+    <style>
+        main.dashboard-main { max-width: 100% !important; }
+    </style>
 @endpush
 
 @section('content')
@@ -52,13 +55,16 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">P</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="user-details">
-                    <div class="user-name">Priya</div>
+                    <div class="user-name">{{ auth()->user()->name }}</div>
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
-            <button class="btn btn-outline logout-btn">Logout</button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-outline logout-btn">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -113,62 +119,86 @@
             </div>
         </div>
 
+        <!-- Validation Errors -->
+        @if ($errors->any())
+            <div class="alert alert-danger" style="margin: 20px; padding: 15px; background: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33;">
+                <strong>Please fix the following errors:</strong>
+                <ul style="margin-top: 10px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Form Container -->
         <div class="fundraiser-form-container">
-            <form class="fundraiser-form" id="fundraiserForm">
+            <form class="fundraiser-form" id="fundraiserForm" method="POST" action="{{ route('fundraisers.create.step3.store') }}">
+                @csrf
                 <!-- Organizer Information Section -->
                 <div class="form-section-card">
                     <div class="form-section-header">
                         <img src="{{ asset('assets/icons/profile-blue.svg') }}" alt="" class="section-icon">
                         <div class="section-header-content">
                             <h2 class="section-title">Organizer Information</h2>
-                            <p class="section-subtitle">Your contact information as the campaign organizer</p>
+                            <p class="section-subtitle">Your contact details for campaign updates and donor inquiries</p>
                         </div>
                     </div>
 
                     <div class="form-grid">
-                        <!-- Your Full Name -->
+                        <!-- Full Name -->
                         <div class="form-group full-width">
-                            <label class="form-label" for="organizerName">
+                            <label class="form-label" for="organizer_name">
                                 Your Full Name
                                 <span class="required">*</span>
                             </label>
-                            <input 
-                                type="text" 
-                                id="organizerName" 
-                                class="form-input" 
-                                placeholder="Your complete name as it appears on your ID"
+                            <input
+                                type="text"
+                                id="organizer_name"
+                                name="organizer_name"
+                                class="form-input @error('organizer_name') is-invalid @enderror"
+                                placeholder="e.g., Juan Dela Cruz"
+                                value="{{ old('organizer_name', $data['organizer_name'] ?? auth()->user()->name) }}"
+                                required
                             >
+                            <p class="form-helper">This name will be displayed as the campaign organizer</p>
                         </div>
 
                         <!-- Email Address -->
-                        <div class="form-group">
-                            <label class="form-label" for="organizerEmail">
+                        <div class="form-group full-width">
+                            <label class="form-label" for="organizer_email">
                                 Email Address
                                 <span class="required">*</span>
                             </label>
-                            <input 
-                                type="email" 
-                                id="organizerEmail" 
-                                class="form-input" 
+                            <input
+                                type="email"
+                                id="organizer_email"
+                                name="organizer_email"
+                                class="form-input @error('organizer_email') is-invalid @enderror"
                                 placeholder="your.email@example.com"
+                                value="{{ old('organizer_email', $data['organizer_email'] ?? auth()->user()->email) }}"
+                                required
                             >
+                            <p class="form-helper">We'll send campaign updates and donation notifications here</p>
                         </div>
 
                         <!-- Phone Number -->
-                        <div class="form-group">
-                            <label class="form-label" for="organizerPhone">
+                        <div class="form-group full-width">
+                            <label class="form-label" for="organizer_phone">
                                 Phone Number
                                 <span class="required">*</span>
                             </label>
-                            <input 
-                                type="tel" 
-                                id="organizerPhone" 
-                                class="form-input" 
+                            <input
+                                type="tel"
+                                id="organizer_phone"
+                                name="organizer_phone"
+                                class="form-input @error('organizer_phone') is-invalid @enderror"
                                 placeholder="+63 912 345 6789"
-                                value="+63 "
-                                maxlength="16"
+                                value="{{ old('organizer_phone', $data['organizer_phone'] ?? auth()->user()->phone ?? '') }}"
+                                maxlength="20"
+                                required
                             >
+                            <p class="form-helper">For urgent campaign-related communication</p>
                         </div>
                     </div>
                 </div>
@@ -191,32 +221,28 @@
                     </div>
                     <div class="notice-content-wrapper">
                         <p class="notice-text">
-                            <strong>📧 Stay Connected:</strong> We'll use this information to contact you about your campaign and send updates. You'll also receive instant notifications when donations are made to your campaign.
+                            <strong>🔒 Privacy Protected:</strong> Your contact information will only be used for campaign-related communications and will not be publicly displayed or shared with third parties.
                         </p>
                     </div>
                 </div>
-                
-                <div class="milestone-indicator">
-                    <div class="milestone-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFC107" stroke="#FFA000" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <div class="milestone-text">
-                        <p><strong>Almost There!</strong> Just one more step after this and your campaign will be ready for review. 🎉</p>
+
+                <div class="help-tip-box">
+                    <div class="help-tip-icon">📧</div>
+                    <div class="help-tip-content">
+                        <p><strong>Almost Done!</strong> One more step to complete your fundraiser setup. Make sure your contact details are accurate for seamless communication.</p>
                     </div>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="form-actions">
-                    <button type="button" class="btn btn-outline btn-previous">
+                    <a href="{{ route('fundraisers.create.step2') }}" class="btn btn-outline btn-previous">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Previous
-                    </button>
+                    </a>
                     <button type="submit" class="btn btn-primary btn-continue">
-                        Continue
+                        Continue to Payment
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -225,486 +251,40 @@
             </form>
         </div>
     </main>
-
-    <script>
-        // Start Fundraiser Step 3 - Organizer Information
-        class OrganizerForm {
-            constructor() {
-                this.form = document.getElementById('fundraiserForm');
-                this.nameInput = document.getElementById('organizerName');
-                this.emailInput = document.getElementById('organizerEmail');
-                this.phoneInput = document.getElementById('organizerPhone');
-                
-                this.init();
-            }
-            
-            init() {
-                this.attachEventListeners();
-                this.loadDraftData();
-                // Removed auto-loading of user data - fields are now manual
-            }
-            
-            attachEventListeners() {
-                // Phone number formatting
-                if (this.phoneInput) {
-                    this.phoneInput.addEventListener('input', (e) => this.formatPhoneNumber(e));
-                    this.phoneInput.addEventListener('click', (e) => this.handlePhoneClick(e));
-                    this.phoneInput.addEventListener('keydown', (e) => this.handlePhoneKeydown(e));
-                }
-                
-                // Form submission
-                if (this.form) {
-                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                }
-                
-                // Auto-save draft
-                const formInputs = this.form.querySelectorAll('input, textarea, select');
-                formInputs.forEach(input => {
-                    input.addEventListener('change', () => this.saveDraft());
-                });
-                
-                // Previous button
-                const prevBtn = document.querySelector('.btn-previous');
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', () => {
-                        window.location.href = 'start-fundraiser-step2.html';
-                    });
-                }
-            }
-            
-            formatPhoneNumber(e) {
-                let value = e.target.value;
-                
-                // Ensure +63 prefix is always present
-                if (!value.startsWith('+63')) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Prevent removing the +63 prefix
-                if (value.length < 4) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Format the phone number: +63 XXX XXX XXXX
-                const numbers = value.slice(3).replace(/\D/g, '');
-                if (numbers.length > 0) {
-                    let formatted = '+63 ';
-                    if (numbers.length <= 3) {
-                        formatted += numbers;
-                    } else if (numbers.length <= 6) {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3);
-                    } else {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3, 6) + ' ' + numbers.slice(6, 10);
-                    }
-                    e.target.value = formatted;
-                }
-            }
-            
-            handlePhoneClick(e) {
-                if (e.target.selectionStart < 4) {
-                    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
-                }
-            }
-            
-            handlePhoneKeydown(e) {
-                const input = e.target;
-                // Prevent deleting the +63 prefix
-                if ((e.key === 'Backspace' || e.key === 'Delete') && input.selectionStart <= 4) {
-                    e.preventDefault();
-                }
-            }
-            
-            validateEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
-            
-            validateForm() {
-                const errors = [];
-                
-                // Name validation
-                const name = this.nameInput.value.trim();
-                if (!name) {
-                    errors.push('Your full name is required');
-                } else if (name.length < 3) {
-                    errors.push('Name must be at least 3 characters');
-                }
-                
-                // Email validation
-                const email = this.emailInput.value.trim();
-                if (!email) {
-                    errors.push('Email address is required');
-                } else if (!this.validateEmail(email)) {
-                    errors.push('Please enter a valid email address');
-                }
-                
-                // Phone validation
-                const phone = this.phoneInput.value;
-                if (phone.length < 13) {
-                    errors.push('Please enter a valid phone number');
-                }
-                
-                return errors;
-            }
-            
-            handleSubmit(e) {
-                e.preventDefault();
-                
-                const errors = this.validateForm();
-                
-                if (errors.length > 0) {
-                    alert('Please fix the following errors:\n\n' + errors.join('\n'));
-                    return;
-                }
-                
-                // Get form data
-                const formData = this.getFormData();
-                
-                // Get existing draft from previous steps
-                const existingData = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                
-                // Merge with Step 3 data
-                const combinedData = {
-                    ...existingData,
-                    organizer: formData,
-                    currentStep: 3
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('fundraiserDraft', JSON.stringify(combinedData));
-                
-                // Navigate to next step
-                window.location.href = 'start-fundraiser-step4.html';
-            }
-            
-            getFormData() {
-                return {
-                    name: this.nameInput.value.trim(),
-                    email: this.emailInput.value.trim(),
-                    phone: this.phoneInput.value,
-                    timestamp: new Date().toISOString()
-                };
-            }
-            
-            saveDraft() {
-                try {
-                    const formData = this.getFormData();
-                    
-                    // Get existing draft
-                    const existingDraft = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                    
-                    // Update with organizer data
-                    const updatedDraft = {
-                        ...existingDraft,
-                        organizer: formData,
-                        currentStep: 3
-                    };
-                    
-                    localStorage.setItem('fundraiserDraft', JSON.stringify(updatedDraft));
-                    console.log('Organizer draft saved');
-                } catch (error) {
-                    console.error('Error saving draft:', error);
-                }
-            }
-            
-            loadDraftData() {
-                try {
-                    const draftData = localStorage.getItem('fundraiserDraft');
-                    if (!draftData) return;
-                    
-                    const data = JSON.parse(draftData);
-                    const organizer = data.organizer;
-                    
-                    if (!organizer) return;
-                    
-                    // Restore form values
-                    if (organizer.name) {
-                        this.nameInput.value = organizer.name;
-                    }
-                    
-                    if (organizer.email) {
-                        this.emailInput.value = organizer.email;
-                    }
-                    
-                    if (organizer.phone) {
-                        this.phoneInput.value = organizer.phone;
-                    }
-                    
-                    console.log('Organizer draft loaded');
-                } catch (error) {
-                    console.error('Error loading draft:', error);
-                }
-            }
-        }
-
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                new OrganizerForm();
-            });
-        } else {
-            new OrganizerForm();
-        }
-
-        // Logout functionality
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    this.textContent = 'Logging out...';
-                    this.disabled = true;
-                    setTimeout(() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = "{{ route('login') }}";
-                    }, 800);
-                }
-            });
-        }
-    </script>
 @endsection
 
 @push('scripts')
-    <script>
+<script>
+    // Phone number formatting
+    const phoneInput = document.getElementById('organizer_phone');
 
-        // Start Fundraiser Step 3 - Organizer Information
-        class OrganizerForm {
-            constructor() {
-                this.form = document.getElementById('fundraiserForm');
-                this.nameInput = document.getElementById('organizerName');
-                this.emailInput = document.getElementById('organizerEmail');
-                this.phoneInput = document.getElementById('organizerPhone');
-                
-                this.init();
+    if (phoneInput && !phoneInput.value) {
+        phoneInput.value = '+63 ';
+    }
+
+    if (phoneInput) {
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+
+            // Ensure +63 prefix
+            if (!value.startsWith('+63')) {
+                value = '+63 ';
+                e.target.value = value;
             }
-            
-            init() {
-                this.attachEventListeners();
-                this.loadDraftData();
-                // Removed auto-loading of user data - fields are now manual
+
+            // Prevent removing prefix
+            if (value.length < 4) {
+                value = '+63 ';
+                e.target.value = value;
             }
-            
-            attachEventListeners() {
-                // Phone number formatting
-                if (this.phoneInput) {
-                    this.phoneInput.addEventListener('input', (e) => this.formatPhoneNumber(e));
-                    this.phoneInput.addEventListener('click', (e) => this.handlePhoneClick(e));
-                    this.phoneInput.addEventListener('keydown', (e) => this.handlePhoneKeydown(e));
-                }
-                
-                // Form submission
-                if (this.form) {
-                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                }
-                
-                // Auto-save draft
-                const formInputs = this.form.querySelectorAll('input, textarea, select');
-                formInputs.forEach(input => {
-                    input.addEventListener('change', () => this.saveDraft());
-                });
-                
-                // Previous button
-                const prevBtn = document.querySelector('.btn-previous');
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', () => {
-                        window.location.href = 'start-fundraiser-step2.html';
-                    });
-                }
-            }
-            
-            formatPhoneNumber(e) {
-                let value = e.target.value;
-                
-                // Ensure +63 prefix is always present
-                if (!value.startsWith('+63')) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Prevent removing the +63 prefix
-                if (value.length < 4) {
-                    value = '+63 ';
-                    e.target.value = value;
-                }
-                
-                // Format the phone number: +63 XXX XXX XXXX
-                const numbers = value.slice(3).replace(/\D/g, '');
-                if (numbers.length > 0) {
-                    let formatted = '+63 ';
-                    if (numbers.length <= 3) {
-                        formatted += numbers;
-                    } else if (numbers.length <= 6) {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3);
-                    } else {
-                        formatted += numbers.slice(0, 3) + ' ' + numbers.slice(3, 6) + ' ' + numbers.slice(6, 10);
-                    }
-                    e.target.value = formatted;
-                }
-            }
-            
-            handlePhoneClick(e) {
-                if (e.target.selectionStart < 4) {
-                    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
-                }
-            }
-            
-            handlePhoneKeydown(e) {
-                const input = e.target;
-                // Prevent deleting the +63 prefix
-                if ((e.key === 'Backspace' || e.key === 'Delete') && input.selectionStart <= 4) {
-                    e.preventDefault();
-                }
-            }
-            
-            validateEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
-            
-            validateForm() {
-                const errors = [];
-                
-                // Name validation
-                const name = this.nameInput.value.trim();
-                if (!name) {
-                    errors.push('Your full name is required');
-                } else if (name.length < 3) {
-                    errors.push('Name must be at least 3 characters');
-                }
-                
-                // Email validation
-                const email = this.emailInput.value.trim();
-                if (!email) {
-                    errors.push('Email address is required');
-                } else if (!this.validateEmail(email)) {
-                    errors.push('Please enter a valid email address');
-                }
-                
-                // Phone validation
-                const phone = this.phoneInput.value;
-                if (phone.length < 13) {
-                    errors.push('Please enter a valid phone number');
-                }
-                
-                return errors;
-            }
-            
-            handleSubmit(e) {
+        });
+
+        phoneInput.addEventListener('keydown', (e) => {
+            // Prevent deleting the +63 prefix
+            if ((e.key === 'Backspace' || e.key === 'Delete') && e.target.selectionStart <= 4) {
                 e.preventDefault();
-                
-                const errors = this.validateForm();
-                
-                if (errors.length > 0) {
-                    alert('Please fix the following errors:\n\n' + errors.join('\n'));
-                    return;
-                }
-                
-                // Get form data
-                const formData = this.getFormData();
-                
-                // Get existing draft from previous steps
-                const existingData = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                
-                // Merge with Step 3 data
-                const combinedData = {
-                    ...existingData,
-                    organizer: formData,
-                    currentStep: 3
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('fundraiserDraft', JSON.stringify(combinedData));
-                
-                // Navigate to next step
-                window.location.href = 'start-fundraiser-step4.html';
             }
-            
-            getFormData() {
-                return {
-                    name: this.nameInput.value.trim(),
-                    email: this.emailInput.value.trim(),
-                    phone: this.phoneInput.value,
-                    timestamp: new Date().toISOString()
-                };
-            }
-            
-            saveDraft() {
-                try {
-                    const formData = this.getFormData();
-                    
-                    // Get existing draft
-                    const existingDraft = JSON.parse(localStorage.getItem('fundraiserDraft') || '{}');
-                    
-                    // Update with organizer data
-                    const updatedDraft = {
-                        ...existingDraft,
-                        organizer: formData,
-                        currentStep: 3
-                    };
-                    
-                    localStorage.setItem('fundraiserDraft', JSON.stringify(updatedDraft));
-                    console.log('Organizer draft saved');
-                } catch (error) {
-                    console.error('Error saving draft:', error);
-                }
-            }
-            
-            loadDraftData() {
-                try {
-                    const draftData = localStorage.getItem('fundraiserDraft');
-                    if (!draftData) return;
-                    
-                    const data = JSON.parse(draftData);
-                    const organizer = data.organizer;
-                    
-                    if (!organizer) return;
-                    
-                    // Restore form values
-                    if (organizer.name) {
-                        this.nameInput.value = organizer.name;
-                    }
-                    
-                    if (organizer.email) {
-                        this.emailInput.value = organizer.email;
-                    }
-                    
-                    if (organizer.phone) {
-                        this.phoneInput.value = organizer.phone;
-                    }
-                    
-                    console.log('Organizer draft loaded');
-                } catch (error) {
-                    console.error('Error loading draft:', error);
-                }
-            }
-        }
-
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                new OrganizerForm();
-            });
-        } else {
-            new OrganizerForm();
-        }
-
-        // Logout functionality
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    this.textContent = 'Logging out...';
-                    this.disabled = true;
-                    setTimeout(() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = "{{ route('login') }}";
-                    }, 800);
-                }
-            });
-        }
-    
-    </script>
+        });
+    }
+</script>
 @endpush

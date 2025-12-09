@@ -43,6 +43,7 @@ class DonationStatusChanged implements ShouldBroadcast, ShouldQueue
     {
         return [
             new PrivateChannel('user.' . $this->donation->user_id),
+            new PrivateChannel('admin.dashboard'),
         ];
     }
 

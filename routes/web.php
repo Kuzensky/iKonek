@@ -26,6 +26,15 @@ Route::get('/fundraisers/fundraisers.html', function () {
     return redirect()->route('fundraisers.index');
 });
 
+// Create and success routes must come BEFORE {fundraiser} to avoid matching as an ID
+Route::get('/fundraisers/create', function () {
+    return redirect()->route('fundraisers.create.step1');
+})->middleware(['auth', 'verified'])->name('fundraisers.create');
+
+Route::get('/fundraisers/success', function () {
+    return view('fundraisers.create.success');
+})->middleware(['auth', 'verified'])->name('fundraisers.success');
+
 Route::get('/fundraisers/{fundraiser}', [FundraiserController::class, 'show'])->name('fundraisers.show');
 
 // Authenticated Routes
@@ -35,7 +44,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Profile
     Route::get('/profile', function () {
-        return view('profile.show');
+        $user = auth()->user();
+
+        return view('profile.show', [
+            'user' => $user,
+            'totalDonations' => $user->total_donations,
+            'totalLivesImpacted' => $user->total_lives_impacted,
+            'totalContributions' => $user->total_contributions,
+        ]);
     })->name('profile.show');
 
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -44,7 +60,54 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Donation History
     Route::get('/history', function () {
-        return view('history');
+        $user = auth()->user();
+
+        // Get upcoming (pending) donations
+        $scheduledDonations = $user->donations()
+            ->with('hospital:id,name,address,city')
+            ->where('status', 'pending')
+            ->where('donation_date', '>=', now())
+            ->orderBy('donation_date', 'asc')
+            ->get();
+
+        // Get past (verified) donations
+        $completedDonations = $user->donations()
+            ->with('hospital:id,name,address,city')
+            ->where('status', 'verified')
+            ->orderBy('donation_date', 'desc')
+            ->get();
+
+        // Get fundraiser contributions
+        $contributions = $user->contributions()
+            ->with('fundraiser:id,title')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Calculate statistics
+        $totalDonations = $user->donations()->count();
+        $totalContributions = $contributions->sum('amount');
+        $campaignsSupported = $contributions->pluck('fundraiser_id')->unique()->count();
+        $memberSince = $user->created_at->format('M Y');
+
+        // Calculate time as donor
+        $accountAge = $user->created_at->diffForHumans(['parts' => 2]);
+
+        // Gold Donor progress (20 donations = Gold status)
+        $donationsToGold = max(0, 20 - $totalDonations);
+        $goldProgress = min(100, ($totalDonations / 20) * 100);
+
+        return view('history', compact(
+            'scheduledDonations',
+            'completedDonations',
+            'contributions',
+            'totalDonations',
+            'totalContributions',
+            'campaignsSupported',
+            'memberSince',
+            'accountAge',
+            'donationsToGold',
+            'goldProgress'
+        ));
     })->name('history');
 
     // Redirects for old .html URLs (for backwards compatibility)
@@ -93,15 +156,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('/clear-session', [FundraiserSessionController::class, 'clearSession'])->name('clearSession');
     });
-
-    // Legacy route for backwards compatibility
-    Route::get('/fundraisers/create', function () {
-        return redirect()->route('fundraisers.create.step1');
-    })->name('fundraisers.create');
-
-    Route::get('/fundraisers/success', function () {
-        return view('fundraisers.create.success');
-    })->name('fundraisers.success');
 
     // Appointments (Session 1)
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
