@@ -33,10 +33,26 @@ class AdminHospitalController extends Controller
             'total_capacity' => Hospital::sum('bed_capacity'),
         ];
 
-        $regions = Hospital::select('region')
-            ->distinct()
-            ->orderBy('region')
-            ->pluck('region');
+        // All Philippine Regions
+        $regions = [
+            'National Capital Region (NCR)',
+            'Region I (Ilocos Region)',
+            'Region II (Cagayan Valley)',
+            'Region III (Central Luzon)',
+            'Region IV-A (CALABARZON)',
+            'Region IV-B (MIMAROPA)',
+            'Region V (Bicol Region)',
+            'Region VI (Western Visayas)',
+            'Region VII (Central Visayas)',
+            'Region VIII (Eastern Visayas)',
+            'Region IX (Zamboanga Peninsula)',
+            'Region X (Northern Mindanao)',
+            'Region XI (Davao Region)',
+            'Region XII (SOCCSKSARGEN)',
+            'Region XIII (Caraga)',
+            'Cordillera Administrative Region (CAR)',
+            'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)',
+        ];
 
         return view('admin.hospitals.index', compact('hospitals', 'stats', 'regions'));
     }
