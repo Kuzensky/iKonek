@@ -128,13 +128,18 @@ class BloodDonation extends Model
 
     public function getDonorFullName()
     {
+        // Use the name field directly, fall back to constructed name if available
+        if ($this->user->name) {
+            return $this->user->name;
+        }
         return trim("{$this->user->first_name} {$this->user->middle_name} {$this->user->last_name}");
     }
 
     public function getUserInitials()
     {
-        $firstName = $this->user->first_name ?? '';
-        $lastName = $this->user->last_name ?? '';
+        $nameParts = explode(' ', $this->user->name ?? '');
+        $firstName = $nameParts[0] ?? '';
+        $lastName = isset($nameParts[1]) ? $nameParts[count($nameParts) - 1] : '';
         return strtoupper(substr($firstName, 0, 1) . substr($lastName, 0, 1));
     }
 }

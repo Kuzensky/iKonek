@@ -374,6 +374,9 @@
     line-height: 28px;
     color: rgba(29, 53, 87, 0.75);
     font-weight: 400;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .campaign-description p {

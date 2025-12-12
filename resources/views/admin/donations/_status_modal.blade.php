@@ -36,13 +36,12 @@
                 </svg>
             </button>
 
-            <form :action="`/admin/donations/${donationId}/update-status`" method="POST" @submit="handleSubmit" autocomplete="off" style="padding: 32px 24px 24px 24px;">
+            <form x-ref="statusForm" :action="`/admin/donations/${donationId}/update-status`" method="POST" autocomplete="off" style="padding: 32px 24px 24px 24px;">
                 <!-- Title -->
                 <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin: 0 0 8px 0;">Update Donation Status</h2>
                 <p style="font-size: 14px; color: #64748b; margin: 0 0 24px 0;">Manage the status of this blood donation record</p>
 
                 @csrf
-                <input type="hidden" name="status" x-model="selectedStatus">
 
                 <!-- Donation Info (Read-only) -->
                 <div class="modal-info-section">
@@ -81,28 +80,28 @@
 
                 <!-- Action Buttons Grid -->
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
-                    <button type="button" @click="selectStatus('verified')"
+                    <button type="submit" name="status" value="verified"
                             style="padding: 12px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;"
                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.3)';"
                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         Mark as Verified
                     </button>
 
-                    <button type="button" @click="selectStatus('failed')"
+                    <button type="submit" name="status" value="failed"
                             style="padding: 12px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white;"
                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)';"
                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         Mark as Failed
                     </button>
 
-                    <button type="button" @click="selectStatus('pending')"
+                    <button type="submit" name="status" value="pending"
                             style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; background: white; color: #64748b;"
                             onmouseover="this.style.background='#f9fafb'; this.style.borderColor='#d1d5db';"
                             onmouseout="this.style.background='white'; this.style.borderColor='#e5e7eb';">
                         Set to Pending
                     </button>
 
-                    <button type="button" @click="selectStatus('cancelled')"
+                    <button type="submit" name="status" value="cancelled"
                             style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; background: white; color: #64748b;"
                             onmouseover="this.style.background='#f9fafb'; this.style.borderColor='#d1d5db';"
                             onmouseout="this.style.background='white'; this.style.borderColor='#e5e7eb';">
@@ -154,13 +153,14 @@ function statusModalData() {
 
         loadDonationData(donation) {
             this.donationId = donation.id;
+            // Accept flat data structure with pre-computed values
             this.donationData = {
-                donor_name: `${donation.user.first_name} ${donation.user.middle_name || ''} ${donation.user.last_name}`.trim(),
+                donor_name: donation.donor_name,
                 blood_type: donation.blood_type,
-                hospital_name: donation.hospital.name,
-                scheduled_date: donation.appointment ? new Date(donation.appointment.appointment_date).toLocaleString() : 'N/A',
+                hospital_name: donation.hospital_name,
+                scheduled_date: donation.scheduled_date,
                 status: donation.status,
-                status_display: donation.status.charAt(0).toUpperCase() + donation.status.slice(1)
+                status_display: donation.status_display
             };
             this.notes = '';
             this.selectedStatus = '';
@@ -169,7 +169,7 @@ function statusModalData() {
         selectStatus(status) {
             this.selectedStatus = status;
             // Submit form immediately after selecting status
-            this.$el.querySelector('form').submit();
+            this.$refs.statusForm.submit();
         },
 
         closeModal() {

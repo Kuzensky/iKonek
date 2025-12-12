@@ -160,7 +160,7 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>by {{ $campaign->creator->first_name }} {{ $campaign->creator->last_name }}</span>
+                                <span>by {{ $campaign->creator->name ?? trim($campaign->creator->first_name . ' ' . $campaign->creator->last_name) }}</span>
                             </div>
                             <div class="meta-item">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

@@ -16,7 +16,70 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    // Fetch featured or active fundraisers for the homepage
+    $fundraisers = \App\Models\Fundraiser::where('status', \App\Models\Fundraiser::STATUS_ACTIVE)
+        ->where('end_date', '>=', now())
+        ->with('creator')
+        ->orderBy('is_featured', 'desc')
+        ->orderBy('created_at', 'desc')
+        ->take(3)
+        ->get();
+
+    // Transform campaigns data for JavaScript
+    $campaigns = $fundraisers->map(function($fundraiser) {
+        $organizerName = $fundraiser->organizer_name ?? ($fundraiser->creator ? trim($fundraiser->creator->first_name . ' ' . $fundraiser->creator->last_name) : 'Anonymous');
+        $location = $fundraiser->beneficiary_address ? ' • ' . $fundraiser->beneficiary_address : '';
+
+        return [
+            'id' => $fundraiser->id,
+            'title' => $fundraiser->title,
+            'organizer' => $organizerName . $location,
+            'category' => $fundraiser->getCategoryDisplayName(),
+            'raised' => (float) $fundraiser->current_amount,
+            'goal' => (float) $fundraiser->goal_amount,
+            'supporters' => $fundraiser->contributors_count ?? 0,
+            'daysLeft' => max(0, $fundraiser->daysRemaining)
+        ];
+    });
+
+    // Calculate stats for hero cards
+    $totalActiveCampaigns = \App\Models\Fundraiser::where('status', \App\Models\Fundraiser::STATUS_ACTIVE)
+        ->where('end_date', '>=', now())
+        ->count();
+
+    $urgentCampaigns = \App\Models\Fundraiser::where('status', \App\Models\Fundraiser::STATUS_ACTIVE)
+        ->where('end_date', '>=', now())
+        ->where('end_date', '<=', now()->addDays(7))
+        ->count();
+
+    $totalRaisedThisMonth = \App\Models\Fundraiser::where('status', \App\Models\Fundraiser::STATUS_ACTIVE)
+        ->where('created_at', '>=', now()->startOfMonth())
+        ->sum('current_amount');
+
+    // Calculate total partner hospitals
+    $totalPartnerHospitals = \App\Models\Hospital::where('is_active', true)->count();
+
+    // Fetch active hospitals for the homepage
+    $hospitalRecords = \App\Models\Hospital::where('is_active', true)
+        ->orderBy('created_at', 'desc')
+        ->take(6)
+        ->get();
+
+    // Transform hospitals data for JavaScript
+    $hospitals = $hospitalRecords->map(function($hospital) {
+        return [
+            'id' => $hospital->id,
+            'name' => $hospital->name,
+            'category' => $hospital->region ?? 'Hospital', // Using region as category for now
+            'location' => $hospital->address . ', ' . $hospital->city,
+            'region' => $hospital->region ?? 'Philippines',
+            'phone' => $hospital->contact_number ?? 'N/A',
+            'hours' => $hospital->operating_hours ?? 'Please contact for hours',
+            'availability' => $hospital->is_active ? 'Available Today' : 'Contact for availability'
+        ];
+    });
+
+    return view('welcome', compact('campaigns', 'totalActiveCampaigns', 'urgentCampaigns', 'totalRaisedThisMonth', 'totalPartnerHospitals', 'hospitals'));
 })->name('home');
 
 Route::get('/fundraisers', [FundraiserController::class, 'index'])->name('fundraisers.index');
@@ -62,13 +125,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/history', function () {
         $user = auth()->user();
 
-        // Get upcoming (pending) donations
+        // Get upcoming (pending) donations with appointments
         $scheduledDonations = $user->donations()
-            ->with('hospital:id,name,address,city')
+            ->with(['hospital:id,name,address,city', 'appointment'])
             ->where('status', 'pending')
-            ->where('donation_date', '>=', now())
-            ->orderBy('donation_date', 'asc')
-            ->get();
+            ->whereHas('appointment', function($query) {
+                $query->where('appointment_date', '>=', now());
+            })
+            ->get()
+            ->sortBy(function($donation) {
+                return $donation->appointment->appointment_date ?? now();
+            });
 
         // Get past (verified) donations
         $completedDonations = $user->donations()

@@ -339,18 +339,6 @@
                     </div>
                 </div>
 
-                <!-- Info Notice -->
-                <div class="info-notice enhanced">
-                    <div class="notice-icon-wrapper">
-                        <img src="{{ asset('assets/icons/blue-heart.svg') }}" alt="" class="notice-icon">
-                    </div>
-                    <div class="notice-content-wrapper">
-                        <p class="notice-text">
-                            <strong>🔐 Bank-Level Security:</strong> All payment information is encrypted and securely stored. We never share your financial details with unauthorized parties.
-                        </p>
-                    </div>
-                </div>
-
                 <!-- Form Actions -->
                 <div class="form-actions">
                     <a href="{{ route('fundraisers.create.step3') }}" class="btn btn-outline btn-previous">

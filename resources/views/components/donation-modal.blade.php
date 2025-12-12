@@ -67,15 +67,15 @@
                         <span style="font-size: 20px;">💰</span>
                         <span>GCash</span>
                     </button>
-                    <button class="payment-btn" data-method="maya" style="padding: 14px; border: 2px solid #e0e0e0; background: white; border-radius: 10px; font-size: 14px; font-weight: 500; color: #1D3557; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 10px;">
+                    <button class="payment-btn" data-method="paymaya" style="padding: 14px; border: 2px solid #e0e0e0; background: white; border-radius: 10px; font-size: 14px; font-weight: 500; color: #1D3557; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 20px;">💳</span>
                         <span>Maya (PayMaya)</span>
                     </button>
-                    <button class="payment-btn" data-method="card" style="padding: 14px; border: 2px solid #e0e0e0; background: white; border-radius: 10px; font-size: 14px; font-weight: 500; color: #1D3557; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 10px;">
+                    <button class="payment-btn" data-method="other" style="padding: 14px; border: 2px solid #e0e0e0; background: white; border-radius: 10px; font-size: 14px; font-weight: 500; color: #1D3557; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 20px;">💳</span>
                         <span>Credit/Debit Card</span>
                     </button>
-                    <button class="payment-btn" data-method="bank" style="padding: 14px; border: 2px solid #e0e0e0; background: white; border-radius: 10px; font-size: 14px; font-weight: 500; color: #1D3557; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 10px;">
+                    <button class="payment-btn" data-method="bank_transfer" style="padding: 14px; border: 2px solid #e0e0e0; background: white; border-radius: 10px; font-size: 14px; font-weight: 500; color: #1D3557; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 20px;">🏦</span>
                         <span>Bank Transfer</span>
                     </button>

@@ -82,7 +82,7 @@
                     </a>
                 </div>
                 <div class="header-text-content">
-                    <h1 class="header-title">Start a Fundraiser 💝</h1>
+                    <h1 class="header-title">Start a Fundraiser</h1>
                     <p class="header-subtitle">Create your campaign in 4 easy steps and start receiving support from our generous community</p>
                 </div>
                 <div class="header-stats">
@@ -290,53 +290,6 @@
                                 <option value="60" {{ old('campaign_duration', $data['campaign_duration'] ?? '') == '60' ? 'selected' : '' }}>60 days</option>
                                 <option value="90" {{ old('campaign_duration', $data['campaign_duration'] ?? '') == '90' ? 'selected' : '' }}>90 days</option>
                             </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Help Section -->
-                <div class="help-section">
-                    <div class="success-examples-card">
-                        <div class="examples-header">
-                            <div class="examples-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFC107" stroke="#FFA000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="examples-title">💡 Tips for a Successful Campaign</h3>
-                                <p class="examples-subtitle">Follow these best practices from our top fundraisers</p>
-                            </div>
-                        </div>
-                        <div class="tips-grid">
-                            <div class="tip-card">
-                                <div class="tip-card-icon">📝</div>
-                                <div class="tip-card-content">
-                                    <h4>Clear Title</h4>
-                                    <p>Use a descriptive, emotional title that explains what you need</p>
-                                </div>
-                            </div>
-                            <div class="tip-card">
-                                <div class="tip-card-icon">📸</div>
-                                <div class="tip-card-content">
-                                    <h4>Add Photos</h4>
-                                    <p>Campaigns with images receive 40% more donations</p>
-                                </div>
-                            </div>
-                            <div class="tip-card">
-                                <div class="tip-card-icon">💬</div>
-                                <div class="tip-card-content">
-                                    <h4>Tell Your Story</h4>
-                                    <p>Share specific details about how funds will be used</p>
-                                </div>
-                            </div>
-                            <div class="tip-card">
-                                <div class="tip-card-icon">🎯</div>
-                                <div class="tip-card-content">
-                                    <h4>Set Realistic Goals</h4>
-                                    <p>Break down costs to show donors where money goes</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

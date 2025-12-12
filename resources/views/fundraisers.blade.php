@@ -80,7 +80,7 @@
         <header class="dashboard-header">
             <div class="header-content">
                 <div class="greeting-section">
-                    <h1 class="header-title">Fundraisers 💝</h1>
+                    <h1 class="header-title">Fundraisers</h1>
                     <p class="header-subtitle">Support humanitarian causes or start your own campaign</p>
                 </div>
                 <div class="quick-stats">
@@ -201,21 +201,92 @@
         </div>
 
         <div class="tab-content" id="my-campaigns-tab">
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="rgba(230, 57, 70, 0.3)" stroke-width="2" fill="rgba(230, 57, 70, 0.05)"/>
-                    </svg>
+            @if($myCampaigns->isEmpty())
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="rgba(230, 57, 70, 0.3)" stroke-width="2" fill="rgba(230, 57, 70, 0.05)"/>
+                        </svg>
+                    </div>
+                    <h3 class="empty-state-title">No campaigns yet</h3>
+                    <p class="empty-state-text">Start your first fundraiser to support a cause you care about and make a difference in people's lives.</p>
+                    <button class="btn btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 11H5M12 18V4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Start a Fundraiser
+                    </button>
                 </div>
-                <h3 class="empty-state-title">No campaigns yet</h3>
-                <p class="empty-state-text">Start your first fundraiser to support a cause you care about and make a difference in people's lives.</p>
-                <button class="btn btn-primary">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 11H5M12 18V4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Start a Fundraiser
-                </button>
-            </div>
+            @else
+                <div class="section-header" style="margin-bottom: 28px;">
+                    <h2 class="section-title">My Fundraising Campaigns</h2>
+                    <p class="section-subtitle">Manage and track your campaigns</p>
+                </div>
+                <div class="fundraisers-grid">
+                    @foreach($myCampaigns as $campaign)
+                        <div class="fundraiser-card" data-id="{{ $campaign->id }}">
+                            <div class="fundraiser-header">
+                                <div class="fundraiser-header-top">
+                                    <h3 class="fundraiser-title">{{ $campaign->title }}</h3>
+                                    <span class="fundraiser-category">{{ $campaign->category }}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                                    <p class="fundraiser-organizer">by {{ $campaign->creator->name ?? $campaign->creator->first_name . ' ' . $campaign->creator->last_name }}</p>
+                                    <span class="status-badge status-{{ $campaign->status }}" style="padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+                                        @if($campaign->status === 'active') background: rgba(34, 197, 94, 0.1); color: #22C55E;
+                                        @elseif($campaign->status === 'pending') background: rgba(251, 191, 36, 0.1); color: #FBBF24;
+                                        @else background: rgba(239, 68, 68, 0.1); color: #EF4444;
+                                        @endif">
+                                        {{ $campaign->status }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="fundraiser-progress">
+                                <div class="fundraiser-amounts">
+                                    <span class="fundraiser-raised">₱{{ number_format($campaign->current_amount, 0) }}</span>
+                                    <span class="fundraiser-goal">of ₱{{ number_format($campaign->goal_amount, 0) }}</span>
+                                </div>
+
+                                <div class="fundraiser-progress-bar">
+                                    <div class="fundraiser-progress-fill" style="width: {{ $campaign->progress_percentage }}%"></div>
+                                </div>
+
+                                <div class="fundraiser-stats">
+                                    <div class="fundraiser-stat">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2"/>
+                                            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        <span>{{ number_format($campaign->contributors_count) }} contributors</span>
+                                    </div>
+                                    <div class="fundraiser-stat">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                        <span>{{ $campaign->days_remaining }} days left</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fundraiser-action">
+                                <a href="{{ route('fundraisers.show', $campaign) }}" class="btn btn-primary btn-view-campaign">View Campaign</a>
+                                @if($campaign->status === 'active')
+                                <a href="{{ route('fundraisers.show', $campaign) }}" class="btn btn-outline btn-contribute">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Share
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </main>
 @endsection

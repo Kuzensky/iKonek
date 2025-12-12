@@ -223,7 +223,8 @@
                         </div>
                     @else
                     <div class="history-list">
-                        <!-- Scheduled Donation 1 -->
+                        @foreach($scheduledDonations as $donation)
+                        <!-- Scheduled Donation -->
                         <div class="history-record scheduled-record">
                             <div class="record-left">
                                 <div class="record-icon-wrapper record-icon-red">
@@ -235,7 +236,7 @@
 
                                 <div class="record-info">
                                     <div class="record-header">
-                                        <h4 class="record-title">Philippine General Hospital</h4>
+                                        <h4 class="record-title">{{ $donation->hospital->name }}</h4>
                                         <span class="badge badge-confirmed">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -250,24 +251,26 @@
                                                 <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
                                                 <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
                                             </svg>
-                                            <span>April 15, 2025 at 10:00 AM</span>
+                                            <span>{{ $donation->appointment ? $donation->appointment->appointment_date->format('F d, Y \a\t g:i A') : 'N/A' }}</span>
                                         </div>
                                         <div class="meta-item">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
                                                 <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
                                             </svg>
-                                            <span>Taft Avenue, Manila</span>
+                                            <span>{{ $donation->hospital->address }}, {{ $donation->hospital->city }}</span>
                                         </div>
                                     </div>
 
+                                    @if($donation->appointment)
                                     <div class="record-countdown">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <circle cx="12" cy="12" r="10" stroke="#457B9D" stroke-width="2"/>
                                             <path d="M12 6V12L16 14" stroke="#457B9D" stroke-width="2" stroke-linecap="round"/>
                                         </svg>
-                                        <span>In 5 days, 12 hours</span>
+                                        <span>{{ $donation->appointment->appointment_date->diffForHumans() }}</span>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -288,72 +291,7 @@
                                 </button>
                             </div>
                         </div>
-
-                        <!-- Scheduled Donation 2 -->
-                        <div class="history-record scheduled-record">
-                            <div class="record-left">
-                                <div class="record-icon-wrapper record-icon-red">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" stroke="#E63946" stroke-width="2"/>
-                                        <path d="M16 2V6M8 2V6M3 10H21" stroke="#E63946" stroke-width="2"/>
-                                    </svg>
-                                </div>
-
-                                <div class="record-info">
-                                    <div class="record-header">
-                                        <h4 class="record-title">St. Luke's Medical Center</h4>
-                                        <span class="badge badge-confirmed">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            Confirmed
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="record-meta">
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>May 3, 2025 at 2:00 PM</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
-                                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>E. Rodriguez Sr. Ave, Quezon City</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="record-countdown">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="12" cy="12" r="10" stroke="#457B9D" stroke-width="2"/>
-                                            <path d="M12 6V12L16 14" stroke="#457B9D" stroke-width="2" stroke-linecap="round"/>
-                                        </svg>
-                                        <span>In 23 days, 8 hours</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="record-actions">
-                                <button class="btn-action-primary">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M13 2V9H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    View E-Ticket
-                                </button>
-                                <button class="btn-action-secondary btn-cancel-appointment">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                     @endif
                 </div>
@@ -370,7 +308,8 @@
                         </div>
                     @else
                     <div class="history-list">
-                        <!-- Donation Record 1 -->
+                        @foreach($completedDonations as $donation)
+                        <!-- Donation Record -->
                         <div class="history-record">
                             <div class="record-left">
                                 <div class="record-icon-wrapper record-icon-red">
@@ -382,7 +321,7 @@
 
                                 <div class="record-info">
                                     <div class="record-header">
-                                        <h4 class="record-title">Philippine General Hospital</h4>
+                                        <h4 class="record-title">{{ $donation->hospital->name }}</h4>
                                         <span class="badge badge-verified">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -398,21 +337,21 @@
                                                 <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
                                                 <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
                                             </svg>
-                                            <span>March 15, 2025</span>
+                                            <span>{{ $donation->donation_date ? $donation->donation_date->format('F d, Y') : 'N/A' }}</span>
                                         </div>
                                         <div class="meta-item">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
                                                 <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
                                             </svg>
-                                            <span>Taft Avenue, Manila</span>
+                                            <span>{{ $donation->hospital->address }}, {{ $donation->hospital->city }}</span>
                                         </div>
                                     </div>
 
                                     <div class="record-badges">
-                                        <span class="badge badge-blood-type">O+</span>
+                                        <span class="badge badge-blood-type">{{ $donation->blood_type }}</span>
                                         <span class="badge badge-volume">450ml</span>
-                                        <span class="record-impact">Helped 3 people</span>
+                                        <span class="record-impact">Helped {{ $donation->lives_impacted ?? 3 }} {{ Str::plural('person', $donation->lives_impacted ?? 3) }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -424,116 +363,7 @@
                                 Download Certificate
                             </button>
                         </div>
-
-                        <!-- Donation Record 2 -->
-                        <div class="history-record">
-                            <div class="record-left">
-                                <div class="record-icon-wrapper record-icon-red">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" fill="#E63946" opacity="0.2"/>
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="#E63946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-
-                                <div class="record-info">
-                                    <div class="record-header">
-                                        <h4 class="record-title">St. Luke's Medical Center</h4>
-                                        <span class="badge badge-verified">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            Verified
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="record-meta">
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>January 20, 2025</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
-                                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>E. Rodriguez Sr. Ave, Quezon City</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="record-badges">
-                                        <span class="badge badge-blood-type">O+</span>
-                                        <span class="badge badge-volume">450ml</span>
-                                        <span class="record-impact">Helped 3 people</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn-action-secondary btn-certificate">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Download Certificate
-                            </button>
-                        </div>
-
-                        <!-- Donation Record 3 -->
-                        <div class="history-record">
-                            <div class="record-left">
-                                <div class="record-icon-wrapper record-icon-red">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" fill="#E63946" opacity="0.2"/>
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="#E63946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-
-                                <div class="record-info">
-                                    <div class="record-header">
-                                        <h4 class="record-title">Makati Medical Center</h4>
-                                        <span class="badge badge-verified">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            Verified
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="record-meta">
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>November 10, 2024</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
-                                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>Amorsolo Street, Makati</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="record-badges">
-                                        <span class="badge badge-blood-type">O+</span>
-                                        <span class="badge badge-volume">450ml</span>
-                                        <span class="record-impact">Helped 3 people</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn-action-secondary btn-certificate">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Download Certificate
-                            </button>
-                        </div>
+                        @endforeach
                     </div>
                     @endif
                 </div>
@@ -550,7 +380,8 @@
                         </div>
                     @else
                     <div class="history-list">
-                        <!-- Fundraiser Contribution 1 -->
+                        @foreach($contributions as $contribution)
+                        <!-- Fundraiser Contribution -->
                         <div class="history-record">
                             <div class="record-left">
                                 <div class="record-icon-wrapper record-icon-green">
@@ -562,88 +393,40 @@
 
                                 <div class="record-info">
                                     <div class="record-header">
-                                        <h4 class="record-title">Hope for Typhoon Victims</h4>
-                                        <span class="badge badge-verified">
+                                        <h4 class="record-title">{{ $contribution->fundraiser->title }}</h4>
+                                        <span class="badge badge-{{ $contribution->status === 'verified' ? 'verified' : 'pending' }}">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                @if($contribution->status === 'verified')
                                                 <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                                 <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            Completed
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="record-meta">
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>March 10, 2025</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Disaster Relief Fund</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="record-badges">
-                                        <span class="badge badge-amount">₱500</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn-action-secondary btn-receipt">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Download Receipt
-                            </button>
-                        </div>
-
-                        <!-- Fundraiser Contribution 2 -->
-                        <div class="history-record">
-                            <div class="record-left">
-                                <div class="record-icon-wrapper record-icon-green">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" fill="#16A34A" opacity="0.2"/>
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-
-                                <div class="record-info">
-                                    <div class="record-header">
-                                        <h4 class="record-title">Children's Cancer Fund</h4>
-                                        <span class="badge badge-pending">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                @else
                                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                                                 <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                                @endif
                                             </svg>
-                                            Processing
+                                            {{ ucfirst($contribution->status) }}
                                         </span>
                                     </div>
-                                    
+
                                     <div class="record-meta">
                                         <div class="meta-item">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
                                                 <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
                                             </svg>
-                                            <span>December 28, 2024</span>
+                                            <span>{{ $contribution->created_at->format('F d, Y') }}</span>
                                         </div>
                                         <div class="meta-item">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                                                 <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>
-                                            <span>Medical Assistance</span>
+                                            <span>{{ $contribution->fundraiser->getCategoryDisplayName() }}</span>
                                         </div>
                                     </div>
 
                                     <div class="record-badges">
-                                        <span class="badge badge-amount">₱1,000</span>
+                                        <span class="badge badge-amount">₱{{ number_format($contribution->amount, 0) }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -655,112 +438,8 @@
                                 Download Receipt
                             </button>
                         </div>
+                        @endforeach
 
-                        <!-- Fundraiser Contribution 3 -->
-                        <div class="history-record">
-                            <div class="record-left">
-                                <div class="record-icon-wrapper record-icon-green">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" fill="#16A34A" opacity="0.2"/>
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-
-                                <div class="record-info">
-                                    <div class="record-header">
-                                        <h4 class="record-title">Emergency Surgery Support</h4>
-                                        <span class="badge badge-verified">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            Completed
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="record-meta">
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>November 15, 2024</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Patient Assistance</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="record-badges">
-                                        <span class="badge badge-amount">₱750</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn-action-secondary btn-receipt">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Download Receipt
-                            </button>
-                        </div>
-
-                        <!-- Fundraiser Contribution 4 -->
-                        <div class="history-record">
-                            <div class="record-left">
-                                <div class="record-icon-wrapper record-icon-green">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" fill="#16A34A" opacity="0.2"/>
-                                        <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6053C22.3095 9.93789 22.4518 9.22248 22.4518 8.5C22.4518 7.77752 22.3095 7.06211 22.0329 6.39467C21.7564 5.72723 21.351 5.12087 20.84 4.61Z" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-
-                                <div class="record-info">
-                                    <div class="record-header">
-                                        <h4 class="record-title">Community Health Program</h4>
-                                        <span class="badge badge-verified">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            Completed
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="record-meta">
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
-                                            </svg>
-                                            <span>October 5, 2024</span>
-                                        </div>
-                                        <div class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                                <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            <span>Healthcare Access</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="record-badges">
-                                        <span class="badge badge-amount">₱1,250</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn-action-secondary btn-receipt">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Download Receipt
-                            </button>
-                        </div>
                     </div>
                     @endif
                 </div>

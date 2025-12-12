@@ -23,7 +23,14 @@ class FundraiserController extends Controller
         $fundraisers = $query->orderBy('created_at', 'desc')
             ->paginate(12);
 
-        return view('fundraisers', compact('fundraisers'));
+        // Fetch user's own campaigns (all statuses)
+        $myCampaigns = auth()->check()
+            ? Fundraiser::where('user_id', auth()->id())
+                ->orderBy('created_at', 'desc')
+                ->get()
+            : collect();
+
+        return view('fundraisers', compact('fundraisers', 'myCampaigns'));
     }
 
     public function store(StoreFundraiserRequest $request)

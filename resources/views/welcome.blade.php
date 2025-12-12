@@ -70,7 +70,7 @@
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <path d="M20 6L9 17l-5-5" stroke="#E63946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>150+ Verified Hospitals</span>
+                            <span>{{ $totalPartnerHospitals }}+ Verified Hospitals</span>
                         </div>
                         <div class="feature-item">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -134,7 +134,7 @@
                                 </svg>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-value">150+</div>
+                                <div class="stat-value">{{ $totalPartnerHospitals }}+</div>
                                 <div class="stat-label">Partner Hospitals</div>
                             </div>
                         </div>
@@ -203,13 +203,15 @@
                         </div>
                         <div class="card-content">
                             <div class="card-label">Active Campaigns</div>
-                            <div class="card-value">23 Fundraisers</div>
+                            <div class="card-value">{{ $totalActiveCampaigns }} Fundraisers</div>
+                            @if($urgentCampaigns > 0)
                             <div class="card-badge urgent">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="#FFC107">
                                     <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
                                 </svg>
-                                <span>5 urgent</span>
+                                <span>{{ $urgentCampaigns }} urgent</span>
                             </div>
+                            @endif
                         </div>
                     </div>
 
@@ -222,12 +224,12 @@
                         </div>
                         <div class="card-content">
                             <div class="card-label">This Month</div>
-                            <div class="card-value">₱2.3M Raised</div>
+                            <div class="card-value">₱{{ number_format($totalRaisedThisMonth / 1000000, 1) }}M Raised</div>
                             <div class="card-trend">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                                     <polyline points="18 15 12 9 6 15" stroke="#28A745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                <span>+23% from last month</span>
+                                <span>Real-time tracking</span>
                             </div>
                         </div>
                     </div>
@@ -243,7 +245,7 @@
                         <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="#E63946"/>
                         <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <p class="trusted-label">Trusted by <strong>150+ leading healthcare institutions</strong> nationwide</p>
+                    <p class="trusted-label">Trusted by <strong>{{ $totalPartnerHospitals }}+ leading healthcare institutions</strong> nationwide</p>
                 </div>
                 <div class="trusted-logos-wrapper">
                     <div class="trusted-logos" aria-label="Scrolling list of partner organizations">
@@ -366,7 +368,7 @@
             </div>
 
             <div class="section-footer">
-                <button class="btn btn-outline-secondary">View All Campaigns</button>
+                <a href="{{ route('fundraisers.index') }}" class="btn btn-outline-secondary">View All Campaigns</a>
             </div>
         </div>
     </section>
@@ -413,7 +415,7 @@
                         <img src="{{ asset('assets/icons/hospital.svg') }}" alt="" width="32" height="32">
                     </div>
                     <div class="impact-content">
-                        <div class="impact-value">150+</div>
+                        <div class="impact-value">{{ $totalPartnerHospitals }}+</div>
                         <div class="impact-label">Partner Hospitals</div>
                         <p class="impact-description">Nationwide network of trusted facilities</p>
                     </div>
@@ -508,7 +510,7 @@
             <div class="section-header">
                 <h2 class="section-title">Trusted <span style="color: var(--color-primary);">Partner Hospitals</span></h2>
                 <p class="section-description">
-                    Schedule your life-saving blood donation at any of our <strong>150+ verified partner hospitals</strong> across the Philippines—from Luzon to Mindanao. Safe, convenient, and always near you.
+                    Schedule your life-saving blood donation at any of our <strong>{{ $totalPartnerHospitals }}+ verified partner hospitals</strong> across the Philippines—from Luzon to Mindanao. Safe, convenient, and always near you.
                 </p>
             </div>
 
@@ -532,9 +534,9 @@
                             <img src="{{ asset('assets/icons/white-blood-fill.svg') }}" alt="Add" width="16" height="16">
                             Suggest a Hospital
                         </button>
-                        <button class="btn btn-outline-secondary">
-                            View All 150+ Hospitals
-                        </button>
+                        <a href="{{ route('hospitals.index') }}" class="btn btn-outline-secondary">
+                            View All {{ $totalPartnerHospitals }}+ Hospitals
+                        </a>
                     </div>
                 </div>
             </div>
@@ -549,38 +551,8 @@
         // ===========================
         // CAMPAIGNS DATA & MANAGER
         // ===========================
-        const campaignsData = [
-            {
-                id: 1,
-                title: "Help Baby Sofia's Heart Surgery",
-                organizer: "Sofia's Family • Manila, Philippines",
-                category: "Medical Treatment",
-                raised: 450000,
-                goal: 800000,
-                supporters: 234,
-                daysLeft: 12
-            },
-            {
-                id: 2,
-                title: "Kidney Transplant for Tatay Ernesto",
-                organizer: "Ernesto Support Group • Cebu, Philippines",
-                category: "Medical Treatment",
-                raised: 1200000,
-                goal: 1500000,
-                supporters: 456,
-                daysLeft: 8
-            },
-            {
-                id: 3,
-                title: "Cancer Treatment for Teacher Maria",
-                organizer: "Former Students of Maria • Davao City, Philippines",
-                category: "Medical Treatment",
-                raised: 380000,
-                goal: 600000,
-                supporters: 189,
-                daysLeft: 15
-            }
-        ];
+        // Real-time data from database
+        const campaignsData = @json($campaigns);
 
         class CampaignsManager {
             constructor() {
@@ -608,6 +580,7 @@
 
             createCampaignCard(campaign) {
                 const percentage = this.calculatePercentage(campaign.raised, campaign.goal);
+                const fundraiserUrl = `/fundraisers/${campaign.id}`;
 
                 return `
                     <div class="card campaign-card">
@@ -644,15 +617,24 @@
                             </div>
                         </div>
 
-                        <button class="campaign-button" aria-label="Donate to ${campaign.title}">
+                        <a href="${fundraiserUrl}" class="campaign-button" aria-label="Donate to ${campaign.title}">
                             <img src="{{ asset('assets/icons/heart-white.svg') }}" alt="" width="18" height="18">
                             Donate Now
-                        </button>
+                        </a>
                     </div>
                 `;
             }
 
             renderCampaigns() {
+                if (campaignsData.length === 0) {
+                    this.container.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
+                            <p style="color: #64748B; font-size: 16px;">No active campaigns at the moment. Check back soon!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
                 this.container.innerHTML = campaignsData
                     .map(campaign => this.createCampaignCard(campaign))
                     .join('');
@@ -668,68 +650,8 @@
         // ===========================
         // HOSPITALS DATA & MANAGER
         // ===========================
-        const hospitalsData = [
-            {
-                id: 1,
-                name: "Philippine General Hospital",
-                category: "National Referral Center",
-                location: "Taft Avenue, Manila",
-                region: "Metro Manila",
-                phone: "(02) 8554-8400",
-                hours: "Mon-Sat: 8:00 AM - 5:00 PM",
-                availability: "Available Today"
-            },
-            {
-                id: 2,
-                name: "Philippine Heart Center",
-                category: "Cardiovascular Specialty",
-                location: "East Avenue, Quezon City",
-                region: "Metro Manila",
-                phone: "(02) 8925-2401",
-                hours: "Mon-Fri: 8:00 AM - 4:00 PM",
-                availability: "Available Today"
-            },
-            {
-                id: 3,
-                name: "Vicente Sotto Memorial Medical Center",
-                category: "Regional Hospital",
-                location: "B. Rodriguez St, Cebu City",
-                region: "Visayas",
-                phone: "(032) 253-9891",
-                hours: "Mon-Sat: 8:00 AM - 5:00 PM",
-                availability: "Available Tomorrow"
-            },
-            {
-                id: 4,
-                name: "Southern Philippines Medical Center",
-                category: "Regional Hospital",
-                location: "J.P. Laurel Ave, Davao City",
-                region: "Mindanao",
-                phone: "(082) 227-2731",
-                hours: "Mon-Sat: 8:00 AM - 5:00 PM",
-                availability: "Available Today"
-            },
-            {
-                id: 5,
-                name: "St. Luke's Medical Center",
-                category: "Tertiary Hospital",
-                location: "E. Rodriguez Sr. Ave, Quezon City",
-                region: "Metro Manila",
-                phone: "(02) 8789-7700",
-                hours: "24/7 Blood Bank Services",
-                availability: "Available Now"
-            },
-            {
-                id: 6,
-                name: "The Medical City",
-                category: "Multi-Specialty Hospital",
-                location: "Ortigas Avenue, Pasig City",
-                region: "Metro Manila",
-                phone: "(02) 8988-1000",
-                hours: "Mon-Sat: 7:00 AM - 6:00 PM",
-                availability: "Available Today"
-            }
-        ];
+        // Real-time data from database
+        const hospitalsData = @json($hospitals);
 
         class HospitalsManager {
             constructor() {
@@ -775,6 +697,8 @@
             }
 
             createHospitalCard(hospital) {
+                const hospitalUrl = `/hospitals/${hospital.id}`;
+
                 return `
                     <div class="card hospital-card" data-region="${hospital.region.toLowerCase().replace(' ', '-')}">
                         <div class="hospital-header">
@@ -807,10 +731,10 @@
                         </div>
 
                         <div class="hospital-action">
-                            <button class="hospital-button">
+                            <a href="${hospitalUrl}" class="hospital-button">
                                 <img src="{{ asset('assets/icons/calendar.svg') }}" alt="" width="16" height="16">
                                 Schedule Appointment
-                            </button>
+                            </a>
                         </div>
                     </div>
                 `;
@@ -1210,20 +1134,6 @@
             }
 
             setupEventListeners() {
-                document.querySelectorAll('.btn-primary, .btn-outline').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const text = button.textContent.trim();
-
-                        if (text.includes('Login')) {
-                            this.handleLogin();
-                        } else if (text.includes('Register')) {
-                            this.handleRegister();
-                        } else if (text.includes('Donate')) {
-                            this.handleDonate(button);
-                        }
-                    });
-                });
-
                 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                     anchor.addEventListener('click', (e) => {
                         const href = anchor.getAttribute('href');
@@ -1241,23 +1151,6 @@
                         }
                     });
                 });
-            }
-
-            handleLogin() {
-                console.log('Login clicked');
-                window.location.href = '{{ route('login') }}';
-            }
-
-            handleRegister() {
-                console.log('Register clicked');
-                window.location.href = '{{ route('register') }}';
-            }
-
-            handleDonate(button) {
-                console.log('Donate clicked');
-                const card = button.closest('.campaign-card');
-                const title = card ? card.querySelector('.campaign-title').textContent : 'this campaign';
-                alert(`Donation functionality for "${title}" will be implemented in the next phase.`);
             }
 
             hideLoader() {

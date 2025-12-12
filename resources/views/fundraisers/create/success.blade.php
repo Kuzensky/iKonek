@@ -551,9 +551,9 @@
     <main class="dashboard-main" style="background: #F3F4F6; min-height: 100vh; padding: 40px;">
         <div class="success-container" style="max-width: 900px; margin: 0 auto; padding: 40px 24px;">
             <!-- Success Icon -->
-            <div class="success-icon-wrapper" style="display: flex; justify-content: center; margin-bottom: 32px; margin-top: 20px;">
-                <div class="success-icon pulse" style="width: 100px; height: 100px; background: #16A34A; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 10px 40px rgba(22, 163, 74, 0.3);">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div style="text-align: center; margin-bottom: 32px; margin-top: 20px;">
+                <div style="display: inline-flex; width: 100px; height: 100px; background: #16A34A; border-radius: 50%; align-items: center; justify-content: center; color: white; box-shadow: 0 10px 40px rgba(22, 163, 74, 0.3); animation: pulse 2s ease-in-out infinite;">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
                         <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
@@ -603,17 +603,17 @@
                 </div>
 
                 <div class="summary-stats-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                    <div class="stat-box" style="padding: 20px; background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-radius: 12px; text-align: center;">
-                        <div class="stat-label" style="font-size: 13px; color: #666; margin-bottom: 6px;">Goal Amount</div>
-                        <div class="stat-value-large" style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 6px;">₱{{ number_format($fundraiser->goal_amount, 2) }}</div>
+                    <div style="padding: 20px; background: #F9FAFB; border-radius: 12px; text-align: center; border: 1px solid #E5E7EB;">
+                        <div style="font-size: 13px; color: #666; margin-bottom: 6px;">Goal Amount</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 6px;">₱{{ number_format($fundraiser->goal_amount, 2) }}</div>
                     </div>
-                    <div class="stat-box" style="padding: 20px; background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); border-radius: 12px; text-align: center;">
-                        <div class="stat-label" style="font-size: 13px; color: #666; margin-bottom: 6px;">Beneficiary</div>
-                        <div class="stat-value-large" style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 6px;">{{ $fundraiser->beneficiary_name }}</div>
+                    <div style="padding: 20px; background: #F9FAFB; border-radius: 12px; text-align: center; border: 1px solid #E5E7EB;">
+                        <div style="font-size: 13px; color: #666; margin-bottom: 6px;">Beneficiary</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 6px;">{{ $fundraiser->beneficiary_name }}</div>
                     </div>
-                    <div class="stat-box" style="padding: 20px; background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%); border-radius: 12px; text-align: center;">
-                        <div class="stat-label" style="font-size: 13px; color: #666; margin-bottom: 6px;">Organizer</div>
-                        <div class="stat-value-large" style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 6px;">{{ $fundraiser->organizer_name }}</div>
+                    <div style="padding: 20px; background: #F9FAFB; border-radius: 12px; text-align: center; border: 1px solid #E5E7EB;">
+                        <div style="font-size: 13px; color: #666; margin-bottom: 6px;">Organizer</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-top: 6px;">{{ $fundraiser->organizer_name }}</div>
                     </div>
                 </div>
 

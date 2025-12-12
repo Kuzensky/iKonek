@@ -143,11 +143,14 @@
                     <div class="donor-info">
                         <div class="donor-name-row">
                             <h3 class="donor-name">{{ $donation->getDonorFullName() }}</h3>
-                            @if($donation->user->email_verified_at)
-                                <span class="user-badge user-badge-verified">Verified</span>
-                            @else
-                                <span class="user-badge user-badge-pending">Pending</span>
-                            @endif
+                            <span class="status-badge status-{{ $donation->status }}" style="
+                                padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500;
+                                @if($donation->status === 'verified') background: rgba(34, 197, 94, 0.1); color: #22C55E;
+                                @elseif($donation->status === 'pending') background: rgba(251, 191, 36, 0.1); color: #FBBF24;
+                                @elseif($donation->status === 'failed') background: rgba(239, 68, 68, 0.1); color: #EF4444;
+                                @else background: rgba(156, 163, 175, 0.1); color: #9CA3AF;
+                                @endif
+                            ">{{ ucfirst($donation->status) }}</span>
                             <span class="blood-type-badge">{{ $donation->blood_type }}</span>
                         </div>
 
@@ -180,7 +183,18 @@
                         <span>{{ $donation->appointment->appointment_date->format('Y-m-d') }} at {{ $donation->appointment->appointment_date->format('h:i A') }}</span>
                     </div>
                     @endif
-                    <button @click="openStatusModal({{ $donation->id }}, {{ json_encode($donation->toArray()) }})"
+                    @php
+                        $donationData = [
+                            'id' => $donation->id,
+                            'donor_name' => trim($donation->user->first_name . ' ' . ($donation->user->middle_name ?? '') . ' ' . $donation->user->last_name),
+                            'blood_type' => $donation->blood_type,
+                            'hospital_name' => $donation->hospital->name,
+                            'scheduled_date' => $donation->appointment ? $donation->appointment->appointment_date->format('Y-m-d h:i A') : 'N/A',
+                            'status' => $donation->status,
+                            'status_display' => ucfirst($donation->status)
+                        ];
+                    @endphp
+                    <button @click="openStatusModal({{ $donation->id }}, {{ json_encode($donationData) }})"
                             class="btn-update">
                         Update Status
                     </button>
@@ -251,14 +265,20 @@
             <div class="user-card">
                 <!-- Left: Avatar -->
                 <div class="user-card-avatar">
-                    {{ strtoupper(substr($user->first_name ?? '', 0, 1) . substr($user->last_name ?? '', 0, 1)) }}
+                    @php
+                        $nameParts = explode(' ', $user->name ?? '');
+                        $firstName = $nameParts[0] ?? '';
+                        $lastName = isset($nameParts[1]) ? $nameParts[count($nameParts) - 1] : '';
+                        $initials = strtoupper(substr($firstName, 0, 1) . substr($lastName, 0, 1));
+                    @endphp
+                    {{ $initials }}
                 </div>
 
                 <!-- Middle: User Info -->
                 <div class="user-card-info">
                     <!-- Name Row -->
                     <div class="user-card-name-row">
-                        <h3 class="user-card-name">{{ trim("{$user->first_name} {$user->middle_name} {$user->last_name}") }}</h3>
+                        <h3 class="user-card-name">{{ $user->name ?? trim("{$user->first_name} {$user->middle_name} {$user->last_name}") }}</h3>
                         <div class="user-card-badges">
                             @if($user->email_verified_at)
                                 <span class="status-badge-inactive">Inactive</span>

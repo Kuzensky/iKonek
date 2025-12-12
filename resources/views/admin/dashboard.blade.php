@@ -243,9 +243,17 @@
                 <tr>
                     <td>
                         <div class="donor-info">
-                            <div class="donor-avatar">{{ strtoupper(substr($donation->user->first_name, 0, 1)) }}</div>
+                            <div class="donor-avatar">
+                                @php
+                                    $nameParts = explode(' ', $donation->user->name);
+                                    $firstName = $nameParts[0] ?? '';
+                                    $lastName = isset($nameParts[1]) ? $nameParts[count($nameParts) - 1] : '';
+                                    $initials = strtoupper(substr($firstName, 0, 1) . substr($lastName, 0, 1));
+                                @endphp
+                                {{ $initials }}
+                            </div>
                             <div>
-                                <p class="donor-name">{{ $donation->user->first_name }} {{ $donation->user->last_name }}</p>
+                                <p class="donor-name">{{ $donation->user->name }}</p>
                                 <p class="donor-email">{{ $donation->user->email }}</p>
                             </div>
                         </div>

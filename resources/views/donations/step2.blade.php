@@ -156,12 +156,13 @@
                                         </svg>
                                     </button>
                                 </label>
-                                <input 
-                                    type="email" 
-                                    id="email" 
-                                    name="email" 
-                                    class="form-input" 
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-input"
                                     placeholder="your.email@example.com"
+                                    value="{{ auth()->user()->email }}"
                                     required
                                     aria-required="true"
                                     autocomplete="email"
@@ -652,12 +653,30 @@ class ContactInfoForm {
     }
 
     init() {
+        // Clear localStorage if it contains data from a different user
+        const currentUserEmail = '{{ auth()->user()->email }}';
+        const contactData = localStorage.getItem('contactFormData');
+        if (contactData) {
+            try {
+                const data = JSON.parse(contactData);
+                if (data.email && data.email !== currentUserEmail) {
+                    // Clear all appointment data if it belongs to a different user
+                    localStorage.removeItem('contactFormData');
+                    localStorage.removeItem('scheduleFormData');
+                    localStorage.removeItem('healthFormData');
+                    console.log('Cleared localStorage from previous user session');
+                }
+            } catch (e) {
+                console.error('Error checking stored user data:', e);
+            }
+        }
+
         // Load previous step data
         this.loadPreviousStepData();
-        
+
         // Add event listeners
         this.addEventListeners();
-        
+
         // Initial validation check
         this.validateForm();
     }
@@ -678,16 +697,17 @@ class ContactInfoForm {
         if (contactData) {
             try {
                 const data = JSON.parse(contactData);
-                if (data.email) this.emailInput.value = data.email;
+                // Only load email from localStorage if it exists, otherwise keep the authenticated user's email
+                if (data.email && data.email !== '') this.emailInput.value = data.email;
                 if (data.phone) this.phoneInput.value = data.phone;
                 if (data.phoneCountry) this.phoneCountrySelect.value = data.phoneCountry;
                 if (data.emergencyName) this.emergencyNameInput.value = data.emergencyName;
                 if (data.emergencyPhone) this.emergencyPhoneInput.value = data.emergencyPhone;
                 if (data.emergencyPhoneCountry) this.emergencyPhoneCountrySelect.value = data.emergencyPhoneCountry;
-                
+
                 // Validate loaded fields
                 setTimeout(() => {
-                    if (data.email) this.validateField(this.emailInput, 'email');
+                    if (this.emailInput.value) this.validateField(this.emailInput, 'email');
                     if (data.phone) this.validateField(this.phoneInput, 'phone');
                     if (data.emergencyName) this.validateField(this.emergencyNameInput, 'text');
                     if (data.emergencyPhone) this.validateField(this.emergencyPhoneInput, 'phone');
@@ -696,6 +716,11 @@ class ContactInfoForm {
             } catch (e) {
                 console.error('Error loading contact data:', e);
             }
+        } else {
+            // No localStorage data - validate the default email
+            setTimeout(() => {
+                if (this.emailInput.value) this.validateField(this.emailInput, 'email');
+            }, 100);
         }
     }
 
@@ -1131,6 +1156,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 @push('scripts')
     <script>
+// Force clear localStorage if email doesn't match current user
+(function() {
+    const currentUserEmail = '{{ auth()->user()->email }}';
+    const contactData = localStorage.getItem('contactFormData');
+
+    if (contactData) {
+        try {
+            const data = JSON.parse(contactData);
+            if (data.email && data.email !== currentUserEmail) {
+                console.log('Clearing localStorage - stored email:', data.email, 'current user:', currentUserEmail);
+                localStorage.removeItem('contactFormData');
+                localStorage.removeItem('scheduleFormData');
+                localStorage.removeItem('healthFormData');
+                alert('Previous session data cleared. Your email will be: ' + currentUserEmail);
+            }
+        } catch (e) {
+            console.error('Error checking localStorage:', e);
+        }
+    }
+})();
 
 // Navigation Module - Enhanced UX
 
@@ -1449,12 +1494,30 @@ class ContactInfoForm {
     }
 
     init() {
+        // Clear localStorage if it contains data from a different user
+        const currentUserEmail = '{{ auth()->user()->email }}';
+        const contactData = localStorage.getItem('contactFormData');
+        if (contactData) {
+            try {
+                const data = JSON.parse(contactData);
+                if (data.email && data.email !== currentUserEmail) {
+                    // Clear all appointment data if it belongs to a different user
+                    localStorage.removeItem('contactFormData');
+                    localStorage.removeItem('scheduleFormData');
+                    localStorage.removeItem('healthFormData');
+                    console.log('Cleared localStorage from previous user session');
+                }
+            } catch (e) {
+                console.error('Error checking stored user data:', e);
+            }
+        }
+
         // Load previous step data
         this.loadPreviousStepData();
-        
+
         // Add event listeners
         this.addEventListeners();
-        
+
         // Initial validation check
         this.validateForm();
     }
@@ -1475,16 +1538,17 @@ class ContactInfoForm {
         if (contactData) {
             try {
                 const data = JSON.parse(contactData);
-                if (data.email) this.emailInput.value = data.email;
+                // Only load email from localStorage if it exists, otherwise keep the authenticated user's email
+                if (data.email && data.email !== '') this.emailInput.value = data.email;
                 if (data.phone) this.phoneInput.value = data.phone;
                 if (data.phoneCountry) this.phoneCountrySelect.value = data.phoneCountry;
                 if (data.emergencyName) this.emergencyNameInput.value = data.emergencyName;
                 if (data.emergencyPhone) this.emergencyPhoneInput.value = data.emergencyPhone;
                 if (data.emergencyPhoneCountry) this.emergencyPhoneCountrySelect.value = data.emergencyPhoneCountry;
-                
+
                 // Validate loaded fields
                 setTimeout(() => {
-                    if (data.email) this.validateField(this.emailInput, 'email');
+                    if (this.emailInput.value) this.validateField(this.emailInput, 'email');
                     if (data.phone) this.validateField(this.phoneInput, 'phone');
                     if (data.emergencyName) this.validateField(this.emergencyNameInput, 'text');
                     if (data.emergencyPhone) this.validateField(this.emergencyPhoneInput, 'phone');
@@ -1493,6 +1557,11 @@ class ContactInfoForm {
             } catch (e) {
                 console.error('Error loading contact data:', e);
             }
+        } else {
+            // No localStorage data - validate the default email
+            setTimeout(() => {
+                if (this.emailInput.value) this.validateField(this.emailInput, 'email');
+            }, 100);
         }
     }
 

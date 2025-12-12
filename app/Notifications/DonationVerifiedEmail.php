@@ -13,8 +13,6 @@ class DonationVerifiedEmail extends Notification implements ShouldQueue
     use Queueable;
 
     public $donation;
-    public $queue = 'emails';
-    public $connection = 'database';
     public $tries = 3;
     public $timeout = 30;
 
@@ -24,6 +22,8 @@ class DonationVerifiedEmail extends Notification implements ShouldQueue
     public function __construct(BloodDonation $donation)
     {
         $this->donation = $donation;
+        $this->onQueue('emails');
+        $this->onConnection('database');
     }
 
     /**

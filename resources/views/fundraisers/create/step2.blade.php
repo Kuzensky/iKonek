@@ -223,25 +223,6 @@
                     </div>
                 </div>
 
-                <!-- Info Notice -->
-                <div class="info-notice enhanced">
-                    <div class="notice-icon-wrapper">
-                        <img src="{{ asset('assets/icons/blue-heart.svg') }}" alt="" class="notice-icon">
-                    </div>
-                    <div class="notice-content-wrapper">
-                        <p class="notice-text">
-                            <strong>🛡️ Privacy & Security:</strong> All beneficiary information will be verified to ensure transparency and protect donors. We may contact the beneficiary during our review process to confirm authenticity.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="help-tip-box">
-                    <div class="help-tip-icon">📝</div>
-                    <div class="help-tip-content">
-                        <p><strong>Quick Tip:</strong> Accurate beneficiary details speed up the verification process. Double-check all information before submitting.</p>
-                    </div>
-                </div>
-
                 <!-- Form Actions -->
                 <div class="form-actions">
                     <a href="{{ route('fundraisers.create.step1') }}" class="btn btn-outline btn-previous">

@@ -202,6 +202,7 @@ class Fundraiser extends Model
     public function canBeActivated()
     {
         return in_array($this->status, [
+            self::STATUS_PENDING,
             self::STATUS_PENDING_REVIEW,
             self::STATUS_SUSPENDED,
         ]);

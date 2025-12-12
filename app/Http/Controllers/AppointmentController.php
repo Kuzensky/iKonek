@@ -6,6 +6,7 @@ use App\Events\AppointmentCreated;
 use App\Events\AppointmentCancelled;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Models\Appointment;
+use App\Models\BloodDonation;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -29,6 +30,17 @@ class AppointmentController extends Controller
             'end_time' => $request->end_time,
             'status' => 'confirmed',
             'notes' => $request->notes,
+        ]);
+
+        // Automatically create a pending BloodDonation record
+        BloodDonation::create([
+            'user_id' => auth()->id(),
+            'hospital_id' => $request->hospital_id,
+            'appointment_id' => $appointment->id,
+            'donation_date' => $request->appointment_date,
+            'blood_type' => auth()->user()->blood_type ?? 'Unknown',
+            'status' => BloodDonation::STATUS_PENDING,
+            'notes' => 'Scheduled appointment - awaiting completion',
         ]);
 
         // Load hospital relationship for response
@@ -68,6 +80,15 @@ class AppointmentController extends Controller
         }
 
         $appointment->cancel();
+
+        // Also mark the corresponding BloodDonation as cancelled
+        $bloodDonation = BloodDonation::where('appointment_id', $appointment->id)->first();
+        if ($bloodDonation) {
+            $bloodDonation->update([
+                'status' => BloodDonation::STATUS_CANCELLED,
+                'notes' => ($bloodDonation->notes ? $bloodDonation->notes . "\n\n" : '') . 'Appointment cancelled by user on ' . now()->format('Y-m-d H:i:s'),
+            ]);
+        }
 
         return redirect()->route('dashboard')
             ->with('success', 'Appointment cancelled successfully.');

@@ -346,15 +346,15 @@
 
 .progress-bar-container {
     height: 10px;
-    background: rgba(29, 53, 87, 0.08);
+    background: #e5e7eb;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
 }
 
 .progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #1D3557 0%, #E63946 100%);
+    background: linear-gradient(90deg, #1e3a8a 0%, #ef4444 100%);
     border-radius: 10px;
     transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -810,9 +810,9 @@
 
 /* Status Badges */
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
 }
@@ -850,18 +850,22 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 /* Category Badges */
 .category-badge {
-    padding: 6px 14px;
-    border-radius: 8px;
+    padding: 5px 12px;
+    border-radius: 20px;
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
     white-space: nowrap;
-    border: 1px solid;
+    border: none;
 }
 
 .category-medical {

@@ -34,6 +34,15 @@ class ContributionController extends Controller
             'verified_by' => auth()->id(),
         ]);
 
+        // Return JSON for AJAX requests
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you for your contribution! Your payment has been processed.',
+                'contribution' => $contribution
+            ]);
+        }
+
         return redirect()->route('fundraisers.show', $fundraiser)
             ->with('success', 'Thank you for your contribution! Your payment has been processed.');
     }

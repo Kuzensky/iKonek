@@ -214,25 +214,6 @@
                     </div>
                 </div>
 
-                <!-- Info Notice -->
-                <div class="info-notice enhanced">
-                    <div class="notice-icon-wrapper">
-                        <img src="{{ asset('assets/icons/blue-heart.svg') }}" alt="" class="notice-icon">
-                    </div>
-                    <div class="notice-content-wrapper">
-                        <p class="notice-text">
-                            <strong>🔒 Privacy Protected:</strong> Your contact information will only be used for campaign-related communications and will not be publicly displayed or shared with third parties.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="help-tip-box">
-                    <div class="help-tip-icon">📧</div>
-                    <div class="help-tip-content">
-                        <p><strong>Almost Done!</strong> One more step to complete your fundraiser setup. Make sure your contact details are accurate for seamless communication.</p>
-                    </div>
-                </div>
-
                 <!-- Form Actions -->
                 <div class="form-actions">
                     <a href="{{ route('fundraisers.create.step2') }}" class="btn btn-outline btn-previous">
