@@ -93,43 +93,41 @@
                     <div class="notification-panel" id="notificationPanel">
                         <div class="notification-header">
                             <h3 class="notification-title">Notifications</h3>
-                            <button class="mark-all-read-btn" id="markAllReadBtn">Mark all as read</button>
+                            @if(auth()->user()->unreadNotifications->count() > 0)
+                            <form action="{{ route('notifications.mark-all-read') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="mark-all-read-btn">Mark all as read</button>
+                            </form>
+                            @endif
                         </div>
                         
                         <div class="notification-list" id="notificationList">
                             @forelse(auth()->user()->notifications()->latest()->limit(10)->get() as $notification)
-                                <div class="notification-item {{ !$notification->is_read ? 'unread' : '' }}" data-id="{{ $notification->id }}">
-                                    @if(!$notification->is_read)
+                                <div class="notification-item {{ $notification->read_at ? 'read' : 'unread' }}" data-id="{{ $notification->id }}">
+                                    @if(!$notification->read_at)
                                         <div class="notification-indicator"></div>
                                     @endif
-                                    <div class="notification-icon notification-icon-{{ str_replace('_', '-', $notification->type) }}">
-                                        @switch($notification->type)
-                                            @case('appointment_reminder')
-                                                📅
-                                                @break
-                                            @case('donation_thank_you')
-                                                ❤️
-                                                @break
-                                            @case('campaign_update')
-                                                📢
-                                                @break
-                                            @case('contribution_verified')
-                                                ✅
-                                                @break
-                                            @default
-                                                🔔
-                                        @endswitch
+                                    <div class="notification-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
                                     </div>
                                     <div class="notification-content">
-                                        <h4 class="notification-item-title">{{ $notification->title }}</h4>
-                                        <p class="notification-item-text">{{ $notification->message }}</p>
+                                        <h4 class="notification-item-title">{{ $notification->data['title'] ?? 'Notification' }}</h4>
+                                        <p class="notification-item-text">{{ $notification->data['message'] ?? 'You have a new notification' }}</p>
                                         <span class="notification-time">{{ $notification->created_at->diffForHumans() }}</span>
                                     </div>
-                                    <button class="notification-close" aria-label="Close notification">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </button>
+                                    @if(!$notification->read_at)
+                                    <form action="{{ route('notifications.mark-read', $notification->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="notification-close" aria-label="Mark as read" title="Mark as read">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                    @endif
                                 </div>
                             @empty
                                 <div class="notification-item">
@@ -653,202 +651,3 @@
 })();
     </script>
 @endsection
-
-@push('scripts')
-    <script>
-
-
-(function() {
-    // Logout functionality
-    const logoutForm = document.getElementById('logoutForm');
-    if (logoutForm) {
-        logoutForm.addEventListener('submit', function(e) {
-            if (!confirm('Are you sure you want to logout?')) {
-                e.preventDefault();
-                return false;
-            }
-            // Clear localStorage
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userData');
-            // Form will submit normally to logout route
-        });
-    }
-
-    // Action buttons functionality
-    document.querySelectorAll('.btn-action').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const text = this.textContent.trim();
-            if (text.includes('Schedule')) {
-                window.location.href = 'schedule-donation.html';
-            } else if (text.includes('Fundraiser')) {
-                window.location.href = '{{ route('fundraisers.index') }}';
-            } else if (text.includes('History')) {
-                window.location.href = 'history.html';
-            }
-        });
-    });
-
-    // Activity filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.textContent.trim();
-            console.log('Filtering by:', filter);
-        });
-    });
-
-    // View all activity button
-    const viewAllBtn = document.querySelector('.view-all-btn');
-    if (viewAllBtn) {
-        viewAllBtn.addEventListener('click', function() {
-            window.location.href = '{{ route('history') }}';
-        });
-    }
-
-    // Appointment action buttons
-    const viewTicketBtn = document.querySelector('.btn-view-ticket');
-    if (viewTicketBtn) {
-        viewTicketBtn.addEventListener('click', function() {
-            alert('E-Ticket will be displayed here.\n\nThis would show your appointment confirmation with QR code.');
-        });
-    }
-
-    const cancelBtn = document.querySelector('.btn-cancel');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to cancel this appointment?')) {
-                alert('Appointment cancelled successfully.');
-                location.reload();
-            }
-        });
-    }
-
-    // Notification functionality
-    const notificationBtn = document.querySelector('.notification-btn');
-    const notificationPanel = document.getElementById('notificationPanel');
-    const notificationBadge = document.querySelector('.notification-badge');
-    const markAllReadBtn = document.getElementById('markAllReadBtn');
-    const notificationList = document.getElementById('notificationList');
-    
-    // Toggle notification panel
-    if (notificationBtn && notificationPanel) {
-        notificationBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            notificationPanel.classList.toggle('show');
-        });
-        
-        // Close panel when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!notificationPanel.contains(e.target) && !notificationBtn.contains(e.target)) {
-                notificationPanel.classList.remove('show');
-            }
-        });
-    }
-    
-    // Update notification badge count
-    function updateNotificationCount() {
-        const unreadCount = document.querySelectorAll('.notification-item.unread').length;
-        if (notificationBadge) {
-            if (unreadCount > 0) {
-                notificationBadge.textContent = unreadCount;
-                notificationBadge.style.display = 'flex';
-            } else {
-                notificationBadge.style.display = 'none';
-            }
-        }
-    }
-    
-    // Mark all as read
-    if (markAllReadBtn) {
-        markAllReadBtn.addEventListener('click', function() {
-            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                item.classList.remove('unread');
-            });
-            updateNotificationCount();
-        });
-    }
-    
-    // Mark individual notification as read when clicked
-    if (notificationList) {
-        notificationList.addEventListener('click', function(e) {
-            const notificationItem = e.target.closest('.notification-item');
-            if (notificationItem && !e.target.closest('.notification-close')) {
-                notificationItem.classList.remove('unread');
-                updateNotificationCount();
-            }
-        });
-    }
-    
-    // Close individual notifications
-    document.querySelectorAll('.notification-close').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const notificationItem = this.closest('.notification-item');
-            if (notificationItem) {
-                notificationItem.style.animation = 'slideOut 0.3s ease-out';
-                setTimeout(() => {
-                    notificationItem.remove();
-                    updateNotificationCount();
-                }, 280);
-            }
-        });
-    });
-    
-    // Initialize notification count
-    updateNotificationCount();
-
-    // Countdown timer update
-    function updateCountdown() {
-        const appointmentDate = new Date('2025-04-18T10:00:00');
-        const now = new Date();
-        const diff = appointmentDate - now;
-
-        if (diff > 0) {
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-            const countdownValues = document.querySelectorAll('.countdown-value');
-            if (countdownValues.length >= 3) {
-                countdownValues[0].textContent = days;
-                countdownValues[1].textContent = hours;
-                countdownValues[2].textContent = minutes;
-            }
-        }
-    }
-
-    // Update countdown every minute
-    updateCountdown();
-    setInterval(updateCountdown, 60000);
-
-    // Animate stat cards on scroll
-    const observerOptions = {
-        threshold: 0.2,
-        rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.stat-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'all 0.6s ease-out';
-        observer.observe(card);
-    });
-
-    // Navigation active state is managed by the server-side template
-
-    console.log('Dashboard initialized');
-})();
-    
-    </script>
-@endpush
