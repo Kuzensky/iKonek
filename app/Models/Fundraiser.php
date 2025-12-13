@@ -205,6 +205,7 @@ class Fundraiser extends Model
             self::STATUS_PENDING,
             self::STATUS_PENDING_REVIEW,
             self::STATUS_SUSPENDED,
+            self::STATUS_CANCELLED,
         ]);
     }
 
@@ -216,6 +217,16 @@ class Fundraiser extends Model
     public function canBeCompleted()
     {
         return in_array($this->status, [
+            self::STATUS_ACTIVE,
+            self::STATUS_SUSPENDED,
+        ]);
+    }
+
+    public function canBeCancelled()
+    {
+        return in_array($this->status, [
+            self::STATUS_PENDING,
+            self::STATUS_PENDING_REVIEW,
             self::STATUS_ACTIVE,
             self::STATUS_SUSPENDED,
         ]);

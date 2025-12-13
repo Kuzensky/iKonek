@@ -44,7 +44,7 @@
                 </div>
 
                 <!-- Campaign Details -->
-                <div x-show="!loading && campaign" style="display: flex; flex-direction: column; gap: 20px;">
+                <div x-show="!loading && campaign" style="display: flex; flex-direction: column; gap: 24px;">
 
                     <!-- Title + Status -->
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px;">
@@ -83,7 +83,7 @@
                     </div>
 
                     <!-- Info Grid -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px 0; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 0; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;">
                         <!-- Organizer -->
                         <div>
                             <p style="font-size: 12px; color: #64748b; margin: 0 0 4px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">Organizer</p>
@@ -123,14 +123,14 @@
                     </div>
 
                     <!-- Campaign Story -->
-                    <div style="padding: 20px 0;">
+                    <div style="padding: 4px 0 0 0;">
                         <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin: 0 0 12px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">Campaign Story</h4>
                         <div style="font-size: 14px; color: #64748b; line-height: 1.7; word-break: break-word; overflow-wrap: break-word; max-width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;" x-html="(campaign?.story || campaign?.description || 'No story provided.')"></div>
                     </div>
                 </div>
 
                 <!-- Footer -->
-                <div style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid #e5e7eb; margin-top: 20px;">
+                <div style="display: flex; justify-content: flex-end; padding-top: 20px; border-top: 1px solid #e5e7eb; margin-top: 24px;">
                     <button type="button" @click="closeModal()"
                             style="padding: 10px 24px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-weight: 500; color: #64748b; cursor: pointer; transition: all 0.2s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                         Close

@@ -60,7 +60,10 @@
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
-            <button class="btn btn-outline logout-btn">Logout</button>
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-outline logout-btn">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -592,7 +595,6 @@
             });
 
             this.setupPhoneFormatting();
-            document.querySelector('.logout-btn')?.addEventListener('click', () => this.handleLogout());
             this.setupMedicalConditionsLogic();
         }
 
@@ -851,16 +853,6 @@
                     e.returnValue = '';
                 }
             });
-        }
-
-        handleLogout() {
-            if (this.hasUnsavedChanges) {
-                if (!confirm('You have unsaved changes. Are you sure you want to logout?')) return;
-            }
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('isLoggedIn');
-                window.location.href = "{{ route('login') }}";
-            }
         }
 
         showNotification(message, type) {
@@ -967,7 +959,6 @@
             });
 
             this.setupPhoneFormatting();
-            document.querySelector('.logout-btn')?.addEventListener('click', () => this.handleLogout());
             this.setupMedicalConditionsLogic();
         }
 
@@ -1226,16 +1217,6 @@
                     e.returnValue = '';
                 }
             });
-        }
-
-        handleLogout() {
-            if (this.hasUnsavedChanges) {
-                if (!confirm('You have unsaved changes. Are you sure you want to logout?')) return;
-            }
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('isLoggedIn');
-                window.location.href = "{{ route('login') }}";
-            }
         }
 
         showNotification(message, type) {

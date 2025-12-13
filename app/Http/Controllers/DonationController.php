@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BloodDonation;
 use App\Models\Hospital;
+use App\Models\Appointment;
 use App\Http\Requests\StoreDonationRequest;
 use Illuminate\Http\Request;
 
@@ -67,5 +68,18 @@ class DonationController extends Controller
 
         return redirect()->route('donations.index')
             ->with('success', 'Donation recorded successfully!');
+    }
+
+    public function viewTicket(Appointment $appointment)
+    {
+        // Ensure the appointment belongs to the logged-in user
+        if ($appointment->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this ticket.');
+        }
+
+        // Load relationships
+        $appointment->load(['hospital', 'user']);
+
+        return view('donations.e-ticket', compact('appointment'));
     }
 }

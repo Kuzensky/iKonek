@@ -979,6 +979,32 @@
     color: white;
 }
 
+.badge-cancelled {
+    background: #F3F4F6;
+    color: #6B7280;
+    border: 1px solid #D1D5DB;
+}
+
+.badge-completed {
+    background: #DBEAFE;
+    color: #2563EB;
+}
+
+.badge-failed {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.badge-scheduled {
+    background: #E0F2FE;
+    color: #0369A1;
+}
+
+.badge-no_show {
+    background: #FED7AA;
+    color: #C2410C;
+}
+
 /* Appointment Details */
 .appointment-details {
     display: grid;

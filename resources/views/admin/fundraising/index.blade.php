@@ -328,7 +328,26 @@ function fundraisingManager() {
 
         openStatusModal(campaignId) {
             this.selectedCampaignId = campaignId;
-            this.$dispatch('open-status-modal', { campaignId });
+
+            // Fetch campaign details
+            fetch(`/admin/fundraising/${campaignId}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.$dispatch('open-status-modal', {
+                    campaignId: campaignId,
+                    campaignTitle: data.title,
+                    currentStatus: data.status_display
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching campaign details:', error);
+                alert('Failed to load campaign details');
+            });
         },
 
         openRejectModal(contributionId) {

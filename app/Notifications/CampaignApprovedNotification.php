@@ -13,8 +13,6 @@ class CampaignApprovedNotification extends Notification implements ShouldQueue
     use Queueable;
 
     public $fundraiser;
-    public $queue = 'emails';
-    public $connection = 'database';
     public $tries = 3;
     public $timeout = 30;
 
@@ -24,6 +22,7 @@ class CampaignApprovedNotification extends Notification implements ShouldQueue
     public function __construct(Fundraiser $fundraiser)
     {
         $this->fundraiser = $fundraiser;
+        $this->onQueue('emails');
     }
 
     /**

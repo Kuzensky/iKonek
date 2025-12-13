@@ -17,6 +17,160 @@
         main.dashboard-main {
             max-width: 100% !important;
         }
+
+        /* Notification Styles */
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-btn {
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #E63946;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 380px;
+            max-height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D3557;
+            margin: 0;
+        }
+
+        .mark-all-read {
+            background: none;
+            border: none;
+            color: #457B9D;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .mark-all-read:hover {
+            color: #1D3557;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background: #f0f9ff;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #E63946;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1D3557;
+            margin: 0 0 4px 0;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0 0 6px 0;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .mark-read-btn {
+            background: none;
+            border: none;
+            color: #457B9D;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .mark-read-btn:hover {
+            background: #e0f2fe;
+        }
+
+        .no-notifications {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .no-notifications svg {
+            margin: 0 auto 16px;
+            color: #cbd5e1;
+        }
+
+        .no-notifications p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 0;
+        }
     </style>
 @endpush
 
@@ -63,7 +217,10 @@
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
-            <button class="btn btn-outline logout-btn">Logout</button>
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-outline logout-btn">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -89,12 +246,72 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="notification-btn" aria-label="Notifications">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <div class="notification-wrapper" x-data="{ open: false }" @click.away="open = false">
+                    <button class="notification-btn" aria-label="Notifications" @click="open = !open">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                        <span class="notification-badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+                        @endif
+                    </button>
+
+                    <!-- Notifications Dropdown -->
+                    <div x-show="open"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="notification-dropdown"
+                         style="display: none;">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            @if(auth()->user()->unreadNotifications->count() > 0)
+                            <form action="{{ route('notifications.mark-all-read') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="mark-all-read">Mark all as read</button>
+                            </form>
+                            @endif
+                        </div>
+                        <div class="notification-list">
+                            @forelse(auth()->user()->notifications()->take(10)->get() as $notification)
+                            <div class="notification-item {{ $notification->read_at ? 'read' : 'unread' }}">
+                                <div class="notification-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-title">{{ $notification->data['title'] ?? 'Notification' }}</p>
+                                    <p class="notification-message">{{ $notification->data['message'] ?? 'You have a new notification' }}</p>
+                                    <span class="notification-time">{{ $notification->created_at->diffForHumans() }}</span>
+                                </div>
+                                @if(!$notification->read_at)
+                                <form action="{{ route('notifications.mark-read', $notification->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="mark-read-btn" title="Mark as read">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
+                            @empty
+                            <div class="no-notifications">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                                </svg>
+                                <p>No notifications</p>
+                            </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -213,7 +430,7 @@
             <div class="history-tab-content">
                 <!-- Scheduled Tab -->
                 <div class="tab-panel" id="scheduled-panel">
-                    @if($scheduledDonations->isEmpty())
+                    @if($upcomingAppointments->isEmpty() && $scheduledDonations->isEmpty())
                         <div style="text-align: center; padding: 80px 24px;">
                             <h3>No Scheduled Appointments</h3>
                             <p style="color: #666; margin-top: 8px;">You don't have any upcoming blood donation appointments.</p>
@@ -223,6 +440,74 @@
                         </div>
                     @else
                     <div class="history-list">
+                        @foreach($upcomingAppointments as $appointment)
+                        <!-- Upcoming Appointment -->
+                        <div class="history-record scheduled-record">
+                            <div class="record-left">
+                                <div class="record-icon-wrapper record-icon-red">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" stroke="#E63946" stroke-width="2"/>
+                                        <path d="M16 2V6M8 2V6M3 10H21" stroke="#E63946" stroke-width="2"/>
+                                    </svg>
+                                </div>
+
+                                <div class="record-info">
+                                    <div class="record-header">
+                                        <h4 class="record-title">{{ $appointment->hospital->name }}</h4>
+                                        <span class="badge badge-{{ strtolower($appointment->status) }}">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            {{ ucfirst($appointment->status) }}
+                                        </span>
+                                    </div>
+
+                                    <div class="record-meta">
+                                        <div class="meta-item">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
+                                            </svg>
+                                            <span>{{ $appointment->appointment_date->format('F d, Y \a\t g:i A') }}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
+                                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+                                            </svg>
+                                            <span>{{ $appointment->hospital->address }}, {{ $appointment->hospital->city }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="record-countdown">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="#457B9D" stroke-width="2"/>
+                                            <path d="M12 6V12L16 14" stroke="#457B9D" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                        <span>{{ $appointment->appointment_date->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="record-actions">
+                                <a href="{{ route('appointments.show', $appointment->id) }}" class="btn-action-primary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M13 2V9H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    View E-Ticket
+                                </a>
+                                <button class="btn-action-secondary btn-cancel-appointment" data-appointment-id="{{ $appointment->id }}">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+
                         @foreach($scheduledDonations as $donation)
                         <!-- Scheduled Donation -->
                         <div class="history-record scheduled-record">
@@ -275,20 +560,22 @@
                             </div>
 
                             <div class="record-actions">
-                                <button class="btn-action-primary">
+                                @if($donation->appointment)
+                                <a href="{{ route('appointments.show', $donation->appointment->id) }}" class="btn-action-primary">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         <path d="M13 2V9H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                     View E-Ticket
-                                </button>
-                                <button class="btn-action-secondary btn-cancel-appointment">
+                                </a>
+                                <button class="btn-action-secondary btn-cancel-appointment" data-appointment-id="{{ $donation->appointment->id }}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         <path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                     Cancel
                                 </button>
+                                @endif
                             </div>
                         </div>
                         @endforeach
@@ -298,7 +585,7 @@
 
                 <!-- History Tab -->
                 <div class="tab-panel active" id="history-panel">
-                    @if($completedDonations->isEmpty())
+                    @if($completedDonations->isEmpty() && $pastAppointments->isEmpty())
                         <div style="text-align: center; padding: 80px 24px;">
                             <h3>No Donation History</h3>
                             <p style="color: #666; margin-top: 8px;">You haven't completed any blood donations yet.</p>
@@ -308,6 +595,57 @@
                         </div>
                     @else
                     <div class="history-list">
+                        @foreach($pastAppointments as $appointment)
+                        <!-- Appointment Record -->
+                        <div class="history-record">
+                            <div class="record-left">
+                                <div class="record-icon-wrapper record-icon-red">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" stroke="#E63946" stroke-width="2"/>
+                                        <path d="M16 2V6M8 2V6M3 10H21" stroke="#E63946" stroke-width="2"/>
+                                    </svg>
+                                </div>
+
+                                <div class="record-info">
+                                    <div class="record-header">
+                                        <h4 class="record-title">{{ $appointment->hospital->name }}</h4>
+                                        <span class="badge badge-{{ strtolower($appointment->status) }}">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            {{ ucfirst($appointment->status) }}
+                                        </span>
+                                    </div>
+
+                                    <div class="record-meta">
+                                        <div class="meta-item">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2"/>
+                                            </svg>
+                                            <span>{{ $appointment->appointment_date->format('F d, Y \a\t g:i A') }}</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2"/>
+                                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+                                            </svg>
+                                            <span>{{ $appointment->hospital->address }}, {{ $appointment->hospital->city }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="{{ route('appointments.show', $appointment->id) }}" class="btn-action-secondary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M13 2V9H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                View Ticket
+                            </a>
+                        </div>
+                        @endforeach
+
                         @foreach($completedDonations as $donation)
                         <!-- Donation Record -->
                         <div class="history-record">
@@ -533,22 +871,46 @@
         const record = button.closest('.history-record');
         if (!record) return;
 
+        const appointmentId = button.dataset.appointmentId;
         const hospital = record.querySelector('.record-title')?.textContent;
         const confirmed = confirm(`Are you sure you want to cancel your appointment at ${hospital}?`);
-        
+
         if (confirmed) {
-            record.style.opacity = '0';
-            record.style.transform = 'translateX(-20px)';
-            
-            setTimeout(() => {
-                record.remove();
-                const remainingRecords = document.querySelectorAll('.scheduled-record');
-                if (remainingRecords.length === 0) {
-                    showEmptyState();
+            // Disable button and show loading state
+            button.disabled = true;
+            button.textContent = 'Cancelling...';
+
+            // Make POST request to cancel appointment
+            fetch(`/appointments/${appointmentId}/cancel`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                 }
-            }, 300);
-            
-            console.log(`Cancelled appointment at ${hospital}`);
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Success - remove the record from UI
+                    record.style.opacity = '0';
+                    record.style.transform = 'translateX(-20px)';
+
+                    setTimeout(() => {
+                        record.remove();
+                        const remainingRecords = document.querySelectorAll('.scheduled-record');
+                        if (remainingRecords.length === 0) {
+                            showEmptyState();
+                        }
+                    }, 300);
+                } else {
+                    throw new Error('Failed to cancel appointment');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to cancel appointment. Please try again.');
+                button.disabled = false;
+                button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Cancel';
+            });
         }
     }
 
@@ -579,29 +941,7 @@
         }, 1500);
     }
 
-    // Logout functionality
-    const logoutBtn = document.querySelector('.logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to logout?')) {
-                this.textContent = 'Logging out...';
-                this.disabled = true;
-                setTimeout(() => {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userData');
-                    window.location.href = "{{ route('login') }}";
-                }, 800);
-            }
-        });
-    }
-
-    // Notification button
-    const notificationBtn = document.querySelector('.notification-btn');
-    if (notificationBtn) {
-        notificationBtn.addEventListener('click', function() {
-            alert('No new notifications');
-        });
-    }
+    // Notification dropdown is handled by Alpine.js
 
     // Set active navigation
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -710,22 +1050,46 @@
         const record = button.closest('.history-record');
         if (!record) return;
 
+        const appointmentId = button.dataset.appointmentId;
         const hospital = record.querySelector('.record-title')?.textContent;
         const confirmed = confirm(`Are you sure you want to cancel your appointment at ${hospital}?`);
-        
+
         if (confirmed) {
-            record.style.opacity = '0';
-            record.style.transform = 'translateX(-20px)';
-            
-            setTimeout(() => {
-                record.remove();
-                const remainingRecords = document.querySelectorAll('.scheduled-record');
-                if (remainingRecords.length === 0) {
-                    showEmptyState();
+            // Disable button and show loading state
+            button.disabled = true;
+            button.textContent = 'Cancelling...';
+
+            // Make POST request to cancel appointment
+            fetch(`/appointments/${appointmentId}/cancel`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                 }
-            }, 300);
-            
-            console.log(`Cancelled appointment at ${hospital}`);
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Success - remove the record from UI
+                    record.style.opacity = '0';
+                    record.style.transform = 'translateX(-20px)';
+
+                    setTimeout(() => {
+                        record.remove();
+                        const remainingRecords = document.querySelectorAll('.scheduled-record');
+                        if (remainingRecords.length === 0) {
+                            showEmptyState();
+                        }
+                    }, 300);
+                } else {
+                    throw new Error('Failed to cancel appointment');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to cancel appointment. Please try again.');
+                button.disabled = false;
+                button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Cancel';
+            });
         }
     }
 
@@ -756,29 +1120,7 @@
         }, 1500);
     }
 
-    // Logout functionality
-    const logoutBtn = document.querySelector('.logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to logout?')) {
-                this.textContent = 'Logging out...';
-                this.disabled = true;
-                setTimeout(() => {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userData');
-                    window.location.href = "{{ route('login') }}";
-                }, 800);
-            }
-        });
-    }
-
-    // Notification button
-    const notificationBtn = document.querySelector('.notification-btn');
-    if (notificationBtn) {
-        notificationBtn.addEventListener('click', function() {
-            alert('No new notifications');
-        });
-    }
+    // Notification dropdown is handled by Alpine.js
 
     // Set active navigation
     document.querySelectorAll('.nav-item').forEach(item => {

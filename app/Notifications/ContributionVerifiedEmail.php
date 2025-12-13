@@ -13,8 +13,6 @@ class ContributionVerifiedEmail extends Notification implements ShouldQueue
     use Queueable;
 
     public $contribution;
-    public $queue = 'emails';
-    public $connection = 'database';
     public $tries = 3;
     public $timeout = 30;
 
@@ -24,6 +22,7 @@ class ContributionVerifiedEmail extends Notification implements ShouldQueue
     public function __construct(FundraiserContribution $contribution)
     {
         $this->contribution = $contribution;
+        $this->onQueue('emails');
     }
 
     /**

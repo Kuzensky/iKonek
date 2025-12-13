@@ -67,7 +67,10 @@
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
-            <button class="btn btn-outline logout-btn">Logout</button>
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-outline logout-btn">Logout</button>
+            </form>
             @else
             <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
             @endauth
@@ -1208,22 +1211,6 @@
                     this.modal.remove();
                 }, 300);
             }
-        }
-
-        // Logout functionality
-        const logoutBtn = document.querySelector('.logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    this.textContent = 'Logging out...';
-                    this.disabled = true;
-                    setTimeout(() => {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = "{{ route('login') }}";
-                    }, 800);
-                }
-            });
         }
 
         // Tab functionality

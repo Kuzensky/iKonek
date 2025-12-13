@@ -1,29 +1,28 @@
 <div x-data="statusModalData()" x-init="init()" x-cloak>
+    <!-- Backdrop -->
+    <div x-show="showModal" @click="closeModal()"
+         style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9998;"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+    </div>
+
     <!-- Modal Wrapper -->
     <div x-show="showModal"
-         style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; overflow-y: auto;">
-
-        <!-- Backdrop -->
-        <div x-show="showModal" @click="closeModal()"
-             style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9998;"
-             x-transition:enter="ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-        </div>
+         style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; width: 90%; max-width: 480px; pointer-events: auto;"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform translate(-50%, -50%) scale(0.95)"
+         x-transition:enter-end="opacity-100 transform translate(-50%, -50%) scale(1)"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100 transform translate(-50%, -50%) scale(1)"
+         x-transition:leave-end="opacity-0 transform translate(-50%, -50%) scale(0.95)">
 
         <!-- Modal Content -->
-        <div x-show="showModal"
-             style="position: relative; width: 90%; max-width: 480px; background: white; border-radius: 12px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); z-index: 9999; margin: 40px auto;"
-             @click.stop
-             x-transition:enter="ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform scale-95"
-             x-transition:enter-end="opacity-100 transform scale-100"
-             x-transition:leave="ease-in duration-200"
-             x-transition:leave-start="opacity-100 transform scale-100"
-             x-transition:leave-end="opacity-0 transform scale-95">
+        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);"
+             @click.stop>
 
             <!-- Close Button -->
             <button type="button" @click="closeModal()"
@@ -57,85 +56,139 @@
                 <!-- Hidden Status Input -->
                 <input type="hidden" name="status" x-model="selectedStatus">
 
-                <!-- Update Notes -->
-                <div style="margin-bottom: 24px;">
-                    <label style="display: block; font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                        Update Notes (Optional)
-                    </label>
-                    <textarea name="notes" rows="3"
-                              style="width: 100%; padding: 12px 14px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; resize: vertical; transition: all 0.2s; box-sizing: border-box; background: #f8fafc;"
-                              placeholder="Add notes about this status update..."
-                              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 4px rgba(59, 130, 246, 0.1)'; this.style.background='white';"
-                              onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'; this.style.background='#f8fafc';"></textarea>
+                <!-- Action Buttons - 2x2 Grid -->
+                <div style="margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <!-- Approve & Activate (Primary - Green) -->
+                        <button type="button" @click="selectStatus('active')" class="status-action-btn status-primary-green"
+                                :class="{'status-selected': selectedStatus === 'active'}">
+                            Approve & Activate
+                        </button>
+
+                        <!-- Mark as Completed (Primary - Red) -->
+                        <button type="button" @click="selectStatus('completed')" class="status-action-btn status-primary-red"
+                                :class="{'status-selected': selectedStatus === 'completed'}">
+                            Mark as Completed
+                        </button>
+
+                        <!-- Suspend Campaign (Secondary - Ghost) -->
+                        <button type="button" @click="selectStatus('suspended')" class="status-action-btn status-ghost"
+                                :class="{'status-selected-ghost': selectedStatus === 'suspended'}">
+                            Suspend Campaign
+                        </button>
+
+                        <!-- Mark as Cancelled (Secondary - Ghost) -->
+                        <button type="button" @click="selectStatus('cancelled')" class="status-action-btn status-ghost"
+                                :class="{'status-selected-ghost': selectedStatus === 'cancelled'}">
+                            Mark as Cancelled
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Action Buttons Grid -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-                    <!-- Approve & Activate -->
-                    <button type="button" @click="selectStatus('active')"
-                            :style="selectedStatus === 'active' ? 'background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); transform: translateY(-2px);' : 'background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #059669; border: none; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);'"
-                            style="padding: 14px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
-                            onmouseover="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(16, 185, 129, 0.2)'; }"
-                            onmouseout="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(16, 185, 129, 0.1)'; }">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Approve & Activate
-                    </button>
+                <style>
+                    /* Base button styles */
+                    .status-action-btn {
+                        padding: 16px 20px !important;
+                        border-radius: 6px !important;
+                        font-size: 15px !important;
+                        font-weight: 600 !important;
+                        cursor: pointer !important;
+                        transition: all 0.2s ease !important;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+                        border: none !important;
+                        outline: none !important;
+                        box-sizing: border-box !important;
+                    }
 
-                    <!-- Mark as Completed -->
-                    <button type="button" @click="selectStatus('completed')"
-                            :style="selectedStatus === 'completed' ? 'background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); transform: translateY(-2px);' : 'background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb; border: none; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);'"
-                            style="padding: 14px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
-                            onmouseover="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(59, 130, 246, 0.2)'; }"
-                            onmouseout="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(59, 130, 246, 0.1)'; }">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 11 12 14 22 4"></polyline>
-                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                        </svg>
-                        Mark as Completed
-                    </button>
+                    /* Primary Green Button */
+                    .status-primary-green {
+                        background: #10b981 !important;
+                        color: white !important;
+                    }
+                    .status-primary-green:hover {
+                        background: #059669 !important;
+                    }
+                    .status-primary-green.status-selected {
+                        background: #059669 !important;
+                        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35) !important;
+                    }
 
-                    <!-- Suspend Campaign -->
-                    <button type="button" @click="selectStatus('suspended')"
-                            :style="selectedStatus === 'suspended' ? 'background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4); transform: translateY(-2px);' : 'background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); color: #ea580c; border: none; box-shadow: 0 2px 4px rgba(249, 115, 22, 0.1);'"
-                            style="padding: 14px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
-                            onmouseover="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(249, 115, 22, 0.2)'; }"
-                            onmouseout="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(249, 115, 22, 0.1)'; }">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="15" y1="9" x2="9" y2="15"></line>
-                            <line x1="9" y1="9" x2="15" y2="15"></line>
-                        </svg>
-                        Suspend Campaign
-                    </button>
+                    /* Primary Red Button */
+                    .status-primary-red {
+                        background: #ef4444 !important;
+                        color: white !important;
+                    }
+                    .status-primary-red:hover {
+                        background: #dc2626 !important;
+                    }
+                    .status-primary-red.status-selected {
+                        background: #dc2626 !important;
+                        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35) !important;
+                    }
 
-                    <!-- Cancel Campaign -->
-                    <button type="button" @click="selectStatus('cancelled')"
-                            :style="selectedStatus === 'cancelled' ? 'background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); transform: translateY(-2px);' : 'background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%); color: #dc2626; border: none; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);'"
-                            style="padding: 14px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
-                            onmouseover="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(239, 68, 68, 0.2)'; }"
-                            onmouseout="if(!this.style.transform.includes('translateY(-2px)')) { this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(239, 68, 68, 0.1)'; }">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="15" y1="9" x2="9" y2="15"></line>
-                            <line x1="9" y1="9" x2="15" y2="15"></line>
-                        </svg>
-                        Cancel Campaign
-                    </button>
-                </div>
+                    /* Ghost/Secondary Buttons */
+                    .status-ghost {
+                        background: white !important;
+                        color: #64748b !important;
+                        border: 1px solid #cbd5e1 !important;
+                    }
+                    .status-ghost:hover {
+                        background: #f8fafc !important;
+                        border-color: #94a3b8 !important;
+                    }
+                    .status-ghost.status-selected-ghost {
+                        background: #f8fafc !important;
+                        border: 2px solid #94a3b8 !important;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+                    }
+                </style>
+
 
                 <!-- Footer -->
-                <div style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+                <div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+                    <button type="button" @click="closeModal()"
+                            style="padding: 12px 24px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: white; color: #64748b;"
+                            onmouseover="this.style.borderColor='#cbd5e1'; this.style.background='#f8fafc';"
+                            onmouseout="this.style.borderColor='#e5e7eb'; this.style.background='white';">
+                        Cancel
+                    </button>
                     <button type="submit"
                             :disabled="!selectedStatus"
-                            :style="!selectedStatus ? 'opacity: 0.5; cursor: not-allowed; background: #e5e7eb; color: #94a3b8;' : 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.3);'"
-                            style="padding: 12px 32px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;"
-                            onmouseover="if (!this.disabled) { this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(30, 41, 59, 0.4)'; }"
-                            onmouseout="if (!this.disabled) { this.style.transform=''; this.style.boxShadow='0 4px 12px rgba(30, 41, 59, 0.3)'; }">
+                            class="update-status-btn"
+                            :class="{ 'disabled': !selectedStatus }"
+                            onmouseover="if (!this.disabled) { this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(239, 68, 68, 0.4)'; }"
+                            onmouseout="if (!this.disabled) { this.style.transform=''; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)'; }">
                         Update Status
                     </button>
                 </div>
+
+                <style>
+                    .update-status-btn {
+                        padding: 12px 32px;
+                        border: none;
+                        border-radius: 10px;
+                        font-size: 15px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                        color: white;
+                        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+                    }
+
+                    .update-status-btn.disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                        background: #cbd5e1;
+                        color: #94a3b8;
+                        box-shadow: none;
+                    }
+
+                    .update-status-btn:not(.disabled):hover {
+                        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+                    }
+                </style>
             </form>
         </div>
     </div>

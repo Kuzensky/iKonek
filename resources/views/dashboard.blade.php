@@ -505,7 +505,7 @@
     const viewAllBtn = document.querySelector('.view-all-btn');
     if (viewAllBtn) {
         viewAllBtn.addEventListener('click', function() {
-            window.location.href = 'history.html';
+            window.location.href = '{{ route('history') }}';
         });
     }
 
@@ -703,7 +703,7 @@
     const viewAllBtn = document.querySelector('.view-all-btn');
     if (viewAllBtn) {
         viewAllBtn.addEventListener('click', function() {
-            window.location.href = 'history.html';
+            window.location.href = '{{ route('history') }}';
         });
     }
 

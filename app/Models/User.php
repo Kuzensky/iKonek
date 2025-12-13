@@ -58,12 +58,12 @@ class User extends Authenticatable
 
     public function getTotalDonationsAttribute()
     {
-        return $this->donations()->where('status', 'verified')->count();
+        return $this->donations()->whereIn('status', ['completed', 'verified'])->count();
     }
 
     public function getTotalLivesImpactedAttribute()
     {
-        return $this->donations()->where('status', 'verified')->sum('lives_impacted');
+        return $this->donations()->whereIn('status', ['completed', 'verified'])->sum('lives_impacted');
     }
 
     public function getNextAppointmentAttribute()

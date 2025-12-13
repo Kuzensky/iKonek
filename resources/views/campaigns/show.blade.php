@@ -177,6 +177,7 @@
 
                 <!-- Sidebar -->
                 <div class="campaign-sidebar">
+                    @if($fundraiser->status === 'active')
                     <!-- Donation Card -->
                     <div class="donation-card">
                         <h3 class="donation-card-title">Support This Campaign</h3>
@@ -186,7 +187,7 @@
                             </svg>
                             Donate Now
                         </button>
-                        
+
                         <div class="donation-info-box">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
@@ -195,6 +196,7 @@
                             <p>100% of your donation goes directly to this campaign. No fees deducted.</p>
                         </div>
                     </div>
+                    @endif
 
                     <!-- Organizer Card -->
                     <div class="organizer-card">

@@ -63,7 +63,10 @@
                     <div class="user-status">Verified Donor</div>
                 </div>
             </div>
-            <button class="btn btn-outline logout-btn">Logout</button>
+            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-outline logout-btn">Logout</button>
+            </form>
         </div>
     </aside>
 
@@ -499,11 +502,6 @@
                 item.addEventListener('click', () => this.handleActionClick(index));
             });
 
-            const logoutBtn = document.querySelector('.logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => this.handleLogout());
-            }
-
             this.setupCardHoverEffects();
         }
 
@@ -740,20 +738,6 @@
                     notification.remove();
                 }, 300);
             }, 3000);
-        }
-
-        handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                const logoutBtn = document.querySelector('.logout-btn');
-                logoutBtn.textContent = 'Logging out...';
-                logoutBtn.disabled = true;
-
-                setTimeout(() => {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userData');
-                    window.location.href = "{{ route('login') }}";
-                }, 800);
-            }
         }
 
         calculateAge(dateOfBirth) {
@@ -832,11 +816,6 @@
                 item.addEventListener('click', () => this.handleActionClick(index));
             });
 
-            const logoutBtn = document.querySelector('.logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => this.handleLogout());
-            }
-
             this.setupCardHoverEffects();
         }
 
@@ -1073,20 +1052,6 @@
                     notification.remove();
                 }, 300);
             }, 3000);
-        }
-
-        handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                const logoutBtn = document.querySelector('.logout-btn');
-                logoutBtn.textContent = 'Logging out...';
-                logoutBtn.disabled = true;
-
-                setTimeout(() => {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userData');
-                    window.location.href = "{{ route('login') }}";
-                }, 800);
-            }
         }
 
         calculateAge(dateOfBirth) {

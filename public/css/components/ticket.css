@@ -15,11 +15,19 @@
     text-decoration: none;
     margin-bottom: 16px;
     transition: all 0.2s ease;
+    padding: 10px 16px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(29, 53, 87, 0.08);
+    border: 1px solid rgba(69, 123, 157, 0.15);
 }
 
 .back-btn:hover {
     color: #E63946;
     gap: 12px;
+    background: #F8F9FA;
+    border-color: #E63946;
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
 }
 
 .back-btn svg {
@@ -47,7 +55,8 @@
 
 /* Ticket Container */
 .ticket-container {
-    max-width: 800px;
+    max-width: 650px;
+    width: 100%;
     margin: 0 auto;
     padding-bottom: 40px;
 }
@@ -115,20 +124,34 @@
     border: 1px solid #D1D5DB;
 }
 
-/* QR Code Section */
-.ticket-qr-section {
-    padding: 40px 32px;
+/* Hero Section with QR and Key Info */
+.ticket-hero {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    border-bottom: 2px dashed rgba(29, 53, 87, 0.1);
+}
+
+.ticket-qr-side {
+    background: linear-gradient(135deg, #F8F9FA 0%, #F0F4F8 100%);
+    padding: 32px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px dashed rgba(29, 53, 87, 0.1);
+}
+
+.qr-wrapper {
     text-align: center;
-    background: linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
 }
 
 .qr-code {
     display: inline-block;
-    padding: 16px;
+    padding: 12px;
     background: white;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(29, 53, 87, 0.1);
-    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(29, 53, 87, 0.12);
+    margin-bottom: 20px;
 }
 
 .qr-code img {
@@ -138,29 +161,90 @@
 
 .confirmation-code {
     background: linear-gradient(135deg, #E63946 0%, #D12835 100%);
-    padding: 16px 24px;
-    border-radius: 12px;
-    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 10px;
     box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
 }
 
 .confirmation-label {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.85);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
 }
 
 .confirmation-value {
     font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     color: white;
     letter-spacing: 2px;
     margin: 0;
+}
+
+.ticket-info-side {
+    padding: 32px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FAFBFC 100%);
+}
+
+.ticket-quick-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.quick-info-group {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.quick-info-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #E63946 0%, #D12835 100%);
+    border-radius: 10px;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.2);
+}
+
+.quick-info-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.quick-info-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(29, 53, 87, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quick-info-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1D3557;
+    line-height: 1.4;
+}
+
+.quick-info-address {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(29, 53, 87, 0.65);
+    line-height: 1.5;
+    margin-top: 2px;
 }
 
 /* Ticket Details */
@@ -257,15 +341,14 @@
     padding: 16px;
     background: #F8F9FA;
     border-radius: 12px;
-    border-left: 4px solid #457B9D;
     margin: 0;
 }
 
-/* Instructions List */
-.instructions-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+/* Instructions Box */
+.instructions-box {
+    padding: 20px;
+    background: #F3F4F6;
+    border-radius: 12px;
 }
 
 .instruction-item {
@@ -275,14 +358,18 @@
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     color: #1D3557;
-    padding: 12px 16px;
-    background: #F0FDF4;
-    border-radius: 10px;
-    border: 1px solid #BBF7D0;
+    padding: 10px 0;
+}
+
+.instruction-item:not(:last-child) {
+    border-bottom: 1px solid rgba(29, 53, 87, 0.08);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
 }
 
 .instruction-item svg {
     flex-shrink: 0;
+    color: #10B981;
 }
 
 /* Ticket Actions */
@@ -361,8 +448,36 @@
         gap: 16px;
     }
 
-    .ticket-qr-section {
-        padding: 32px 20px;
+    /* Stack QR code and info vertically on mobile */
+    .ticket-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-qr-side {
+        border-right: none;
+        border-bottom: 2px dashed rgba(29, 53, 87, 0.1);
+        padding: 28px 20px;
+    }
+
+    .ticket-info-side {
+        padding: 28px 20px;
+    }
+
+    .quick-info-group {
+        gap: 12px;
+    }
+
+    .quick-info-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .quick-info-value {
+        font-size: 14px;
+    }
+
+    .quick-info-address {
+        font-size: 12px;
     }
 
     .ticket-details {

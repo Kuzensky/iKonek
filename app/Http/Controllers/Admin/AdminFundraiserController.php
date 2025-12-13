@@ -154,6 +154,14 @@ class AdminFundraiserController extends Controller
             return redirect()->back()->with('error', 'Only active campaigns can be suspended.');
         }
 
+        if ($newStatus === Fundraiser::STATUS_COMPLETED && !$fundraiser->canBeCompleted()) {
+            return redirect()->back()->with('error', 'Only active or suspended campaigns can be marked as completed.');
+        }
+
+        if ($newStatus === Fundraiser::STATUS_CANCELLED && !$fundraiser->canBeCancelled()) {
+            return redirect()->back()->with('error', 'This campaign cannot be cancelled in its current state.');
+        }
+
         $fundraiser->status = $newStatus;
 
         // Append notes if provided

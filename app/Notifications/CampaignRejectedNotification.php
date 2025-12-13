@@ -14,10 +14,6 @@ class CampaignRejectedNotification extends Notification implements ShouldQueue
 
     public $fundraiser;
     public $notes;
-    public $queue = 'emails';
-    public $connection = 'database';
-    public $tries = 3;
-    public $timeout = 30;
 
     /**
      * Create a new notification instance.
@@ -26,7 +22,21 @@ class CampaignRejectedNotification extends Notification implements ShouldQueue
     {
         $this->fundraiser = $fundraiser;
         $this->notes = $notes;
+
+        // Configure queue settings
+        $this->onQueue('emails');
+        $this->onConnection('database');
     }
+
+    /**
+     * Get the number of times the job may be attempted.
+     */
+    public $tries = 3;
+
+    /**
+     * Get the number of seconds before the job should timeout.
+     */
+    public $timeout = 30;
 
     /**
      * Get the notification's delivery channels.

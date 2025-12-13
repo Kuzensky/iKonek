@@ -137,11 +137,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 return $donation->appointment->appointment_date ?? now();
             });
 
+        // Get active appointments (for Scheduled tab) - scheduled or confirmed
+        $upcomingAppointments = $user->appointments()
+            ->with('hospital:id,name,address,city')
+            ->whereIn('status', ['scheduled', 'confirmed'])
+            ->where('appointment_date', '>=', now())
+            ->orderBy('appointment_date', 'asc')
+            ->get();
+
         // Get past (verified) donations
         $completedDonations = $user->donations()
             ->with('hospital:id,name,address,city')
             ->where('status', 'verified')
             ->orderBy('donation_date', 'desc')
+            ->get();
+
+        // Get completed appointments (for History tab) - cancelled, completed, no_show, or past
+        $pastAppointments = $user->appointments()
+            ->with('hospital:id,name,address,city')
+            ->where(function($query) {
+                $query->whereIn('status', ['cancelled', 'completed', 'no_show'])
+                      ->orWhere('appointment_date', '<', now());
+            })
+            ->orderBy('appointment_date', 'desc')
             ->get();
 
         // Get fundraiser contributions
@@ -151,8 +169,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->get();
 
         // Calculate statistics
-        $totalDonations = $user->donations()->count();
-        $totalContributions = $contributions->sum('amount');
+        $totalDonations = $user->total_donations;
+        $totalContributions = $user->total_contributions;
         $campaignsSupported = $contributions->pluck('fundraiser_id')->unique()->count();
         $memberSince = $user->created_at->format('M Y');
 
@@ -165,7 +183,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         return view('history', compact(
             'scheduledDonations',
+            'upcomingAppointments',
             'completedDonations',
+            'pastAppointments',
             'contributions',
             'totalDonations',
             'totalContributions',
@@ -230,10 +250,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
     Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
 
+    // Notifications
+    Route::post('/notifications/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/{notification}/mark-read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+
     // Donations (Session 1)
     Route::get('/donations', [DonationController::class, 'index'])->name('donations.index');
     Route::post('/donations', [DonationController::class, 'store'])->name('donations.store');
     Route::get('/donations/{donation}', [DonationController::class, 'show'])->name('donations.show');
+    Route::get('/appointments/{appointment}/ticket', [DonationController::class, 'viewTicket'])->name('donations.ticket');
 
     // Hospitals (Session 1)
     Route::get('/hospitals', [HospitalController::class, 'index'])->name('hospitals.index');
