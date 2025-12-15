@@ -201,21 +201,23 @@ class Fundraiser extends Model
 
     public function canBeActivated()
     {
+        // Cannot reactivate if already completed or cancelled (final statuses)
         return in_array($this->status, [
             self::STATUS_PENDING,
             self::STATUS_PENDING_REVIEW,
             self::STATUS_SUSPENDED,
-            self::STATUS_CANCELLED,
         ]);
     }
 
     public function canBeSuspended()
     {
+        // Can only suspend active campaigns, not completed or cancelled
         return $this->status === self::STATUS_ACTIVE;
     }
 
     public function canBeCompleted()
     {
+        // Can mark as completed from active or suspended, but not if already cancelled
         return in_array($this->status, [
             self::STATUS_ACTIVE,
             self::STATUS_SUSPENDED,
@@ -224,6 +226,7 @@ class Fundraiser extends Model
 
     public function canBeCancelled()
     {
+        // Can cancel from any status except if already completed or cancelled
         return in_array($this->status, [
             self::STATUS_PENDING,
             self::STATUS_PENDING_REVIEW,

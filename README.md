@@ -1,97 +1,60 @@
 # iKonek
 
-A blood donation and fundraising platform built with Laravel, connecting donors with those in need.
+## About
+
+iKonek is a blood donation and fundraising platform that connects blood donors with those in need. The platform streamlines the blood donation process by allowing users to schedule appointments, track their donation history, and participate in fundraising campaigns. It aims to create a community of donors making a meaningful impact on saving lives.
 
 ## Features
 
-- **User Authentication** - Complete registration with donor profile (blood type, contact info, etc.)
-- **Dashboard** - Track donations, view impact statistics, and manage appointments
-- **Schedule Donations** - Multi-step booking flow for blood donation appointments
-- **Fundraisers** - Browse and create fundraising campaigns
-- **Donation History** - View past donations and contributions
-- **Profile Management** - Update personal information and preferences
+- User registration with donor profiles (blood type, contact information)
+- Dashboard for tracking donations and viewing impact statistics
+- Multi-step blood donation appointment scheduling
+- Fundraising campaign creation and browsing
+- Donation history tracking
+- Profile management
 
-## Tech Stack
+## Technical Stack
 
-- **Framework:** Laravel 11
-- **Authentication:** Laravel Breeze
-- **Database:** PostgreSQL
-- **Frontend:** Blade Templates with custom CSS
-
-## Requirements
-
-- PHP 8.2+
-- Composer
-- PostgreSQL
-- Node.js & NPM
+Built with Laravel 11 and PostgreSQL, utilizing Laravel Breeze for authentication and Blade templates for the frontend.
 
 ## Installation
 
-1. Clone the repository
+1. Clone the repository and install dependencies
 ```bash
 git clone <repository-url>
 cd iKonek-laravel
-```
-
-2. Install dependencies
-```bash
 composer install
 npm install
 ```
 
-3. Configure environment
+2. Configure environment
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-4. Set up database in `.env`
+3. Set up database credentials in `.env`
 ```
 DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
 DB_DATABASE=ikonek
 DB_USERNAME=postgres
 DB_PASSWORD=your_password
 ```
 
-5. Run migrations
+4. Run migrations and start server
 ```bash
 php artisan migrate
-```
-
-6. Start development server
-```bash
 php artisan serve
 ```
 
 Visit `http://localhost:8000` to access the application.
 
-## Project Structure
+## Authors
 
-```
-resources/views/
-├── auth/               # Login, Register, Password Reset
-├── campaigns/          # Campaign viewing
-├── donations/          # Donation scheduling flow
-├── fundraisers/        # Fundraiser creation flow
-├── layouts/            # Base layouts
-├── partials/           # Navigation, Footer
-├── profile/            # User profile pages
-├── dashboard.blade.php
-├── fundraisers.blade.php
-├── history.blade.php
-└── welcome.blade.php
-```
+- Joel Aguzar
+- Jerzha Ara Lalu
+- Christian Nayre
 
-## Database Schema
+## Instructor
 
-### Users Table (Extended)
-- first_name, last_name, middle_name
-- email, password
-- birthdate, sex, blood_type
-- contact_number
-
-## License
-
-This project is for educational purposes.
+Paul Isaac De Chavez
